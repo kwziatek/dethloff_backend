@@ -1,0 +1,2 @@
+    - DTO classes should be implemented as record classes - records are immutable which is perfect for data transfer
+    - I need mappers from classes to DTO's and the other way around, otherwise I'll be implementing them in service layer which is suboptimal
