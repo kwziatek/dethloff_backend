@@ -6,6 +6,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class StudentDAOImpl implements StudentDAO{
 
@@ -17,13 +20,30 @@ public class StudentDAOImpl implements StudentDAO{
     }
 
     @Override
-    @Transactional
     public void save(Student theStudent) {
         entityManager.persist(theStudent);
     }
 
     @Override
-    public void findById(int theId) {
-        entityManager.find(Student.class, theId);
+    public void update(Student student) {
+        entityManager.merge(student);
+    }
+
+    @Override
+    public Optional<Student> findById(String theId) {
+        Student student = entityManager.find(Student.class, theId);
+        return Optional.ofNullable(student);
+
+    }
+
+    @Override
+    public Optional<List<Student>> findAll() {
+        List<Student> list = entityManager.createQuery("SELECT u from Student u", Student.class).getResultList();
+        return Optional.ofNullable(list);
+    }
+
+    @Override
+    public void remove(Student theStudent) {
+        entityManager.remove(theStudent);
     }
 }

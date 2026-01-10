@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     String id;
 
@@ -24,4 +25,7 @@ public class Student {
 
     @Column(name = "surname")
     String surname;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Course> courses;
 }

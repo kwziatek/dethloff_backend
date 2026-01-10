@@ -1,9 +1,10 @@
 package com.app.dethloff.DTO;
 
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-public class StudentDTO {
-    String name;
-    String surname;
-}
+@Builder
+public record StudentDTO(
+        String id,
+        String name,
+        String surname
+) {}
