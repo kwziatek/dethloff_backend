@@ -5,6 +5,9 @@
 To do's:
     - modify the student's service, rest controller so that it matches the course (done)
     - wonder how to implement exception logic for update request (done)
-    - after making sure everything works correctly when it comes to course and user push to remote
-    - wonder/learn how to implement logic of assigning students to courses
+    - after making sure everything works correctly when it comes to course and user push to remote (done)
+    - wonder/learn how to implement logic of assigning students to courses (done)
+    - modify REST api so that it return ResponseEntity<> so that (done)
+    - implement unit tests
+    - implement integration tests
     - DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app

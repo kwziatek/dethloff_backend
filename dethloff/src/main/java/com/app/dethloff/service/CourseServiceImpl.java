@@ -1,10 +1,13 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.DAO.CourseDAO;
+import com.app.dethloff.DAO.StudentDAO;
 import com.app.dethloff.DTO.CourseDTO;
 import com.app.dethloff.DTO.mappers.CourseMapper;
 import com.app.dethloff.error.CourseNotFoundException;
+import com.app.dethloff.error.StudentNotFoundException;
 import com.app.dethloff.model.Course;
+import com.app.dethloff.model.Student;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,17 +19,20 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService{
 
     CourseDAO courseDAO;
+    StudentDAO studentDAO;
 
     @Autowired
-    public CourseServiceImpl(CourseDAO courseDAO) {
+    public CourseServiceImpl(CourseDAO courseDAO, StudentDAO studentDAO) {
         this.courseDAO = courseDAO;
+        this.studentDAO = studentDAO;
     }
 
     @Override
     @Transactional
-    public void create(CourseDTO courseDTO) {
+    public CourseDTO create(CourseDTO courseDTO) {
         Course course = CourseMapper.toCourse(courseDTO);
         courseDAO.save(course);
+        return CourseMapper.toDTO(course);
     }
 
     @Override
@@ -53,10 +59,31 @@ public class CourseServiceImpl implements CourseService{
 
     @Transactional
     @Override
-    public void update(CourseDTO courseDTO) {
+    public CourseDTO update(CourseDTO courseDTO) {
         Course course = CourseMapper.toCourse(courseDTO);
         courseDAO.findById(course.getId())
-                        .orElseThrow(() -> new CourseNotFoundException("No course with such id" + course.getId()));
-        courseDAO.update(course);
+                        .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + course.getId()));
+        Course updatedCourse = courseDAO.update(course);
+        return CourseMapper.toDTO(updatedCourse);
+    }
+
+    @Override
+    @Transactional
+    public void enrollStudent(String courseId, String studentId) {
+        Course course = courseDAO.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + courseId));
+        Student student = studentDAO.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentId));
+        course.addStudent(student);
+    }
+
+    @Override
+    @Transactional
+    public void unenrollStudent(String courseId, String studentId) {
+        Course course = courseDAO.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + courseId));
+        Student student = studentDAO.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentId));
+        course.removeStudent(student);
     }
 }

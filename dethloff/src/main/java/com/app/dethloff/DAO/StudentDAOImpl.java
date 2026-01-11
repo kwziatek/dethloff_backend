@@ -20,13 +20,14 @@ public class StudentDAOImpl implements StudentDAO{
     }
 
     @Override
-    public void save(Student theStudent) {
+    public Student save(Student theStudent) {
         entityManager.persist(theStudent);
+        return theStudent;
     }
 
     @Override
-    public void update(Student student) {
-        entityManager.merge(student);
+    public Student update(Student student) {
+        return entityManager.merge(student);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.app.dethloff.rest;
 
-import com.app.dethloff.error.StudentErrorResponse;
+import com.app.dethloff.error.ErrorResponse;
 import com.app.dethloff.error.StudentNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class StudentRestExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<StudentErrorResponse> handleException(StudentNotFoundException exc) {
+    public ResponseEntity<ErrorResponse> handleException(StudentNotFoundException exc) {
 
-        StudentErrorResponse error = new StudentErrorResponse();
+        ErrorResponse studentErrorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), exc.getMessage(), System.currentTimeMillis());
 
-        error.setStatus(HttpStatus.NOT_FOUND.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
-
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(studentErrorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -20,14 +20,14 @@ public class CourseDAOImpl implements CourseDAO{
     }
 
     @Override
-    public void save(Course course) {
-        System.out.println(course == null);
-        entityManager.persist(course);
+    public Course save(Course course) {
+         entityManager.persist(course);
+         return course;
     }
 
     @Override
-    public void update(Course course) {
-        entityManager.merge(course);
+    public Course update(Course course) {
+        return entityManager.merge(course);
     }
 
     @Override

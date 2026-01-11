@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -33,6 +34,26 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    List<Student> students;
+    List<Student> students = new ArrayList<>();
+
+    public void addStudent(Student student) {
+        if(students == null) {
+            students = new ArrayList<>();
+        }
+
+        if(!students.contains(student)) {
+            students.add(student);
+            student.getCourses().add(this);
+        }
+
+    }
+
+    public void removeStudent(Student student) {
+        if(students != null && students.contains(student)) {
+            students.remove(student);
+            student.getCourses().remove(this);
+        }
+
+    }
 
 }

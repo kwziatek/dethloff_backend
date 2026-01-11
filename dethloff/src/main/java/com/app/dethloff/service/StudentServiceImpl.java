@@ -23,9 +23,11 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public void create(StudentDTO studentDTO) {
+    public StudentDTO create(StudentDTO studentDTO) {
         Student student = StudentMapper.toStudent(studentDTO);
-        studentDAO.save(student);
+
+        Student savedStudent = studentDAO.save(student);
+        return StudentMapper.toDTO(savedStudent);
     }
 
     @Override
@@ -54,10 +56,12 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public void update(StudentDTO studentDTO) {
+    public StudentDTO update(StudentDTO studentDTO) {
         Student student = StudentMapper.toStudent(studentDTO);
         studentDAO.findById(student.getId())
                         .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + student.getId()));
-        studentDAO.update(student);
+        Student updatedStudent = studentDAO.update(student);
+
+        return StudentMapper.toDTO(updatedStudent);
     }
 }
