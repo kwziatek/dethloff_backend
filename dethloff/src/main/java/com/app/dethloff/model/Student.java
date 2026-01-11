@@ -1,31 +1,21 @@
 package com.app.dethloff.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "student")
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    String id;
-
-    @Column(name = "name")
-    String name;
-
-    @Column(name = "surname")
-    String surname;
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+public class Student extends Person{
 
     @ManyToMany(mappedBy = "students")
-    private List<Course> courses;
+    @Builder.Default
+    private List<Course> courses = new ArrayList<>();
 }
