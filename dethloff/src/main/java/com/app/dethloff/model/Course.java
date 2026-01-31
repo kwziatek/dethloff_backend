@@ -22,6 +22,9 @@ public class Course {
     @Column(name = "id")
     String id;
 
+    @Column(name = "name")
+    String name;
+
     @Column(name = "course_level")
     CourseLevel level;
 
@@ -35,6 +38,10 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     List<Student> students = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "teacherId")
+    private Teacher teacher;
 
     public void addStudent(Student student) {
         if(students == null) {

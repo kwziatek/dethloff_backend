@@ -1,8 +1,7 @@
-package com.app.dethloff.DAO;
+package com.app.dethloff.dao;
 
 import com.app.dethloff.model.Student;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

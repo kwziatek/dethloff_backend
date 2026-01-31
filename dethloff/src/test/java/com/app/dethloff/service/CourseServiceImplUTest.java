@@ -1,13 +1,13 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.DAO.CourseDAO;
-import com.app.dethloff.DAO.StudentDAO;
-import com.app.dethloff.DTO.CourseDTO;
-import com.app.dethloff.DTO.mappers.CourseMapper;
+import com.app.dethloff.dao.CourseDAO;
+import com.app.dethloff.dao.StudentDAO;
+import com.app.dethloff.model.DTO.CourseRequestDTO;
 import com.app.dethloff.model.Course;
 import com.app.dethloff.model.CourseLevel;
+import com.app.dethloff.model.DTO.CourseResponseDTO;
 import com.app.dethloff.model.Student;
-import org.checkerframework.checker.units.qual.C;
+import com.app.dethloff.model.Teacher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,18 +37,28 @@ public class CourseServiceImplUTest {
 
     private Course sampleCourse;
     private Student sampleStudent;
+    private Teacher sampleTeacher;
 
     @BeforeEach
      void setUp() {
         UUID studentId = UUID.randomUUID();
-        UUID courseID = UUID.randomUUID();
-        sampleCourse = new Course(courseID.toString(), CourseLevel.A1, "NICE", new ArrayList<>());
+        UUID courseId = UUID.randomUUID();
+        UUID teacherID = UUID.randomUUID();
+
         sampleStudent = Student.builder()
                 .id(studentId.toString())
                 .name("Karol")
                 .surname("Piątkowski")
                 .courses(new ArrayList<>())
                 .build();
+        sampleTeacher = Teacher.builder()
+                .id(teacherID.toString())
+                .name("Michał")
+                .surname("Żarowski")
+                .courses(new ArrayList<>())
+                .build();
+
+        sampleCourse = new Course(courseId.toString(), "A1_1", CourseLevel.A1, "NICE", new ArrayList<>(), sampleTeacher);
     }
 
     @Test
@@ -57,11 +67,11 @@ public class CourseServiceImplUTest {
         when(courseDAO.findById(sampleCourse.getId())).thenReturn(Optional.ofNullable(sampleCourse));
 
         // act
-        CourseDTO courseDTO = courseService.get(sampleCourse.getId());
+        CourseResponseDTO courseResponseDTO = courseService.get(sampleCourse.getId());
 
         // assert
-        assertNotNull(courseDTO);
-        assertEquals(sampleCourse.getId(), courseDTO.id());
+        assertNotNull(courseResponseDTO);
+        assertEquals(sampleCourse.getId(), courseResponseDTO.id());
     }
 
     @Test

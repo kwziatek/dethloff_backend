@@ -1,4 +1,4 @@
-package com.app.dethloff.error;
+package com.app.dethloff.rest.error;
 
 public class CourseNotFoundException extends RuntimeException {
     public CourseNotFoundException(String message) {

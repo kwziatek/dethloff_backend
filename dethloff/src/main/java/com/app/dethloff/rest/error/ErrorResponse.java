@@ -1,4 +1,4 @@
-package com.app.dethloff.error;
+package com.app.dethloff.rest.error;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

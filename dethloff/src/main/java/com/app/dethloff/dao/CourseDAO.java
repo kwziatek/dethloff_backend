@@ -1,7 +1,6 @@
-package com.app.dethloff.DAO;
+package com.app.dethloff.dao;
 
 import com.app.dethloff.model.Course;
-import com.app.dethloff.model.Student;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,7 @@
 package com.app.dethloff.rest;
 
-import com.app.dethloff.DTO.CourseDTO;
+import com.app.dethloff.model.DTO.CourseRequestDTO;
+import com.app.dethloff.model.DTO.CourseResponseDTO;
 import com.app.dethloff.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,30 +23,30 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<List<CourseDTO>> getCourses() {
-        List<CourseDTO> courses = courseService.getAll();
+    public ResponseEntity<List<CourseResponseDTO>> getCourses() {
+        List<CourseResponseDTO> courses = courseService.getAll();
 
         return ResponseEntity.ok(courses);
     }
 
     @GetMapping("courses/{courseId}")
-    public ResponseEntity<CourseDTO> getCourse(@PathVariable String courseId) {
-        CourseDTO courseDTO = courseService.get(courseId);
+    public ResponseEntity<CourseResponseDTO> getCourse(@PathVariable String courseId) {
+        CourseResponseDTO courseResponseDTO = courseService.get(courseId);
 
-        return ResponseEntity.ok(courseDTO);
+        return ResponseEntity.ok(courseResponseDTO);
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<CourseDTO> createCourse(@RequestBody CourseDTO courseDTO) {
-        CourseDTO responseCourseDTO = courseService.create(courseDTO);
+    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
+        CourseResponseDTO courseResponseDTO = courseService.create(courseRequestDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(responseCourseDTO.id())
+                .buildAndExpand(courseResponseDTO.id())
                 .toUri();
 
-        return ResponseEntity.created(location).body(responseCourseDTO);
+        return ResponseEntity.created(location).body(courseResponseDTO);
     }
 
     @DeleteMapping("/courses/{courseId}")
@@ -56,10 +57,10 @@ public class CourseController {
     }
 
     @PutMapping("/courses")
-    public ResponseEntity<CourseDTO> updateCourse(@RequestBody CourseDTO courseDTO) {
-        CourseDTO responseCourseDTO = courseService.update(courseDTO);
+    public ResponseEntity<CourseResponseDTO> updateCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
+        CourseResponseDTO courseResponseDTO = courseService.update(courseRequestDTO);
 
-        return ResponseEntity.ok(responseCourseDTO);
+        return ResponseEntity.ok(courseResponseDTO);
     }
 
     @PostMapping("/courses/{courseId}/students/{studentId}")

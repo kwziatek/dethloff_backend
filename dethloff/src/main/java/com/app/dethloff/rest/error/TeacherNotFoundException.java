@@ -1,0 +1,8 @@
+package com.app.dethloff.rest.error;
+
+
+public class TeacherNotFoundException extends RuntimeException{
+    public TeacherNotFoundException(String message) {
+        super(message);
+    }
+}

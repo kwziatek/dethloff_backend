@@ -1,7 +1,8 @@
 package com.app.dethloff.rest;
 
 
-import com.app.dethloff.DTO.StudentDTO;
+import com.app.dethloff.model.DTO.StudentRequestDTO;
+import com.app.dethloff.model.DTO.StudentResponseDTO;
 import com.app.dethloff.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,22 +24,22 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<StudentDTO>> getStudents() {
-        List<StudentDTO> students = studentService.getAll();
+    public ResponseEntity<List<StudentResponseDTO>> getStudents() {
+        List<StudentResponseDTO> students = studentService.getAll();
 
         return ResponseEntity.ok(students);
     }
 
     @GetMapping("/students/{studentId}")
-    public ResponseEntity<StudentDTO> getStudent(@PathVariable String studentId) {
-        StudentDTO studentDTO = studentService.get(studentId);
+    public ResponseEntity<StudentResponseDTO> getStudent(@PathVariable String studentId) {
+        StudentResponseDTO studentDTO = studentService.get(studentId);
 
         return ResponseEntity.ok(studentDTO);
     }
 
     @PostMapping("/students")
-    public ResponseEntity<StudentDTO> createStudent(@RequestBody StudentDTO studentDTO) {
-        StudentDTO createdStudent = studentService.create(studentDTO);
+    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO studentDTO) {
+        StudentResponseDTO createdStudent = studentService.create(studentDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -57,8 +58,8 @@ public class StudentController {
     }
 
     @PutMapping("/students")
-    public ResponseEntity<StudentDTO> updateStudent(@RequestBody StudentDTO studentDTO) {
-        StudentDTO updatedStudent = studentService.update(studentDTO);
+    public ResponseEntity<StudentResponseDTO> updateStudent(@RequestBody StudentRequestDTO studentDTO) {
+        StudentResponseDTO updatedStudent = studentService.update(studentDTO);
 
         return ResponseEntity.ok(updatedStudent);
     }

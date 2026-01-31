@@ -1,9 +1,10 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.DAO.StudentDAO;
-import com.app.dethloff.DTO.StudentDTO;
-import com.app.dethloff.DTO.mappers.StudentMapper;
-import com.app.dethloff.error.StudentNotFoundException;
+import com.app.dethloff.dao.StudentDAO;
+import com.app.dethloff.model.DTO.StudentRequestDTO;
+import com.app.dethloff.model.DTO.StudentResponseDTO;
+import com.app.dethloff.model.DTO.mappers.StudentMapper;
+import com.app.dethloff.rest.error.StudentNotFoundException;
 import com.app.dethloff.model.Student;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,35 +16,37 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService{
 
     private final StudentDAO studentDAO;
+    private final StudentMapper studentMapper;
 
     @Autowired
-    public StudentServiceImpl(StudentDAO studentDAO) {
+    public StudentServiceImpl(StudentDAO studentDAO, StudentMapper studentMapper) {
         this.studentDAO = studentDAO;
+        this.studentMapper = studentMapper;
     }
 
     @Override
     @Transactional
-    public StudentDTO create(StudentDTO studentDTO) {
-        Student student = StudentMapper.toStudent(studentDTO);
+    public StudentResponseDTO create(StudentRequestDTO studentDTO) {
+        Student student = studentMapper.toStudent(studentDTO);
 
         Student savedStudent = studentDAO.save(student);
-        return StudentMapper.toDTO(savedStudent);
+        return studentMapper.toDTO(savedStudent);
     }
 
     @Override
-    public StudentDTO get(String id) {
+    public StudentResponseDTO get(String id) {
         Student student = studentDAO.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
 
-        return StudentMapper.toDTO(student);
+        return studentMapper.toDTO(student);
     }
 
     @Override
-    public List<StudentDTO> getAll() {
+    public List<StudentResponseDTO> getAll() {
         List<Student> list = studentDAO.findAll()
                 .orElseThrow(() -> new StudentNotFoundException("No students found"));
 
-        return StudentMapper.toDTO(list);
+        return studentMapper.toDTO(list);
     }
 
     @Override
@@ -56,12 +59,12 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public StudentDTO update(StudentDTO studentDTO) {
-        Student student = StudentMapper.toStudent(studentDTO);
+    public StudentResponseDTO update(StudentRequestDTO studentDTO) {
+        Student student = studentMapper.toStudent(studentDTO);
         studentDAO.findById(student.getId())
                         .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + student.getId()));
         Student updatedStudent = studentDAO.update(student);
 
-        return StudentMapper.toDTO(updatedStudent);
+        return studentMapper.toDTO(updatedStudent);
     }
 }
