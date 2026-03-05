@@ -1,7 +1,4 @@
-package com.app.dethloff.rest.error;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.app.dethloff.exceptions;
 
 public record ErrorResponse(
         int status,

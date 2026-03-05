@@ -11,4 +11,5 @@ To do's:
     - implement unit tests (partially - lets not focus on it right now)
     - implement integration tests (skipped)
     - implement teacher entity
+    - learn about liquibase scripts, use them instead of applying the changes to db by hand
     - DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app

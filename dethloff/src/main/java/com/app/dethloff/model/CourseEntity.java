@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class CourseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,6 +25,7 @@ public class Course {
     @Column(name = "name")
     String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "course_level")
     CourseLevel level;
 
@@ -37,13 +38,13 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    List<Student> students = new ArrayList<>();
+    List<StudentEntity> students = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "teacherId")
-    private Teacher teacher;
+    private TeacherEntity teacher;
 
-    public void addStudent(Student student) {
+    public void addStudent(StudentEntity student) {
         if(students == null) {
             students = new ArrayList<>();
         }
@@ -55,7 +56,7 @@ public class Course {
 
     }
 
-    public void removeStudent(Student student) {
+    public void removeStudent(StudentEntity student) {
         if(students != null && students.contains(student)) {
             students.remove(student);
             student.getCourses().remove(this);

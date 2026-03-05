@@ -1,4 +1,4 @@
-package com.app.dethloff.rest.error;
+package com.app.dethloff.exceptions.model;
 
 
 public class TeacherNotFoundException extends RuntimeException{

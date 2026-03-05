@@ -13,9 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class Student extends Person{
+public class StudentEntity extends PersonAbstractEntity {
 
     @ManyToMany(mappedBy = "students")
     @Builder.Default
-    private List<Course> courses = new ArrayList<>();
+    private List<CourseEntity> courses = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Boolean isActive = false;
 }

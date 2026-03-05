@@ -1,14 +1,14 @@
 package com.app.dethloff.dao;
 
-import com.app.dethloff.model.Course;
+import com.app.dethloff.model.CourseEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CourseDAO {
-    Course save(Course course);
-    Course update(Course course);
-    Optional<Course> findById(String id);
-    Optional<List<Course>> findAll();
-    void remove(Course course);
+    CourseEntity save(CourseEntity course);
+    CourseEntity update(CourseEntity course);
+    Optional<CourseEntity> findById(String id);
+    Optional<List<CourseEntity>> findAll();
+    void remove(CourseEntity course);
 }

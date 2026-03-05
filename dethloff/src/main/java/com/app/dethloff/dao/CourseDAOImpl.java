@@ -1,6 +1,6 @@
 package com.app.dethloff.dao;
 
-import com.app.dethloff.model.Course;
+import com.app.dethloff.model.CourseEntity;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,30 +20,30 @@ public class CourseDAOImpl implements CourseDAO{
     }
 
     @Override
-    public Course save(Course course) {
+    public CourseEntity save(CourseEntity course) {
          entityManager.persist(course);
          return course;
     }
 
     @Override
-    public Course update(Course course) {
+    public CourseEntity update(CourseEntity course) {
         return entityManager.merge(course);
     }
 
     @Override
-    public Optional<Course> findById(String id) {
-        Course course = entityManager.find(Course.class, id);
+    public Optional<CourseEntity> findById(String id) {
+        CourseEntity course = entityManager.find(CourseEntity.class, id);
         return Optional.ofNullable(course);
     }
 
     @Override
-    public Optional<List<Course>> findAll() {
-        List<Course> list = entityManager.createQuery("SELECT u from Course u", Course.class).getResultList();
+    public Optional<List<CourseEntity>> findAll() {
+        List<CourseEntity> list = entityManager.createQuery("SELECT u from CourseEntity u", CourseEntity.class).getResultList();
         return Optional.ofNullable(list);
     }
 
     @Override
-    public void remove(Course course) {
+    public void remove(CourseEntity course) {
         entityManager.remove(course);
     }
 }

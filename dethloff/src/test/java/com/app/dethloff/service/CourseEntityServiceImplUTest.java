@@ -2,12 +2,11 @@ package com.app.dethloff.service;
 
 import com.app.dethloff.dao.CourseDAO;
 import com.app.dethloff.dao.StudentDAO;
-import com.app.dethloff.model.DTO.CourseRequestDTO;
-import com.app.dethloff.model.Course;
+import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.CourseLevel;
 import com.app.dethloff.model.DTO.CourseResponseDTO;
-import com.app.dethloff.model.Student;
-import com.app.dethloff.model.Teacher;
+import com.app.dethloff.model.StudentEntity;
+import com.app.dethloff.model.TeacherEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CourseServiceImplUTest {
+public class CourseEntityServiceImplUTest {
 
     @Mock
     private CourseDAO courseDAO;
@@ -35,9 +34,9 @@ public class CourseServiceImplUTest {
     @InjectMocks
     private CourseServiceImpl courseService;
 
-    private Course sampleCourse;
-    private Student sampleStudent;
-    private Teacher sampleTeacher;
+    private CourseEntity sampleCourse;
+    private StudentEntity sampleStudent;
+    private TeacherEntity sampleTeacher;
 
     @BeforeEach
      void setUp() {
@@ -45,20 +44,20 @@ public class CourseServiceImplUTest {
         UUID courseId = UUID.randomUUID();
         UUID teacherID = UUID.randomUUID();
 
-        sampleStudent = Student.builder()
+        sampleStudent = StudentEntity.builder()
                 .id(studentId.toString())
                 .name("Karol")
                 .surname("Piątkowski")
                 .courses(new ArrayList<>())
                 .build();
-        sampleTeacher = Teacher.builder()
+        sampleTeacher = TeacherEntity.builder()
                 .id(teacherID.toString())
                 .name("Michał")
                 .surname("Żarowski")
                 .courses(new ArrayList<>())
                 .build();
 
-        sampleCourse = new Course(courseId.toString(), "A1_1", CourseLevel.A1, "NICE", new ArrayList<>(), sampleTeacher);
+        sampleCourse = new CourseEntity(courseId.toString(), "A1_1", CourseLevel.A1, "NICE", new ArrayList<>(), sampleTeacher);
     }
 
     @Test

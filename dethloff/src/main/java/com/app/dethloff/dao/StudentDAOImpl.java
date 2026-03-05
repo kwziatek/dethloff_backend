@@ -1,6 +1,6 @@
 package com.app.dethloff.dao;
 
-import com.app.dethloff.model.Student;
+import com.app.dethloff.model.StudentEntity;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,31 +19,31 @@ public class StudentDAOImpl implements StudentDAO{
     }
 
     @Override
-    public Student save(Student theStudent) {
+    public StudentEntity save(StudentEntity theStudent) {
         entityManager.persist(theStudent);
         return theStudent;
     }
 
     @Override
-    public Student update(Student student) {
+    public StudentEntity update(StudentEntity student) {
         return entityManager.merge(student);
     }
 
     @Override
-    public Optional<Student> findById(String theId) {
-        Student student = entityManager.find(Student.class, theId);
+    public Optional<StudentEntity> findById(String theId) {
+        StudentEntity student = entityManager.find(StudentEntity.class, theId);
         return Optional.ofNullable(student);
 
     }
 
     @Override
-    public Optional<List<Student>> findAll() {
-        List<Student> list = entityManager.createQuery("SELECT u from Student u", Student.class).getResultList();
+    public Optional<List<StudentEntity>> findAll() {
+        List<StudentEntity> list = entityManager.createQuery("SELECT u from StudentEntity u", StudentEntity.class).getResultList();
         return Optional.ofNullable(list);
     }
 
     @Override
-    public void remove(Student theStudent) {
+    public void remove(StudentEntity theStudent) {
         entityManager.remove(theStudent);
     }
 }

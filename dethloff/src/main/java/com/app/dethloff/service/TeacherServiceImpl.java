@@ -4,8 +4,8 @@ import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.model.DTO.TeacherRequestDTO;
 import com.app.dethloff.model.DTO.TeacherResponseDTO;
 import com.app.dethloff.model.DTO.mappers.TeacherMapper;
-import com.app.dethloff.rest.error.TeacherNotFoundException;
-import com.app.dethloff.model.Teacher;
+import com.app.dethloff.exceptions.model.TeacherNotFoundException;
+import com.app.dethloff.model.TeacherEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +26,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherResponseDTO get(String id) {
-        Teacher teacher = teacherDAO.findById(id)
+        TeacherEntity teacher = teacherDAO.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException("No teacher with such id - " + id));
         return teacherMapper.toDTO(teacher);
     }
 
     @Override
     public List<TeacherResponseDTO> getAll() {
-        List<Teacher> teachers = teacherDAO.findAll()
+        List<TeacherEntity> teachers = teacherDAO.findAll()
                 .orElseThrow(() -> new TeacherNotFoundException("No teachers found"));
         return teacherMapper.toDTO(teachers);
     }
@@ -41,7 +41,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     @Transactional
     public TeacherResponseDTO create(TeacherRequestDTO teacherDTO) {
-        Teacher teacher = teacherDAO.save(teacherMapper.toTeacher(teacherDTO));
+        TeacherEntity teacher = teacherDAO.save(teacherMapper.toTeacher(teacherDTO));
         return teacherMapper.toDTO(teacher);
     }
 
@@ -50,7 +50,7 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherResponseDTO update(TeacherRequestDTO teacherDTO) {
         teacherDAO.findById(teacherDTO.id())
                 .orElseThrow(() -> new TeacherNotFoundException("No teacher with such id - " + teacherDTO.id()));
-        Teacher teacher = teacherDAO.update(teacherMapper.toTeacher(teacherDTO));
+        TeacherEntity teacher = teacherDAO.update(teacherMapper.toTeacher(teacherDTO));
         return teacherMapper.toDTO(teacher);
     }
 
