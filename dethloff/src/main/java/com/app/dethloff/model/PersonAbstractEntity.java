@@ -43,6 +43,23 @@ public abstract class PersonAbstractEntity {
     @Column(name = "gender")
     protected Gender gender;
 
+    @Column
+    String city;
+
+    @Column
+    String street;
+
+    @Column(name = "flat_number")
+    String flatNumber;
+
+    @Column(name = "postal_code")
+    String postalCode;
+
+    @Column(name = "phone_number")
+    String phoneNumber;
+
+    String email;
+
     //setter for Jackson
     public void setPesel(String peselValue) {
         this.pesel = new Pesel(peselValue);

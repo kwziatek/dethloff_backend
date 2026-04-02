@@ -1,7 +1,7 @@
 package com.app.dethloff.rest;
 
 
-import com.app.dethloff.model.DTO.StudentRequestDTO;
+import com.app.dethloff.model.DTO.DetailedStudentDTO;
 import com.app.dethloff.model.DTO.StudentResponseDTO;
 import com.app.dethloff.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +31,15 @@ public class StudentController {
     }
 
     @GetMapping("/students/{studentId}")
-    public ResponseEntity<StudentResponseDTO> getStudent(@PathVariable String studentId) {
-        StudentResponseDTO studentDTO = studentService.get(studentId);
+    public ResponseEntity<DetailedStudentDTO> getStudent(@PathVariable String studentId) {
+        DetailedStudentDTO studentDTO = studentService.get(studentId);
 
         return ResponseEntity.ok(studentDTO);
     }
 
     @PostMapping("/students")
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO studentDTO) {
-        StudentResponseDTO createdStudent = studentService.create(studentDTO);
+    public ResponseEntity<DetailedStudentDTO> createStudent(@RequestBody DetailedStudentDTO studentDTO) {
+        DetailedStudentDTO createdStudent = studentService.create(studentDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -58,8 +58,8 @@ public class StudentController {
     }
 
     @PutMapping("/students")
-    public ResponseEntity<StudentResponseDTO> updateStudent(@RequestBody StudentRequestDTO studentDTO) {
-        StudentResponseDTO updatedStudent = studentService.update(studentDTO);
+    public ResponseEntity<DetailedStudentDTO> updateStudent(@RequestBody DetailedStudentDTO studentDTO) {
+        DetailedStudentDTO updatedStudent = studentService.update(studentDTO);
 
         return ResponseEntity.ok(updatedStudent);
     }

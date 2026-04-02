@@ -1,7 +1,7 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.dao.StudentDAO;
-import com.app.dethloff.model.DTO.StudentRequestDTO;
+import com.app.dethloff.model.DTO.DetailedStudentDTO;
 import com.app.dethloff.model.DTO.StudentResponseDTO;
 import com.app.dethloff.model.DTO.mappers.StudentMapper;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
@@ -26,22 +26,21 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public StudentResponseDTO create(StudentRequestDTO studentDTO) {
+    public DetailedStudentDTO create(DetailedStudentDTO detailedStudentDTO) {
+        StudentEntity student = studentMapper.detailedToEntity(detailedStudentDTO);
 
-        StudentEntity student = studentMapper.toStudent(studentDTO);
-        if(student.getIsActive() == null) {
-            student.setIsActive(false);
-        }
-        StudentEntity savedStudent = studentDAO.save(student);
-        return studentMapper.toDTO(savedStudent);
+        student.setIsActive(false);
+        studentDAO.save(student);
+
+        return studentMapper.entityToDetailed(student);
     }
 
     @Override
-    public StudentResponseDTO get(String id) {
+    public DetailedStudentDTO get(String id) {
         StudentEntity student = studentDAO.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
 
-        return studentMapper.toDTO(student);
+        return studentMapper.entityToDetailed(student);
     }
 
     @Override
@@ -62,12 +61,13 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public StudentResponseDTO update(StudentRequestDTO studentDTO) {
-        StudentEntity student = studentMapper.toStudent(studentDTO);
-        studentDAO.findById(student.getId())
-                        .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + student.getId()));
-        StudentEntity updatedStudent = studentDAO.update(student);
+    public DetailedStudentDTO update(DetailedStudentDTO detailedStudentDTO) {
+        StudentEntity existingStudent = studentDAO.findById(detailedStudentDTO.id())
+                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + detailedStudentDTO.id()));
 
-        return studentMapper.toDTO(updatedStudent);
+        studentMapper.updateEntityFromDetailed(detailedStudentDTO, existingStudent);
+
+        StudentEntity savedStudent = studentDAO.update(existingStudent);
+        return studentMapper.entityToDetailed(savedStudent);
     }
 }

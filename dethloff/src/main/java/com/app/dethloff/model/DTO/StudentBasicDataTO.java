@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record StudentRequestDTO(
+public record StudentBasicDataTO(
         String id,
         String name,
         String surname,
@@ -16,4 +16,6 @@ public record StudentRequestDTO(
         LocalDate birthDate,
         String placeOfBirth,
         Gender gender
-) {}
+) {
+
+}

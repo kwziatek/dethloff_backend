@@ -2,7 +2,7 @@
     - I need mappers from classes to DTO's and the other way around, otherwise I'll be implementing them in service layer which is suboptimal
 
 
-To do's:
+To Do's:
     - modify the student's service, rest controller so that it matches the course (done)
     - wonder how to implement exception logic for update request (done)
     - after making sure everything works correctly when it comes to course and user push to remote (done)
@@ -10,6 +10,9 @@ To do's:
     - modify REST api so that it returns ResponseEntity<> so that the return type is predictable(done)
     - implement unit tests (partially - lets not focus on it right now)
     - implement integration tests (skipped)
-    - implement teacher entity
-    - learn about liquibase scripts, use them instead of applying the changes to db by hand
+    - implement teacher entity (done)
+    - learn about liquibase scripts, use them instead of applying the changes to db by hand (done - flyway taken advantage of)
+    - basing on the frontend fields create flyway scripts for the database that adds a new table - student details (create, update - fine, get to be implemented)
+    - in student details add reference to attended courses
+
     - DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app

@@ -2,11 +2,17 @@ package com.app.dethloff.service;
 
 import com.app.dethloff.dao.CourseDAO;
 import com.app.dethloff.dao.StudentDAO;
+import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.CourseLevel;
 import com.app.dethloff.model.DTO.CourseResponseDTO;
+import com.app.dethloff.model.DTO.mappers.CourseMapper;
+import com.app.dethloff.model.DTO.mappers.StudentMapper;
+import com.app.dethloff.model.DTO.mappers.TeacherMapper;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.model.TeacherEntity;
+import jakarta.inject.Inject;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +39,18 @@ public class CourseEntityServiceImplUTest {
 
     @InjectMocks
     private CourseServiceImpl courseService;
+
+    @Mock
+    private CourseMapper courseMapper;
+
+    @Mock
+    private TeacherMapper teacherMapper;
+
+    @Mock
+    private StudentMapper studentMapper;
+
+    @Mock
+    private TeacherDAO teacherDAO;
 
     private CourseEntity sampleCourse;
     private StudentEntity sampleStudent;
@@ -64,6 +82,15 @@ public class CourseEntityServiceImplUTest {
     void getCourse_shouldReturnDTO_whenIdExists() {
         // arrange
         when(courseDAO.findById(sampleCourse.getId())).thenReturn(Optional.ofNullable(sampleCourse));
+        when(courseMapper.toDTO(sampleCourse)).thenReturn(CourseResponseDTO.builder()
+                        .id(sampleCourse.getId())
+                        .name(sampleCourse.getName())
+                        .description(sampleCourse.getDescription())
+                        .level(sampleCourse.getLevel())
+                        .students(null)
+                        .teacher(null) // teacherMapper would need to be mocked
+                        .build()
+        );
 
         // act
         CourseResponseDTO courseResponseDTO = courseService.get(sampleCourse.getId());
