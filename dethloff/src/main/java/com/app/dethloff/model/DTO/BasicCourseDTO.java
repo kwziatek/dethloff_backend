@@ -4,10 +4,11 @@ import com.app.dethloff.model.CourseLevel;
 import lombok.Builder;
 
 @Builder
-public record CourseRequestDTO(
+public record BasicCourseDTO(
     String id,
     String name,
     CourseLevel level,
     String description,
-    String teacherId
+    String teacherId,
+    SetOfCoursesDTO setOfCourses
 ) {}

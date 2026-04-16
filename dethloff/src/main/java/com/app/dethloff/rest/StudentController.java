@@ -1,8 +1,8 @@
 package com.app.dethloff.rest;
 
 
+import com.app.dethloff.model.DTO.BasicStudentDTO;
 import com.app.dethloff.model.DTO.DetailedStudentDTO;
-import com.app.dethloff.model.DTO.StudentResponseDTO;
 import com.app.dethloff.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<List<StudentResponseDTO>> getStudents() {
-        List<StudentResponseDTO> students = studentService.getAll();
+    public ResponseEntity<List<BasicStudentDTO>> getStudents() {
+        List<BasicStudentDTO> students = studentService.getAll();
 
         return ResponseEntity.ok(students);
     }

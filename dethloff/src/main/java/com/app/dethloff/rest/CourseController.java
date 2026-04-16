@@ -1,7 +1,7 @@
 package com.app.dethloff.rest;
 
-import com.app.dethloff.model.DTO.CourseRequestDTO;
-import com.app.dethloff.model.DTO.CourseResponseDTO;
+import com.app.dethloff.model.DTO.BasicCourseDTO;
+import com.app.dethloff.model.DTO.DetailedCourseDTO;
 import com.app.dethloff.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,30 +23,30 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCourses() {
-        List<CourseResponseDTO> courses = courseService.getAll();
+    public ResponseEntity<List<DetailedCourseDTO>> getCourses() {
+        List<DetailedCourseDTO> courses = courseService.getAll();
 
         return ResponseEntity.ok(courses);
     }
 
     @GetMapping("courses/{courseId}")
-    public ResponseEntity<CourseResponseDTO> getCourse(@PathVariable String courseId) {
-        CourseResponseDTO courseResponseDTO = courseService.get(courseId);
+    public ResponseEntity<DetailedCourseDTO> getCourse(@PathVariable String courseId) {
+        DetailedCourseDTO detailedCourseDTO = courseService.get(courseId);
 
-        return ResponseEntity.ok(courseResponseDTO);
+        return ResponseEntity.ok(detailedCourseDTO);
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
-        CourseResponseDTO courseResponseDTO = courseService.create(courseRequestDTO);
+    public ResponseEntity<DetailedCourseDTO> createCourse(@RequestBody BasicCourseDTO basicCourseDTO) {
+        DetailedCourseDTO detailedCourseDTO = courseService.create(basicCourseDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(courseResponseDTO.id())
+                .buildAndExpand(detailedCourseDTO.id())
                 .toUri();
 
-        return ResponseEntity.created(location).body(courseResponseDTO);
+        return ResponseEntity.created(location).body(detailedCourseDTO);
     }
 
     @DeleteMapping("/courses/{courseId}")
@@ -57,10 +57,10 @@ public class CourseController {
     }
 
     @PutMapping("/courses")
-    public ResponseEntity<CourseResponseDTO> updateCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
-        CourseResponseDTO courseResponseDTO = courseService.update(courseRequestDTO);
+    public ResponseEntity<DetailedCourseDTO> updateCourse(@RequestBody BasicCourseDTO basicCourseDTO) {
+        DetailedCourseDTO detailedCourseDTO = courseService.update(basicCourseDTO);
 
-        return ResponseEntity.ok(courseResponseDTO);
+        return ResponseEntity.ok(detailedCourseDTO);
     }
 
     @PostMapping("/courses/{courseId}/students/{studentId}")

@@ -6,11 +6,12 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record CourseResponseDTO(
+public record DetailedCourseDTO(
         String id,
         String name,
         String description,
         CourseLevel level,
-        TeacherResponseDTO teacher,
-        List<StudentResponseDTO> students
+        BasicTeacherDTO teacher,
+        List<BasicStudentDTO> students,
+        SetOfCoursesDTO setOfCourses
 ) {}

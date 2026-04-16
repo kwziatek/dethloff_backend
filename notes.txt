@@ -3,16 +3,39 @@
 
 
 To Do's:
-    - modify the student's service, rest controller so that it matches the course (done)
-    - wonder how to implement exception logic for update request (done)
-    - after making sure everything works correctly when it comes to course and user push to remote (done)
-    - wonder/learn how to implement logic of assigning students to courses (done)
-    - modify REST api so that it returns ResponseEntity<> so that the return type is predictable(done)
-    - implement unit tests (partially - lets not focus on it right now)
-    - implement integration tests (skipped)
-    - implement teacher entity (done)
-    - learn about liquibase scripts, use them instead of applying the changes to db by hand (done - flyway taken advantage of)
-    - basing on the frontend fields create flyway scripts for the database that adds a new table - student details (create, update - fine, get to be implemented)
-    - in student details add reference to attended courses
+    -- DONE --
 
-    - DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app
+    - modify the student's service, rest controller so that it matches the course
+    - wonder how to implement exception logic for update request
+    - after making sure everything works correctly when it comes to course and user push to remote
+    - wonder/learn how to implement logic of assigning students to courses
+    - modify REST api so that it returns ResponseEntity<> so that the return type is predictable
+    - implement teacher entity
+    - learn about liquibase scripts, use them instead of applying the changes to db by hand (flyway taken advantage of)
+    - basing on the frontend fields create flyway scripts for the database that adds a new table - student details
+
+    -- DONE --
+
+    -- SKIPPED --
+
+        - implement integration tests
+        - implement unit tests
+
+    -- SKIPPED --
+
+    -- REMAINING --
+
+        - prepare BE endpoints to get all courses and courses in specific set of courses (1)
+        - adjust FE service layer accordingly (2)
+        - create a subpage for displaying of all the courses (maybe that would be the default one, we could sort courses regarding the creation date) (3)
+        - create appropriate subpages for displaying course for each set (4)
+
+        - in student details add reference to attended courses (FD)
+
+        - create a db relations visualisation (Idroo should be okay)
+
+    -- REMAINING --
+
+DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app
+
+

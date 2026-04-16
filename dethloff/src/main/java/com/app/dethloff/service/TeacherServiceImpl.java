@@ -1,8 +1,8 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.dao.TeacherDAO;
-import com.app.dethloff.model.DTO.TeacherRequestDTO;
-import com.app.dethloff.model.DTO.TeacherResponseDTO;
+import com.app.dethloff.model.DTO.BasicTeacherDTO;
+import com.app.dethloff.model.DTO.DetailedTeacherDTO;
 import com.app.dethloff.model.DTO.mappers.TeacherMapper;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.TeacherEntity;
@@ -25,33 +25,37 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherResponseDTO get(String id) {
+    public DetailedTeacherDTO get(String id) {
         TeacherEntity teacher = teacherDAO.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException("No teacher with such id - " + id));
-        return teacherMapper.toDTO(teacher);
+        return teacherMapper.entityToDetailed(teacher);
     }
 
     @Override
-    public List<TeacherResponseDTO> getAll() {
+    public List<BasicTeacherDTO> getAll() {
         List<TeacherEntity> teachers = teacherDAO.findAll()
                 .orElseThrow(() -> new TeacherNotFoundException("No teachers found"));
-        return teacherMapper.toDTO(teachers);
+        return teacherMapper.toBasicDTO(teachers);
     }
 
     @Override
     @Transactional
-    public TeacherResponseDTO create(TeacherRequestDTO teacherDTO) {
-        TeacherEntity teacher = teacherDAO.save(teacherMapper.toTeacher(teacherDTO));
-        return teacherMapper.toDTO(teacher);
+    public DetailedTeacherDTO create(DetailedTeacherDTO teacherDTO) {
+        TeacherEntity teacher = teacherMapper.detailedToEntity(teacherDTO);
+
+        teacher.setIsActive(false);
+        teacherDAO.save(teacher);
+        return teacherMapper.entityToDetailed(teacher);
     }
 
     @Override
     @Transactional
-    public TeacherResponseDTO update(TeacherRequestDTO teacherDTO) {
-        teacherDAO.findById(teacherDTO.id())
+    public DetailedTeacherDTO update(DetailedTeacherDTO teacherDTO) {
+        TeacherEntity existingTeacher = teacherDAO.findById(teacherDTO.id())
                 .orElseThrow(() -> new TeacherNotFoundException("No teacher with such id - " + teacherDTO.id()));
-        TeacherEntity teacher = teacherDAO.update(teacherMapper.toTeacher(teacherDTO));
-        return teacherMapper.toDTO(teacher);
+        teacherMapper.updateEntityFromDetailed(teacherDTO, existingTeacher);
+        TeacherEntity updatedTeacher = teacherDAO.update(existingTeacher);
+        return teacherMapper.entityToDetailed(updatedTeacher);
     }
 
     @Override

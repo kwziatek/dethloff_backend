@@ -3,8 +3,8 @@ package com.app.dethloff.service;
 import com.app.dethloff.dao.CourseDAO;
 import com.app.dethloff.dao.StudentDAO;
 import com.app.dethloff.dao.TeacherDAO;
-import com.app.dethloff.model.DTO.CourseRequestDTO;
-import com.app.dethloff.model.DTO.CourseResponseDTO;
+import com.app.dethloff.model.DTO.BasicCourseDTO;
+import com.app.dethloff.model.DTO.DetailedCourseDTO;
 import com.app.dethloff.model.DTO.mappers.CourseMapper;
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
@@ -36,31 +36,31 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     @Transactional
-    public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
+    public DetailedCourseDTO create(BasicCourseDTO basicCourseDTO) {
         System.out.println();
-        if(courseRequestDTO.teacherId() != null) {
-            if(!teacherDAO.existsById(courseRequestDTO.teacherId())) {
-                throw new TeacherNotFoundException("No teacher with such id - " + courseRequestDTO.id());
+        if(basicCourseDTO.teacherId() != null) {
+            if(!teacherDAO.existsById(basicCourseDTO.teacherId())) {
+                throw new TeacherNotFoundException("No teacher with such id - " + basicCourseDTO.id());
             }
         }
 
-        CourseEntity course = courseMapper.toCourse(courseRequestDTO);
+        CourseEntity course = courseMapper.basicToEntity(basicCourseDTO);
         courseDAO.save(course);
-        return courseMapper.toDTO(course);
+        return courseMapper.toDetailedDTO(course);
     }
 
     @Override
-    public CourseResponseDTO get(String id) {
+    public DetailedCourseDTO get(String id) {
         CourseEntity course = courseDAO.findById(id)
                 .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + id));
-        return courseMapper.toDTO(course);
+        return courseMapper.toDetailedDTO(course);
     }
 
     @Override
-    public List<CourseResponseDTO> getAll() {
+    public List<DetailedCourseDTO> getAll() {
         List<CourseEntity> list = courseDAO.findAll()
                 .orElseThrow(() -> new CourseNotFoundException("No course found"));
-        return courseMapper.toDTO(list);
+        return courseMapper.toDetailedDTO(list);
     }
 
     @Transactional
@@ -73,12 +73,12 @@ public class CourseServiceImpl implements CourseService{
 
     @Transactional
     @Override
-    public CourseResponseDTO update(CourseRequestDTO courseRequestDTO) {
-        CourseEntity course = courseMapper.toCourse(courseRequestDTO);
+    public DetailedCourseDTO update(BasicCourseDTO basicCourseDTO) {
+        CourseEntity course = courseMapper.basicToEntity(basicCourseDTO);
         courseDAO.findById(course.getId())
                         .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + course.getId()));
         CourseEntity updatedCourse = courseDAO.update(course);
-        return courseMapper.toDTO(updatedCourse);
+        return courseMapper.toDetailedDTO(updatedCourse);
     }
 
     @Override

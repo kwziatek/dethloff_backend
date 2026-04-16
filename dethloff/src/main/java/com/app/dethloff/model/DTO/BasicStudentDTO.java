@@ -1,13 +1,12 @@
 package com.app.dethloff.model.DTO;
 
 import com.app.dethloff.model.Gender;
-import com.app.dethloff.model.pesel.Pesel;
 import lombok.Builder;
 
 import java.time.LocalDate;
 
 @Builder
-public record StudentBasicDataTO(
+public record BasicStudentDTO(
         String id,
         String name,
         String surname,

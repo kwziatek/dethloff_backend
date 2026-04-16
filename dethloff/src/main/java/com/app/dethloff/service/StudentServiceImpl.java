@@ -1,8 +1,8 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.dao.StudentDAO;
+import com.app.dethloff.model.DTO.BasicStudentDTO;
 import com.app.dethloff.model.DTO.DetailedStudentDTO;
-import com.app.dethloff.model.DTO.StudentResponseDTO;
 import com.app.dethloff.model.DTO.mappers.StudentMapper;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.StudentEntity;
@@ -44,11 +44,11 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public List<StudentResponseDTO> getAll() {
+    public List<BasicStudentDTO> getAll() {
         List<StudentEntity> list = studentDAO.findAll()
                 .orElseThrow(() -> new StudentNotFoundException("No students found"));
 
-        return studentMapper.toDTO(list);
+        return studentMapper.toBasicDTO(list);
     }
 
     @Override

@@ -41,8 +41,12 @@ public class CourseEntity {
     List<StudentEntity> students = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "teacherId")
+    @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
+
+    @ManyToOne
+    @JoinColumn(name = "set_of_courses_id")
+    private SetOfCoursesEntity setOfCourses;
 
     public void addStudent(StudentEntity student) {
         if(students == null) {

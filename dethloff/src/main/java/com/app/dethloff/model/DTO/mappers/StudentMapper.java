@@ -1,12 +1,12 @@
 package com.app.dethloff.model.DTO.mappers;
 
 import com.app.dethloff.model.DTO.DetailedStudentDTO;
-import com.app.dethloff.model.DTO.StudentBasicDataTO;
-import com.app.dethloff.model.DTO.StudentResponseDTO;
+import com.app.dethloff.model.DTO.BasicStudentDTO;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.model.pesel.Pesel;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -14,30 +14,9 @@ public class StudentMapper {
     public StudentMapper() {
 
     }
-    public StudentResponseDTO toDTO(StudentEntity student) {
-        String pesel = student.getPesel() != null ? student.getPesel().toString() : null;
 
-        return StudentResponseDTO.builder()
-                .id(student.getId())
-                .name(student.getName())
-                .surname(student.getSurname())
-                .isActive(student.getIsActive())
-                .pesel(pesel)
-                .birthDate(student.getBirthDate())
-                .placeOfBirth(student.getPlaceOfBirth())
-                .gender(student.getGender())
-                .build();
-    }
-
-
-    public List<StudentResponseDTO> toDTO(List<StudentEntity> students) {
-        return students.stream()
-                .map(this::toDTO)
-                .toList();
-    }
-
-    public StudentBasicDataTO toBasicTo(StudentEntity studentEntity) {
-        return StudentBasicDataTO.builder()
+    public BasicStudentDTO toBasicDTO(StudentEntity studentEntity) {
+        return BasicStudentDTO.builder()
                 .id(studentEntity.getId())
                 .name(studentEntity.getName())
                 .surname(studentEntity.getSurname())
@@ -49,54 +28,62 @@ public class StudentMapper {
                 .build();
     }
 
-    public StudentEntity toEntity(StudentBasicDataTO studentBasicDataTO) {
+    public List<BasicStudentDTO> toBasicDTO(List<StudentEntity> studentEntities) {
+        List<BasicStudentDTO> basicEntities = new ArrayList<>();
+        for(StudentEntity entity: studentEntities) {
+            basicEntities.add(this.toBasicDTO(entity));
+        }
+        return basicEntities;
+    }
+
+    public StudentEntity toEntity(BasicStudentDTO basicStudentDTO) {
         return StudentEntity.builder()
-                .id(studentBasicDataTO.id())
-                .name(studentBasicDataTO.name())
-                .surname(studentBasicDataTO.surname())
-                .pesel(new Pesel(studentBasicDataTO.pesel()))
-                .placeOfBirth(studentBasicDataTO.placeOfBirth())
-                .birthDate(studentBasicDataTO.birthDate())
-                .isActive(studentBasicDataTO.isActive())
-                .gender(studentBasicDataTO.gender())
+                .id(basicStudentDTO.id())
+                .name(basicStudentDTO.name())
+                .surname(basicStudentDTO.surname())
+                .pesel(new Pesel(basicStudentDTO.pesel()))
+                .placeOfBirth(basicStudentDTO.placeOfBirth())
+                .birthDate(basicStudentDTO.birthDate())
+                .isActive(basicStudentDTO.isActive())
+                .gender(basicStudentDTO.gender())
                 .build();
 
     }
 
-    public void updateEntityFromDetailed(DetailedStudentDTO to, StudentEntity entity) {
-        if (to == null) return;
+    public void updateEntityFromDetailed(DetailedStudentDTO dto, StudentEntity entity) {
+        if (dto == null) return;
 
         // Update only the fields allowed to be changed
-        entity.setName(to.name());
-        entity.setSurname(to.surname());
-        entity.setPesel(to.pesel()); // Ensure this is the String version now!
-        entity.setGender(to.gender());
-        entity.setBirthDate(to.birthDate());
-        entity.setPlaceOfBirth(to.placeOfBirth());
+        entity.setName(dto.name());
+        entity.setSurname(dto.surname());
+        entity.setPesel(dto.pesel()); // Ensure this is the String version now!
+        entity.setGender(dto.gender());
+        entity.setBirthDate(dto.birthDate());
+        entity.setPlaceOfBirth(dto.placeOfBirth());
 //        entity.setIsActive(to.isActive()); -> it's calculated in service layer
-        entity.setCity(to.city());
-        entity.setStreet(to.street());
-        entity.setFlatNumber(to.flatNumber());
-        entity.setPostalCode(to.postalCode());
-        entity.setPhoneNumber(to.phoneNumber());
-        entity.setEmail(to.email());
-        entity.setGuardianName(to.guardianName());
-        entity.setGuardianSurname(to.guardianSurname());
-        entity.setGuardianCity(to.guardianCity());
-        entity.setGuardianStreet(to.guardianStreet());
-        entity.setGuardianFlatNumber(to.guardianFlatNumber());
-        entity.setGuardianPostalCode(to.guardianPostalCode());
-        entity.setGuardianPhoneNumber(to.guardianPhoneNumber());
-        entity.setGuardianEmail(to.guardianEmail());
-        entity.setCompanyName(to.companyName());
-        entity.setNIP(to.NIP());
-        entity.setCompanyCity(to.companyCity());
-        entity.setCompanyStreet(to.companyStreet());
-        entity.setCompanyFlatNumber(to.companyFlatNumber());
-        entity.setCompanyPostalCode(to.companyPostalCode());
-        entity.setCompanyPhoneNumber(to.companyPhoneNumber());
-        entity.setCompanyEmail(to.companyEmail());
-        entity.setMarketingSources(to.marketingSources());
+        entity.setCity(dto.city());
+        entity.setStreet(dto.street());
+        entity.setFlatNumber(dto.flatNumber());
+        entity.setPostalCode(dto.postalCode());
+        entity.setPhoneNumber(dto.phoneNumber());
+        entity.setEmail(dto.email());
+        entity.setGuardianName(dto.guardianName());
+        entity.setGuardianSurname(dto.guardianSurname());
+        entity.setGuardianCity(dto.guardianCity());
+        entity.setGuardianStreet(dto.guardianStreet());
+        entity.setGuardianFlatNumber(dto.guardianFlatNumber());
+        entity.setGuardianPostalCode(dto.guardianPostalCode());
+        entity.setGuardianPhoneNumber(dto.guardianPhoneNumber());
+        entity.setGuardianEmail(dto.guardianEmail());
+        entity.setCompanyName(dto.companyName());
+        entity.setNIP(dto.NIP());
+        entity.setCompanyCity(dto.companyCity());
+        entity.setCompanyStreet(dto.companyStreet());
+        entity.setCompanyFlatNumber(dto.companyFlatNumber());
+        entity.setCompanyPostalCode(dto.companyPostalCode());
+        entity.setCompanyPhoneNumber(dto.companyPhoneNumber());
+        entity.setCompanyEmail(dto.companyEmail());
+        entity.setMarketingSources(dto.marketingSources());
 
         // Note: We DO NOT set the ID here. The entity already has its ID.
     }

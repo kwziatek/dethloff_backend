@@ -1,14 +1,14 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.model.DTO.TeacherRequestDTO;
-import com.app.dethloff.model.DTO.TeacherResponseDTO;
+import com.app.dethloff.model.DTO.BasicTeacherDTO;
+import com.app.dethloff.model.DTO.DetailedTeacherDTO;
 
 import java.util.List;
 
 public interface TeacherService {
-    TeacherResponseDTO get(String id);
-    List<TeacherResponseDTO> getAll();
-    TeacherResponseDTO create(TeacherRequestDTO teacherDTO);
-    TeacherResponseDTO update(TeacherRequestDTO teacherDTO);
+    DetailedTeacherDTO get(String id);
+    List<BasicTeacherDTO> getAll();
+    DetailedTeacherDTO create(DetailedTeacherDTO teacherDTO);
+    DetailedTeacherDTO update(DetailedTeacherDTO teacherDTO);
     void delete(String id);
 }

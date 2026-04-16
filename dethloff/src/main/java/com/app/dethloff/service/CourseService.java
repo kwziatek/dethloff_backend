@@ -1,16 +1,16 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.model.DTO.CourseRequestDTO;
-import com.app.dethloff.model.DTO.CourseResponseDTO;
+import com.app.dethloff.model.DTO.BasicCourseDTO;
+import com.app.dethloff.model.DTO.DetailedCourseDTO;
 
 import java.util.List;
 
 public interface CourseService {
-    CourseResponseDTO create(CourseRequestDTO courseRequestDTO);
-    CourseResponseDTO get(String id);
-    List<CourseResponseDTO> getAll();
+    DetailedCourseDTO create(BasicCourseDTO basicCourseDTO);
+    DetailedCourseDTO get(String id);
+    List<DetailedCourseDTO> getAll();
     void delete(String id);
-    CourseResponseDTO update(CourseRequestDTO courseRequestDTO);
+    DetailedCourseDTO update(BasicCourseDTO basicCourseDTO);
     void enrollStudent(String courseId, String studentId);
     void unenrollStudent(String courseId, String studentId);
 }
