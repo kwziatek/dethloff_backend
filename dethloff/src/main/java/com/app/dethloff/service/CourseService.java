@@ -2,6 +2,7 @@ package com.app.dethloff.service;
 
 import com.app.dethloff.model.DTO.BasicCourseDTO;
 import com.app.dethloff.model.DTO.DetailedCourseDTO;
+import com.app.dethloff.model.DTO.SetOfCoursesDTO;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface CourseService {
     DetailedCourseDTO update(BasicCourseDTO basicCourseDTO);
     void enrollStudent(String courseId, String studentId);
     void unenrollStudent(String courseId, String studentId);
+    List<DetailedCourseDTO> getAllFromParticularSet(String setOfCoursesId);
+    List<SetOfCoursesDTO> getAllSetsOfCourses();
 }

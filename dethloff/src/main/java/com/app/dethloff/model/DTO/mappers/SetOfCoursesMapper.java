@@ -4,6 +4,8 @@ import com.app.dethloff.model.DTO.SetOfCoursesDTO;
 import com.app.dethloff.model.SetOfCoursesEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class SetOfCoursesMapper {
     public SetOfCoursesMapper(){
@@ -24,5 +26,11 @@ public class SetOfCoursesMapper {
                 .name(dto.name())
                 .description(dto.description())
                 .build();
+    }
+
+    public List<SetOfCoursesDTO> toDTO(List<SetOfCoursesEntity> entity) {
+        return entity.stream()
+                .map(this::toDTO)
+                .toList();
     }
 }

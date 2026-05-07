@@ -1,14 +1,16 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.dao.CourseDAO;
-import com.app.dethloff.dao.StudentDAO;
-import com.app.dethloff.dao.TeacherDAO;
+import com.app.dethloff.dao.*;
+import com.app.dethloff.exceptions.model.SetOfCoursesNotFoundException;
 import com.app.dethloff.model.DTO.BasicCourseDTO;
 import com.app.dethloff.model.DTO.DetailedCourseDTO;
+import com.app.dethloff.model.DTO.SetOfCoursesDTO;
 import com.app.dethloff.model.DTO.mappers.CourseMapper;
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.CourseEntity;
+import com.app.dethloff.model.DTO.mappers.SetOfCoursesMapper;
+import com.app.dethloff.model.SetOfCoursesEntity;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import jakarta.transaction.Transactional;
@@ -24,14 +26,18 @@ public class CourseServiceImpl implements CourseService{
     CourseDAO courseDAO;
     StudentDAO studentDAO;
     TeacherDAO teacherDAO;
+    SetOfCoursesDAO setOfCoursesDAO;
     CourseMapper courseMapper;
+    SetOfCoursesMapper setOfCoursesMapper;
 
     @Autowired
-    public CourseServiceImpl(CourseDAO courseDAO, StudentDAO studentDAO, TeacherDAO teacherDAO, CourseMapper courseMapper) {
+    public CourseServiceImpl(CourseDAO courseDAO, StudentDAO studentDAO, TeacherDAO teacherDAO, CourseMapper courseMapper, SetOfCoursesDAO setOfCoursesDAO, SetOfCoursesMapper setOfCoursesMapper) {
         this.courseDAO = courseDAO;
         this.studentDAO = studentDAO;
         this.teacherDAO = teacherDAO;
         this.courseMapper = courseMapper;
+        this.setOfCoursesDAO = setOfCoursesDAO;
+        this.setOfCoursesMapper = setOfCoursesMapper;
     }
 
     @Override
@@ -52,7 +58,7 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public DetailedCourseDTO get(String id) {
         CourseEntity course = courseDAO.findById(id)
-                .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + id));
+                .orElseThrow(CourseNotFoundException::new);
         return courseMapper.toDetailedDTO(course);
     }
 
@@ -67,7 +73,7 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public void delete(String id) {
         CourseEntity course = courseDAO.findById(id)
-                .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + id));
+                .orElseThrow(CourseNotFoundException::new);
         courseDAO.remove(course);
     }
 
@@ -76,7 +82,7 @@ public class CourseServiceImpl implements CourseService{
     public DetailedCourseDTO update(BasicCourseDTO basicCourseDTO) {
         CourseEntity course = courseMapper.basicToEntity(basicCourseDTO);
         courseDAO.findById(course.getId())
-                        .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + course.getId()));
+                        .orElseThrow(CourseNotFoundException::new);
         CourseEntity updatedCourse = courseDAO.update(course);
         return courseMapper.toDetailedDTO(updatedCourse);
     }
@@ -85,9 +91,9 @@ public class CourseServiceImpl implements CourseService{
     @Transactional
     public void enrollStudent(String courseId, String studentId) {
         CourseEntity course = courseDAO.findById(courseId)
-                .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + courseId));
+                .orElseThrow(CourseNotFoundException::new);
         StudentEntity student = studentDAO.findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentId));
+                .orElseThrow(StudentNotFoundException::new);
         course.addStudent(student);
         student.setIsActive(true);
     }
@@ -96,12 +102,28 @@ public class CourseServiceImpl implements CourseService{
     @Transactional
     public void unenrollStudent(String courseId, String studentId) {
         CourseEntity course = courseDAO.findById(courseId)
-                .orElseThrow(() -> new CourseNotFoundException("No course with such id - " + courseId));
+                .orElseThrow(CourseNotFoundException::new);
         StudentEntity student = studentDAO.findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentId));
+                .orElseThrow(StudentNotFoundException::new);
         course.removeStudent(student);
         if(student.getCourses().isEmpty()) {
             student.setIsActive(false);
         }
+    }
+
+    @Override
+    public List<DetailedCourseDTO> getAllFromParticularSet(String setOfCoursesId) {
+        List<CourseEntity> courses = courseDAO.findAllBySetId(setOfCoursesId)
+                .orElseThrow(() -> new CourseNotFoundException("No course with belongs to set of courses with id - " + setOfCoursesId));
+
+        return courseMapper.toDetailedDTO(courses);
+    }
+
+    @Override
+    public List<SetOfCoursesDTO> getAllSetsOfCourses() {
+        List<SetOfCoursesEntity> list = setOfCoursesDAO.findAll()
+                .orElseThrow(SetOfCoursesNotFoundException::new);
+
+        return setOfCoursesMapper.toDTO(list);
     }
 }

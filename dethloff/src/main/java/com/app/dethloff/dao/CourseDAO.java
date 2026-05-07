@@ -11,4 +11,5 @@ public interface CourseDAO {
     Optional<CourseEntity> findById(String id);
     Optional<List<CourseEntity>> findAll();
     void remove(CourseEntity course);
+    Optional<List<CourseEntity>> findAllBySetId(String setOfCoursesId);
 }

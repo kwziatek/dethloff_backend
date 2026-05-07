@@ -27,7 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public DetailedTeacherDTO get(String id) {
         TeacherEntity teacher = teacherDAO.findById(id)
-                .orElseThrow(() -> new TeacherNotFoundException("No teacher with such id - " + id));
+                .orElseThrow(TeacherNotFoundException::new);
         return teacherMapper.entityToDetailed(teacher);
     }
 
@@ -52,7 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional
     public DetailedTeacherDTO update(DetailedTeacherDTO teacherDTO) {
         TeacherEntity existingTeacher = teacherDAO.findById(teacherDTO.id())
-                .orElseThrow(() -> new TeacherNotFoundException("No teacher with such id - " + teacherDTO.id()));
+                .orElseThrow(TeacherNotFoundException::new);
         teacherMapper.updateEntityFromDetailed(teacherDTO, existingTeacher);
         TeacherEntity updatedTeacher = teacherDAO.update(existingTeacher);
         return teacherMapper.entityToDetailed(updatedTeacher);
@@ -62,7 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Transactional
     public void delete(String id) {
         teacherDAO.findById(id)
-                .orElseThrow(() -> new TeacherNotFoundException("No teachers found"));
+                .orElseThrow(TeacherNotFoundException::new);
         teacherDAO.delete(id);
     }
 }

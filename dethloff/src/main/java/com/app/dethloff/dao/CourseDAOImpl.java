@@ -12,7 +12,7 @@ import java.util.Optional;
 public class CourseDAOImpl implements CourseDAO{
 
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Autowired
     public CourseDAOImpl(EntityManager entityManager) {
@@ -45,5 +45,13 @@ public class CourseDAOImpl implements CourseDAO{
     @Override
     public void remove(CourseEntity course) {
         entityManager.remove(course);
+    }
+
+    @Override
+    public Optional<List<CourseEntity>> findAllBySetId(String setOfCoursesId) {
+        List<CourseEntity> list = entityManager.createQuery("SELECT u from CourseEntity u where u.setOfCourses.id = :id", CourseEntity.class)
+                .setParameter("id", setOfCoursesId)
+                .getResultList();
+        return Optional.ofNullable(list);
     }
 }

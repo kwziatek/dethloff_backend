@@ -6,13 +6,53 @@ To Do's:
     -- DONE --
 
     - modify the student's service, rest controller so that it matches the course
+
     - wonder how to implement exception logic for update request
+
     - after making sure everything works correctly when it comes to course and user push to remote
+
     - wonder/learn how to implement logic of assigning students to courses
+
     - modify REST api so that it returns ResponseEntity<> so that the return type is predictable
+
     - implement teacher entity
+
     - learn about liquibase scripts, use them instead of applying the changes to db by hand (flyway taken advantage of)
+
     - basing on the frontend fields create flyway scripts for the database that adds a new table - student details
+
+    - prepare BE endpoints to get all courses and courses in specific set of courses (1)
+    - adjust FE service layer accordingly (2)
+    - create a subpage for displaying of all the courses (maybe that would be the default one, we could sort courses regarding the creation date) (3)
+    - create appropriate subpages for displaying course for each set (4)
+
+    - prepare the BE endpoints to get all sets of courses (1)
+    - adjust the FE service layer accordingly (2)
+
+    - to subpage with all courses add "all courses button" that invoke calling the getAllSetsOfCourses BE endpoint and display them like a hamburger menu (1)
+    - let clicking any of the sets take user to subpage with courses that are only in this particular set of courses (2)
+
+    - login BE
+    - registration BE
+    - jwt generation and validation
+    and more...
+    - adjust FE service layer for teacher and student (course might require attention as well)
+
+    - add pesel field in AddTeacherForm (FE)
+
+    - create a log-out button that redirects to the log-in page
+
+    - wonder if there is a way to be logged in without logging in (dev purpose) (easy log-in data inserted into db)
+
+    - add changing password logic (BE)
+
+    - handle assigning role logic (BE)
+    - add flyway script to add role field
+    - add role field in the Users Entity class
+
+    - disable registration (FE)
+
+    - enable creating new accounts by admin
 
     -- DONE --
 
@@ -24,15 +64,34 @@ To Do's:
     -- SKIPPED --
 
     -- REMAINING --
+        - LET'S NOT ADD MORE FUNCTIONALITIES EXCEPT THESE LISTED BELOW & FOCUS ON COMPLETING THE DEVELOPMENT PROCESS
 
-        - prepare BE endpoints to get all courses and courses in specific set of courses (1)
-        - adjust FE service layer accordingly (2)
-        - create a subpage for displaying of all the courses (maybe that would be the default one, we could sort courses regarding the creation date) (3)
-        - create appropriate subpages for displaying course for each set (4)
+        - do yourself a favor and take a break until you really feel like coding -> when you do, start from planning what is there to do, be less chaotic with tasks
+        remember to learn first, then implement
+
+        - BUG: Lacking phone number handling logic, user can insert any input -> create invalid phone number logic
+        - DESIGN: assume, we only have polish numbers - length 9. We expect formated type (+48 547 234 543) that is then converted to nine digits (547234543)
+        and saved to the db otherwise exception is thrown and handled. When fetching from db we map it the other way around.
+        If the FE gets the phone number, it just displays it. When editing on FE side, the spaces are added automatically.
+        It's not possible to delete the "+48 " part and insert more than nine chars (digits).
+
+        - BUG: No validation for NIP
+
+        - BUG: No validation for any data - if any String data is too long, the BE doesn't handle it, jpa throws an exception when saving to db
+
+        - BUG: (FE) exception on saving student (most likely teacher as well) is not handled
+
+        - unit tests!
+
+        - ci/cd pipeline
 
         - in student details add reference to attended courses (FD)
 
-        - create a db relations visualisation (Idroo should be okay)
+        - create a db relations visualization (Idroo should be okay)
+
+        - wonder how to easily create working/demo env to present the app
+
+        - wonder how to make the frontend navigation more user-friendly
 
     -- REMAINING --
 
