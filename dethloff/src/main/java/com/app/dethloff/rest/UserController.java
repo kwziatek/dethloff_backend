@@ -47,5 +47,4 @@ public class UserController {
         return ResponseEntity.ok(authentication.getPrincipal());
     }
 
-
 }

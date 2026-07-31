@@ -4,6 +4,7 @@ package com.app.dethloff.rest;
 import com.app.dethloff.model.DTO.BasicStudentDTO;
 import com.app.dethloff.model.DTO.DetailedStudentDTO;
 import com.app.dethloff.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class StudentController {
     }
 
     @PutMapping("/students")
-    public ResponseEntity<DetailedStudentDTO> updateStudent(@RequestBody DetailedStudentDTO studentDTO) {
+    public ResponseEntity<DetailedStudentDTO> updateStudent(@Valid @RequestBody DetailedStudentDTO studentDTO) {
         DetailedStudentDTO updatedStudent = studentService.update(studentDTO);
 
         return ResponseEntity.ok(updatedStudent);

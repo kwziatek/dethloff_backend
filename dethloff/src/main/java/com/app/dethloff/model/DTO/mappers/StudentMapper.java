@@ -1,9 +1,10 @@
 package com.app.dethloff.model.DTO.mappers;
 
-import com.app.dethloff.model.DTO.DetailedStudentDTO;
 import com.app.dethloff.model.DTO.BasicStudentDTO;
+import com.app.dethloff.model.DTO.DetailedStudentDTO;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.model.pesel.Pesel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,8 +12,12 @@ import java.util.List;
 
 @Component
 public class StudentMapper {
-    public StudentMapper() {
 
+    PhoneNumberMapper phoneNumberMapper;
+
+    @Autowired
+    public StudentMapper(PhoneNumberMapper phoneNumberMapper) {
+        this.phoneNumberMapper = phoneNumberMapper;
     }
 
     public BasicStudentDTO toBasicDTO(StudentEntity studentEntity) {
@@ -51,7 +56,10 @@ public class StudentMapper {
     }
 
     public void updateEntityFromDetailed(DetailedStudentDTO dto, StudentEntity entity) {
-        if (dto == null) return;
+        if (dto == null){
+            return;
+        }
+        String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.phoneNumber());
 
         // Update only the fields allowed to be changed
         entity.setName(dto.name());
@@ -65,7 +73,7 @@ public class StudentMapper {
         entity.setStreet(dto.street());
         entity.setFlatNumber(dto.flatNumber());
         entity.setPostalCode(dto.postalCode());
-        entity.setPhoneNumber(dto.phoneNumber());
+        entity.setPhoneNumber(basicPhoneNumber);
         entity.setEmail(dto.email());
         entity.setGuardianName(dto.guardianName());
         entity.setGuardianSurname(dto.guardianSurname());
@@ -91,6 +99,7 @@ public class StudentMapper {
 
 
     public StudentEntity detailedToEntity(DetailedStudentDTO detailedStudentDTO) {
+        String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.phoneNumber());
         return StudentEntity.builder()
                 .id(detailedStudentDTO.id())
                 .name(detailedStudentDTO.name())
@@ -99,13 +108,13 @@ public class StudentMapper {
                 .placeOfBirth(detailedStudentDTO.placeOfBirth())
                 .birthDate(detailedStudentDTO.birthDate())
                 .gender(detailedStudentDTO.gender())
-//                .isActive(detailedStudentDTO.isActive()) // it's being determined in service layer and applied directly to entity
+//                .isActive(detailedStudentDTO.isActive()) // it's being determined in the service layer and applied directly to the entity
                 .city(detailedStudentDTO.city())
                 .street(detailedStudentDTO.street())
                 .flatNumber(detailedStudentDTO.flatNumber())
                 .postalCode(detailedStudentDTO.postalCode())
                 .email(detailedStudentDTO.email())
-                .phoneNumber(detailedStudentDTO.phoneNumber())
+                .phoneNumber(basicPhoneNumber)
                 .guardianName(detailedStudentDTO.guardianName())
                 .guardianSurname(detailedStudentDTO.guardianSurname())
                 .guardianCity(detailedStudentDTO.guardianCity())
@@ -128,6 +137,7 @@ public class StudentMapper {
     }
 
     public DetailedStudentDTO entityToDetailed(StudentEntity studentEntity) {
+        String extendedPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getPhoneNumber());
         return DetailedStudentDTO.builder()
                 .id(studentEntity.getId())
                 .name(studentEntity.getName())
@@ -142,7 +152,7 @@ public class StudentMapper {
                 .flatNumber(studentEntity.getFlatNumber())
                 .postalCode(studentEntity.getPostalCode())
                 .email(studentEntity.getEmail())
-                .phoneNumber(studentEntity.getPhoneNumber())
+                .phoneNumber(extendedPhoneNumber)
                 .guardianName(studentEntity.getGuardianName())
                 .guardianSurname(studentEntity.getGuardianSurname())
                 .guardianCity(studentEntity.getGuardianCity())

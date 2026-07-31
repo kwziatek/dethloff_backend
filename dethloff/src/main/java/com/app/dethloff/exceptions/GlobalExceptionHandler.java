@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
             UsernameTakenException.class
 
     })
-    ResponseEntity<ErrorResponse> handleBadRequestException(RuntimeException exc) {
+    ResponseEntity<ErrorResponse> handleBadRequestException(Exception exc) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exc.getMessage(), System.currentTimeMillis());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

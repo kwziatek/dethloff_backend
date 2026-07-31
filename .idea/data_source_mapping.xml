@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/dethloff/src/main/resources/db/migration/V10__client_role_adjustment.sql" value="ac090310-75a0-4d6c-8aa3-42c7da1d9839" />
     <file url="file://$PROJECT_DIR$/dethloff/src/main/resources/db/migration/V1__init.sql" value="ac090310-75a0-4d6c-8aa3-42c7da1d9839" />
   </component>
 </project>
