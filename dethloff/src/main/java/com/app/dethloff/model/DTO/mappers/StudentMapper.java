@@ -100,6 +100,8 @@ public class StudentMapper {
 
     public StudentEntity detailedToEntity(DetailedStudentDTO detailedStudentDTO) {
         String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.phoneNumber());
+        String basicGuardianPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.guardianPhoneNumber());
+        String basicCompanyPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.companyPhoneNumber());
         return StudentEntity.builder()
                 .id(detailedStudentDTO.id())
                 .name(detailedStudentDTO.name())
@@ -121,7 +123,7 @@ public class StudentMapper {
                 .guardianStreet(detailedStudentDTO.guardianStreet())
                 .guardianFlatNumber(detailedStudentDTO.guardianFlatNumber())
                 .guardianPostalCode(detailedStudentDTO.guardianPostalCode())
-                .guardianPhoneNumber(detailedStudentDTO.guardianPhoneNumber())
+                .guardianPhoneNumber(basicGuardianPhoneNumber)
                 .guardianEmail(detailedStudentDTO.guardianEmail())
                 .companyName(detailedStudentDTO.companyName())
                 .NIP(detailedStudentDTO.NIP())
@@ -129,7 +131,7 @@ public class StudentMapper {
                 .companyStreet(detailedStudentDTO.companyStreet())
                 .companyFlatNumber(detailedStudentDTO.companyFlatNumber())
                 .companyPostalCode(detailedStudentDTO.companyPostalCode())
-                .companyPhoneNumber(detailedStudentDTO.companyPhoneNumber())
+                .companyPhoneNumber(basicCompanyPhoneNumber)
                 .companyEmail(detailedStudentDTO.companyEmail())
                 .marketingSources(detailedStudentDTO.marketingSources())
                 .build();
@@ -138,6 +140,8 @@ public class StudentMapper {
 
     public DetailedStudentDTO entityToDetailed(StudentEntity studentEntity) {
         String extendedPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getPhoneNumber());
+        String extendedGuardianPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getGuardianPhoneNumber());
+        String extendedCompanyPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getCompanyPhoneNumber());
         return DetailedStudentDTO.builder()
                 .id(studentEntity.getId())
                 .name(studentEntity.getName())
@@ -159,7 +163,7 @@ public class StudentMapper {
                 .guardianStreet(studentEntity.getGuardianStreet())
                 .guardianFlatNumber(studentEntity.getGuardianFlatNumber())
                 .guardianPostalCode(studentEntity.getGuardianPostalCode())
-                .guardianPhoneNumber(studentEntity.getGuardianPhoneNumber())
+                .guardianPhoneNumber(extendedGuardianPhoneNumber)
                 .guardianEmail(studentEntity.getGuardianEmail())
                 .companyName(studentEntity.getCompanyName())
                 .NIP(studentEntity.getNIP())
@@ -167,7 +171,7 @@ public class StudentMapper {
                 .companyStreet(studentEntity.getCompanyStreet())
                 .companyFlatNumber(studentEntity.getCompanyFlatNumber())
                 .companyPostalCode(studentEntity.getCompanyPostalCode())
-                .companyPhoneNumber(studentEntity.getCompanyPhoneNumber())
+                .companyPhoneNumber(extendedCompanyPhoneNumber)
                 .companyEmail(studentEntity.getCompanyEmail())
                 .marketingSources(studentEntity.getMarketingSources())
                 .build();
