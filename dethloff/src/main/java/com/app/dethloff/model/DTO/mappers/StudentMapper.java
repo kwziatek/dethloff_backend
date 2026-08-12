@@ -60,6 +60,8 @@ public class StudentMapper {
             return;
         }
         String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.phoneNumber());
+        String basicGuardianPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.guardianPhoneNumber());
+        String basicCompanyPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.companyPhoneNumber());
 
         // Update only the fields allowed to be changed
         entity.setName(dto.name());
@@ -81,7 +83,7 @@ public class StudentMapper {
         entity.setGuardianStreet(dto.guardianStreet());
         entity.setGuardianFlatNumber(dto.guardianFlatNumber());
         entity.setGuardianPostalCode(dto.guardianPostalCode());
-        entity.setGuardianPhoneNumber(dto.guardianPhoneNumber());
+        entity.setGuardianPhoneNumber(basicGuardianPhoneNumber);
         entity.setGuardianEmail(dto.guardianEmail());
         entity.setCompanyName(dto.companyName());
         entity.setNIP(dto.NIP());
@@ -89,7 +91,7 @@ public class StudentMapper {
         entity.setCompanyStreet(dto.companyStreet());
         entity.setCompanyFlatNumber(dto.companyFlatNumber());
         entity.setCompanyPostalCode(dto.companyPostalCode());
-        entity.setCompanyPhoneNumber(dto.companyPhoneNumber());
+        entity.setCompanyPhoneNumber(basicCompanyPhoneNumber);
         entity.setCompanyEmail(dto.companyEmail());
         entity.setMarketingSources(dto.marketingSources());
 
