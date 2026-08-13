@@ -1,9 +1,36 @@
-    - DTO classes should be implemented as record classes - records are immutable which is perfect for data transfer
-    - I need mappers from classes to DTO's and the other way around, otherwise I'll be implementing them in service layer which is suboptimal
+    DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app
 
+    Do yourself a favor and take a break until you really feel like coding -> when you do, start from planning what is there to do, be less chaotic with tasks
+    remember to learn first, then implement
 
-To Do's:
-    -- DONE --
+    -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
+
+        - LET'S NOT ADD MORE FUNCTIONALITIES & FOCUS ON COMPLETING THE DEVELOPMENT PROCESS
+
+    - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
+
+    - unit tests!
+
+    - ci/cd pipeline
+
+    - in student details add reference to attended courses (FD)
+
+    - create a db relations visualization (Idroo should be okay)
+
+    - wonder how to easily create working/demo env to present the app
+
+    -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
+
+    -- SKIPPED ----------------------------------------------------------------------------------------------------------------------------------------------
+
+        - implement integration tests
+        - implement unit tests
+
+    -- SKIPPED ----------------------------------------------------------------------------------------------------------------------------------------------
+
+    -- DONE -------------------------------------------------------------------------------------------------------------------------------------------------
+
+    - delete addressDataId from the student table
 
     - modify the student's service, rest controller so that it matches the course
 
@@ -54,47 +81,10 @@ To Do's:
 
     - enable creating new accounts by admin
 
-    -- DONE --
+    -- DONE -------------------------------------------------------------------------------------------------------------------------------------------------
 
-    -- SKIPPED --
-
-        - implement integration tests
-        - implement unit tests
-
-    -- SKIPPED --
-
-    -- REMAINING --
-        - LET'S NOT ADD MORE FUNCTIONALITIES EXCEPT THESE LISTED BELOW & FOCUS ON COMPLETING THE DEVELOPMENT PROCESS
-
-        - do yourself a favor and take a break until you really feel like coding -> when you do, start from planning what is there to do, be less chaotic with tasks
-        remember to learn first, then implement
-
-        - BUG: Lacking phone number handling logic, user can insert any input -> create invalid phone number logic
-        - DESIGN: assume, we only have polish numbers - length 9. We expect formated type (+48 547 234 543) that is then converted to nine digits (547234543)
-        and saved to the db otherwise exception is thrown and handled. When fetching from db we map it the other way around.
-        If the FE gets the phone number, it just displays it. When editing on FE side, the spaces are added automatically.
-        It's not possible to delete the "+48 " part and insert more than nine chars (digits).
-
-        - BUG: No validation for NIP
-
-        - BUG: No validation for any data - if any String data is too long, the BE doesn't handle it, jpa throws an exception when saving to db
-
-        - BUG: (FE) exception on saving student (most likely teacher as well) is not handled
-
-        - unit tests!
-
-        - ci/cd pipeline
-
-        - in student details add reference to attended courses (FD)
-
-        - create a db relations visualization (Idroo should be okay)
-
-        - wonder how to easily create working/demo env to present the app
-
-        - wonder how to make the frontend navigation more user-friendly
-
-    -- REMAINING --
-
-DO NOT HURRY!!! It's not about finishing as soon as possible, but learning as much as possible and creating a decent usable app
-
-
+    -- SOME GENERAL INFO ------------------------------------------------------------------------------------------------------------------------------------
+    - DTO classes should be implemented as record classes - records are immutable which is perfect for data transfer
+    - I need mappers from classes to DTO's and the other way around, otherwise I'll be implementing them in service layer which is suboptimal
+    - Phone number format: "+48 xxx xxx xxx"
+    -- SOME GENERAL INFO ------------------------------------------------------------------------------------------------------------------------------------
