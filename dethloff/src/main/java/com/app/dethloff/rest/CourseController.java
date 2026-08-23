@@ -30,7 +30,7 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
-    @GetMapping("/courses/setOfCourses/{setOfCoursesId}")
+    @GetMapping("/courses/setsOfCourses/{setOfCoursesId}")
     public ResponseEntity<List<DetailedCourseDTO>> getAllSetCourses(@PathVariable String setOfCoursesId) {
         List<DetailedCourseDTO> courses = courseService.getAllFromParticularSet(setOfCoursesId);
 
@@ -85,7 +85,7 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("courses/setOfCourses")
+    @GetMapping("courses/setsOfCourses")
     public ResponseEntity<?> getAllSetsOfCourses() {
         List<SetOfCoursesDTO> setOfCoursesDTOS = courseService.getAllSetsOfCourses();
 
