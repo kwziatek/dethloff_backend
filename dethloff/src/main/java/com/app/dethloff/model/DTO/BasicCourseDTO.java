@@ -10,5 +10,5 @@ public record BasicCourseDTO(
     CourseLevel level,
     String description,
     String teacherId,
-    SetOfCoursesDTO setOfCourses
+    String setOfCoursesId
 ) {}

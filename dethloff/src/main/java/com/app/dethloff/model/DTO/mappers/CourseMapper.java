@@ -1,9 +1,11 @@
 package com.app.dethloff.model.DTO.mappers;
 
 
+import com.app.dethloff.dao.SetOfCoursesDAO;
 import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.model.DTO.*;
 import com.app.dethloff.model.CourseEntity;
+import com.app.dethloff.model.SetOfCoursesEntity;
 import com.app.dethloff.model.TeacherEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,16 +17,18 @@ import java.util.List;
 public class CourseMapper {
 
     TeacherDAO teacherDAO;
+    SetOfCoursesDAO setOfCoursesDAO;
     TeacherMapper teacherMapper;
     StudentMapper studentMapper;
     SetOfCoursesMapper setOfCoursesMapper;
 
 
     @Autowired
-    public CourseMapper(TeacherDAO teacherDAO, TeacherMapper teacherMapper, StudentMapper studentMapper, SetOfCoursesMapper setOfCoursesMapper) {
+    public CourseMapper(TeacherDAO teacherDAO, TeacherMapper teacherMapper, StudentMapper studentMapper, SetOfCoursesDAO setOfCoursesDAO, SetOfCoursesMapper setOfCoursesMapper) {
         this.teacherDAO = teacherDAO;
         this.teacherMapper = teacherMapper;
         this.studentMapper = studentMapper;
+        this.setOfCoursesDAO = setOfCoursesDAO;
         this.setOfCoursesMapper = setOfCoursesMapper;
     }
 
@@ -60,6 +64,11 @@ public class CourseMapper {
              teacherProxy = teacherDAO.createProxy(basicCourseDTO.teacherId());
         }
 
+        SetOfCoursesEntity setOfCoursesProxy = null;
+        if(basicCourseDTO.setOfCoursesId() != null) {
+            setOfCoursesProxy = setOfCoursesDAO.createProxy(basicCourseDTO.setOfCoursesId());
+        }
+
 
         return CourseEntity.builder()
                 .id(basicCourseDTO.id())
@@ -67,6 +76,7 @@ public class CourseMapper {
                 .level(basicCourseDTO.level())
                 .description(basicCourseDTO.description())
                 .teacher(teacherProxy)
+                .setOfCourses(setOfCoursesProxy)
                 .build();
     }
 

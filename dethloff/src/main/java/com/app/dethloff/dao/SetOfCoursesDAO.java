@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface SetOfCoursesDAO {
     Optional<List<SetOfCoursesEntity>> findAll();
+    Optional<SetOfCoursesEntity> findById(String id);
+    boolean existsById(String id);
+    SetOfCoursesEntity createProxy(String id);
 }

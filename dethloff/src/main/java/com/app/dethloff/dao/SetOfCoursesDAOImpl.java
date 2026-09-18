@@ -23,4 +23,20 @@ public class SetOfCoursesDAOImpl implements SetOfCoursesDAO{
         List<SetOfCoursesEntity> list = entityManager.createQuery("SELECT u from SetOfCoursesEntity u", SetOfCoursesEntity.class).getResultList();
         return Optional.ofNullable(list);
     }
+
+    @Override
+    public Optional<SetOfCoursesEntity> findById(String id) {
+        return Optional.ofNullable(entityManager.find(SetOfCoursesEntity.class, id));
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        Optional<SetOfCoursesEntity> setOfCourses = findById(id);
+        return setOfCourses.isPresent();
+    }
+
+    @Override
+    public SetOfCoursesEntity createProxy(String id) {
+        return entityManager.getReference(SetOfCoursesEntity.class, id);
+    }
 }

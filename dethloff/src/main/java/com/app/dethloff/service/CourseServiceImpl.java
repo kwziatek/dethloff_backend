@@ -43,10 +43,14 @@ public class CourseServiceImpl implements CourseService{
     @Override
     @Transactional
     public DetailedCourseDTO create(BasicCourseDTO basicCourseDTO) {
-        System.out.println();
         if(basicCourseDTO.teacherId() != null) {
             if(!teacherDAO.existsById(basicCourseDTO.teacherId())) {
-                throw new TeacherNotFoundException("No teacher with such id - " + basicCourseDTO.id());
+                throw new TeacherNotFoundException("No teacher with such id - " + basicCourseDTO.teacherId());
+            }
+        }
+        if(basicCourseDTO.setOfCoursesId() != null) {
+            if(!setOfCoursesDAO.existsById(basicCourseDTO.setOfCoursesId())) {
+                throw new SetOfCoursesNotFoundException("No set of courses with such id - " + basicCourseDTO.setOfCoursesId());
             }
         }
 
