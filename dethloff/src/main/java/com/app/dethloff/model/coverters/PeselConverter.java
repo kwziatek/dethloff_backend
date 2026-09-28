@@ -10,8 +10,7 @@ public class PeselConverter implements AttributeConverter<Pesel, String> {
 
     @Override
     public String convertToDatabaseColumn(Pesel pesel) {
-        String string = String.valueOf(pesel.getBirthDateDigits()) + pesel.getSerialDigits() + pesel.getGenderDigit() + pesel.getControlDigit();
-        return string;
+        return pesel == null ? null : pesel.getBirthDateDigits() + pesel.getSerialDigits() + pesel.getGenderDigit() + pesel.getControlDigit();
     }
 
     @Override
