@@ -12,4 +12,5 @@ public interface CourseDAO {
     Optional<List<CourseEntity>> findAll();
     void remove(CourseEntity course);
     Optional<List<CourseEntity>> findAllBySetId(String setOfCoursesId);
+    CourseEntity createProxy (String id);
 }

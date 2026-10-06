@@ -13,5 +13,8 @@ public record DetailedCourseDTO(
         CourseLevel level,
         BasicTeacherDTO teacher,
         List<BasicStudentDTO> students,
-        SetOfCoursesDTO setOfCourses
+        SetOfCoursesDTO setOfCourses,
+        String room,
+        Integer totalCourseTime,
+        Integer completedCourseTime
 ) {}

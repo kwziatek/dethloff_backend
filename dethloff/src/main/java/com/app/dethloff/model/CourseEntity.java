@@ -48,6 +48,15 @@ public class CourseEntity {
     @JoinColumn(name = "set_of_courses_id")
     private SetOfCoursesEntity setOfCourses;
 
+    @Column(name = "room")
+    String room;
+
+    @Column(name = "total_course_time")
+    Integer totalCourseTime;
+
+    @Column(name = "completed_course_time")
+    Integer completedCourseTime;
+
     public void addStudent(StudentEntity student) {
         if(students == null) {
             students = new ArrayList<>();

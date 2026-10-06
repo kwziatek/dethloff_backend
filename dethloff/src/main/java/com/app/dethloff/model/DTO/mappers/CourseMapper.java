@@ -55,6 +55,9 @@ public class CourseMapper {
                 .teacher(basicTeacherDTO)
                 .students(basicStudentDTOs)
                 .setOfCourses(setOfCoursesDTO)
+                .room(course.getRoom())
+                .totalCourseTime(course.getTotalCourseTime())
+                .completedCourseTime(course.getCompletedCourseTime())
                 .build();
     }
 
@@ -77,6 +80,16 @@ public class CourseMapper {
                 .description(basicCourseDTO.description())
                 .teacher(teacherProxy)
                 .setOfCourses(setOfCoursesProxy)
+                .build();
+    }
+
+    public BasicCourseDTO toBasicDTO(CourseEntity course) {
+        return BasicCourseDTO.builder()
+                .id(course.getId())
+                .name(course.getName())
+                .description(course.getDescription())
+                .teacherId(course.getTeacher().getId())
+                .setOfCoursesId(course.getSetOfCourses().getId())
                 .build();
     }
 

@@ -54,4 +54,9 @@ public class CourseDAOImpl implements CourseDAO{
                 .getResultList();
         return Optional.ofNullable(list);
     }
+
+    @Override
+    public CourseEntity createProxy(String id) {
+        return entityManager.getReference(CourseEntity.class, id);
+    }
 }
