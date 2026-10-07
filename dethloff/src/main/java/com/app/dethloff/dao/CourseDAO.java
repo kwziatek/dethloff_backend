@@ -9,7 +9,7 @@ public interface CourseDAO {
     CourseEntity save(CourseEntity course);
     CourseEntity update(CourseEntity course);
     Optional<CourseEntity> findById(String id);
-    Optional<List<CourseEntity>> findAll();
+    List<CourseEntity> findAll();
     void remove(CourseEntity course);
     Optional<List<CourseEntity>> findAllBySetId(String setOfCoursesId);
     CourseEntity createProxy (String id);

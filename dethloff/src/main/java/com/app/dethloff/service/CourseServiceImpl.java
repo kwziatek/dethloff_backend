@@ -1,23 +1,24 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.dao.*;
-import com.app.dethloff.exceptions.model.SetOfCoursesNotFoundException;
+import com.app.dethloff.dao.CourseDAO;
+import com.app.dethloff.dao.SetOfCoursesDAO;
+import com.app.dethloff.dao.StudentDAO;
+import com.app.dethloff.dao.TeacherDAO;
+import com.app.dethloff.exceptions.model.*;
+import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.DTO.BasicCourseDTO;
 import com.app.dethloff.model.DTO.DetailedCourseDTO;
 import com.app.dethloff.model.DTO.SetOfCoursesDTO;
 import com.app.dethloff.model.DTO.mappers.CourseMapper;
-import com.app.dethloff.exceptions.model.CourseNotFoundException;
-import com.app.dethloff.exceptions.model.StudentNotFoundException;
-import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.DTO.mappers.SetOfCoursesMapper;
 import com.app.dethloff.model.SetOfCoursesEntity;
 import com.app.dethloff.model.StudentEntity;
-import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -43,20 +44,13 @@ public class CourseServiceImpl implements CourseService{
     @Override
     @Transactional
     public DetailedCourseDTO create(BasicCourseDTO basicCourseDTO) {
-        if(basicCourseDTO.teacherId() != null) {
-            if(!teacherDAO.existsById(basicCourseDTO.teacherId())) {
-                throw new TeacherNotFoundException("No teacher with such id - " + basicCourseDTO.teacherId());
-            }
-        } else {
-            throw new TeacherNotFoundException("teacherId is null");
-        }
-        if(basicCourseDTO.setOfCoursesId() != null) {
-            if(!setOfCoursesDAO.existsById(basicCourseDTO.setOfCoursesId())) {
-                throw new SetOfCoursesNotFoundException("No set of courses with such id - " + basicCourseDTO.setOfCoursesId());
-            }
-        } else {
-            throw new CourseNotFoundException("courseId is null");
-        }
+        Optional.ofNullable(basicCourseDTO.teacherId())
+                .filter(teacherDAO::existsById)
+                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found or ID is null"));
+
+        Optional.ofNullable(basicCourseDTO.setOfCoursesId())
+                .filter(setOfCoursesDAO::existsById)
+                .orElseThrow(() -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
 
         CourseEntity course = courseMapper.basicToEntity(basicCourseDTO);
         courseDAO.save(course);
@@ -72,9 +66,7 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public List<DetailedCourseDTO> getAll() {
-        List<CourseEntity> list = courseDAO.findAll()
-                .orElseThrow(() -> new CourseNotFoundException("No course found"));
-        return courseMapper.toDetailedDTO(list);
+        return courseMapper.toDetailedDTO(courseDAO.findAll());
     }
 
     @Transactional
@@ -122,7 +114,7 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public List<DetailedCourseDTO> getAllFromParticularSet(String setOfCoursesId) {
         List<CourseEntity> courses = courseDAO.findAllBySetId(setOfCoursesId)
-                .orElseThrow(() -> new CourseNotFoundException("No course with belongs to set of courses with such id - " + setOfCoursesId));
+                .orElseThrow(() -> new CourseNotFoundException("No course belongs to set of courses with such id - " + setOfCoursesId));
 
         return courseMapper.toDetailedDTO(courses);
     }

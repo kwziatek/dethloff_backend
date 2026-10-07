@@ -10,6 +10,8 @@ import com.app.dethloff.model.TeacherEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class LessonMapper {
     CourseDAO courseDAO;
@@ -65,5 +67,9 @@ public class LessonMapper {
                 .teacher(teacherMapper.toBasicDTO(lessonEntity.getTeacher()))
                 .completed(lessonEntity.isCompleted())
                 .build();
+    }
+
+    public List<DetailedLessonDTO> toDetailedDTO(List<LessonEntity> lessonEntities) {
+        return lessonEntities.stream().map(this::toDetailedDTO).toList();
     }
 }

@@ -9,7 +9,9 @@ public interface LessonDAO {
     LessonEntity save(LessonEntity lesson);
     LessonEntity update(LessonEntity lesson);
     Optional<LessonEntity> findById(String id);
-    Optional<List<LessonEntity>> findAll();
+    List<LessonEntity> findAll();
     void remove(LessonEntity lesson);
     LessonEntity createProxy(String id);
+
+    List<LessonEntity> findAllByCourseId(String courseId);
 }

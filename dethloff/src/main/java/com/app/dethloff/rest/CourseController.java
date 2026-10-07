@@ -73,7 +73,7 @@ public class CourseController {
 
     @PostMapping("/courses/{courseId}/students/{studentId}")
     public ResponseEntity<?> enrollStudent(@PathVariable String courseId, @PathVariable String studentId) {
-        courseService.enrollStudent(courseId, studentId);
+    courseService.enrollStudent(courseId, studentId);
 
         return ResponseEntity.noContent().build();
     }

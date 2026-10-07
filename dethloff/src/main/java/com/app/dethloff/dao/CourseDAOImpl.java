@@ -37,9 +37,8 @@ public class CourseDAOImpl implements CourseDAO{
     }
 
     @Override
-    public Optional<List<CourseEntity>> findAll() {
-        List<CourseEntity> list = entityManager.createQuery("SELECT u from CourseEntity u", CourseEntity.class).getResultList();
-        return Optional.ofNullable(list);
+    public List<CourseEntity> findAll() {
+        return entityManager.createQuery("SELECT u from CourseEntity u", CourseEntity.class).getResultList();
     }
 
     @Override

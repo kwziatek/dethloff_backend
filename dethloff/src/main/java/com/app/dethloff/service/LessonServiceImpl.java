@@ -4,6 +4,7 @@ import com.app.dethloff.dao.CourseDAO;
 import com.app.dethloff.dao.LessonDAO;
 import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
+import com.app.dethloff.exceptions.model.LessonNotFoundException;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.DTO.BasicLessonDTO;
 import com.app.dethloff.model.DTO.DetailedLessonDTO;
@@ -13,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +43,16 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
+    public List<DetailedLessonDTO> getAll() {
+        return lessonMapper.toDetailedDTO(lessonDAO.findAll());
+    }
+
+    @Override
+    public List<DetailedLessonDTO> getAllFromCourse(String courseId) {
+        return lessonMapper.toDetailedDTO(lessonDAO.findAllByCourseId(courseId));
+    }
+
+    @Override
     @Transactional
     public DetailedLessonDTO create(BasicLessonDTO lessonDTO) {
         Optional.ofNullable(lessonDTO.courseId())
@@ -53,5 +65,12 @@ public class LessonServiceImpl implements LessonService{
 
         LessonEntity lessonEntity = lessonMapper.toEntity(lessonDTO);
         return lessonMapper.toDetailedDTO(lessonDAO.save(lessonEntity));
+    }
+
+    @Override
+    @Transactional
+    public void delete(String lessonId) {
+        LessonEntity lessonEntity = lessonDAO.findById(lessonId).orElseThrow(LessonNotFoundException::new);
+        lessonDAO.remove(lessonEntity);
     }
 }

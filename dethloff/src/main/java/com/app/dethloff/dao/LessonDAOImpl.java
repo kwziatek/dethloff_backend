@@ -35,8 +35,8 @@ public class LessonDAOImpl implements LessonDAO{
     }
 
     @Override
-    public Optional<List<LessonEntity>> findAll() {
-        return Optional.empty();
+    public List<LessonEntity> findAll() {
+        return entityManager.createQuery("SELECT u from LessonEntity u",LessonEntity.class).getResultList();
     }
 
     @Override
@@ -47,5 +47,10 @@ public class LessonDAOImpl implements LessonDAO{
     @Override
     public LessonEntity createProxy(String id) {
         return entityManager.getReference(LessonEntity.class, id);
+    }
+
+    @Override
+    public List<LessonEntity> findAllByCourseId(String courseId) {
+        return entityManager.createQuery("SELECT u from LessonEntity u where u.course.id = :id", LessonEntity.class).setParameter("id", courseId).getResultList();
     }
 }

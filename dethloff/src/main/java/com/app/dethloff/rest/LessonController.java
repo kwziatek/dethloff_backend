@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class LessonController {
@@ -24,10 +26,31 @@ public class LessonController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/lesson/course/{courseId}")
+    ResponseEntity<List<DetailedLessonDTO>> getLessonsAssignedToCourse(@PathVariable String courseId) {
+        List<DetailedLessonDTO> response = lessonService.getAllFromCourse(courseId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/lesson")
+    ResponseEntity<List<DetailedLessonDTO>> getAllLessons() {
+        List<DetailedLessonDTO> response = lessonService.getAll();
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/lesson")
     ResponseEntity<DetailedLessonDTO> createLesson(@RequestBody BasicLessonDTO lessonDTO) {
         DetailedLessonDTO response = lessonService.create(lessonDTO);
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/lesson/{lessonId}")
+    ResponseEntity<DetailedLessonDTO> deleteLesson(@PathVariable String lessonId) {
+        lessonService.delete(lessonId);
+
+        return ResponseEntity.noContent().build();
     }
 }
