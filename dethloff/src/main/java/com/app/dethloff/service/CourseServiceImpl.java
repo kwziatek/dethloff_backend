@@ -47,11 +47,15 @@ public class CourseServiceImpl implements CourseService{
             if(!teacherDAO.existsById(basicCourseDTO.teacherId())) {
                 throw new TeacherNotFoundException("No teacher with such id - " + basicCourseDTO.teacherId());
             }
+        } else {
+            throw new TeacherNotFoundException("teacherId is null");
         }
         if(basicCourseDTO.setOfCoursesId() != null) {
             if(!setOfCoursesDAO.existsById(basicCourseDTO.setOfCoursesId())) {
                 throw new SetOfCoursesNotFoundException("No set of courses with such id - " + basicCourseDTO.setOfCoursesId());
             }
+        } else {
+            throw new CourseNotFoundException("courseId is null");
         }
 
         CourseEntity course = courseMapper.basicToEntity(basicCourseDTO);
@@ -118,7 +122,7 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public List<DetailedCourseDTO> getAllFromParticularSet(String setOfCoursesId) {
         List<CourseEntity> courses = courseDAO.findAllBySetId(setOfCoursesId)
-                .orElseThrow(() -> new CourseNotFoundException("No course with belongs to set of courses with id - " + setOfCoursesId));
+                .orElseThrow(() -> new CourseNotFoundException("No course with belongs to set of courses with such id - " + setOfCoursesId));
 
         return courseMapper.toDetailedDTO(courses);
     }

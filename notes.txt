@@ -5,7 +5,7 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
-        - LET'S NOT ADD MORE FUNCTIONALITIES & FOCUS ON COMPLETING THE DEVELOPMENT PROCESS
+    - create other endpoints for lesson
 
     - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
 

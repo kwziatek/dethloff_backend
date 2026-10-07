@@ -1,13 +1,11 @@
 package com.app.dethloff.rest;
 
+import com.app.dethloff.model.DTO.BasicLessonDTO;
 import com.app.dethloff.model.DTO.DetailedLessonDTO;
 import com.app.dethloff.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -22,6 +20,13 @@ public class LessonController {
     @GetMapping("/lesson/{lessonId}")
     ResponseEntity<DetailedLessonDTO> getLesson(@PathVariable String lessonId) {
         DetailedLessonDTO response = lessonService.get(lessonId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/lesson")
+    ResponseEntity<DetailedLessonDTO> createLesson(@RequestBody BasicLessonDTO lessonDTO) {
+        DetailedLessonDTO response = lessonService.create(lessonDTO);
 
         return ResponseEntity.ok(response);
     }

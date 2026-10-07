@@ -59,4 +59,9 @@ public class CourseDAOImpl implements CourseDAO{
     public CourseEntity createProxy(String id) {
         return entityManager.getReference(CourseEntity.class, id);
     }
+
+    @Override
+    public boolean existsById(String id) {;
+        return findById(id).isPresent();
+    }
 }
