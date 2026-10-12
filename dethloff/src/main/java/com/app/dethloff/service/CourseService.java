@@ -10,8 +10,8 @@ public interface CourseService {
     DetailedCourseDTO create(BasicCourseDTO basicCourseDTO);
     DetailedCourseDTO get(String id);
     List<DetailedCourseDTO> getAll();
-    void delete(String id);
     DetailedCourseDTO update(BasicCourseDTO basicCourseDTO);
+    void delete(String id);
     void enrollStudent(String courseId, String studentId);
     void unenrollStudent(String courseId, String studentId);
     List<DetailedCourseDTO> getAllFromParticularSet(String setOfCoursesId);

@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @Service
 public class LessonServiceImpl implements LessonService{
-    LessonMapper lessonMapper;
-    LessonDAO lessonDAO;
-    CourseDAO courseDAO;
-    TeacherDAO teacherDAO;
+    private final LessonMapper lessonMapper;
+    private final LessonDAO lessonDAO;
+    private final CourseDAO courseDAO;
+    private final TeacherDAO teacherDAO;
 
     @Autowired
-    LessonServiceImpl(LessonMapper lessonMapper, LessonDAO lessonDAO, CourseDAO courseDAO, TeacherDAO teacherDAO) {
+    public LessonServiceImpl(LessonMapper lessonMapper, LessonDAO lessonDAO, CourseDAO courseDAO, TeacherDAO teacherDAO) {
         this.lessonMapper = lessonMapper;
         this.lessonDAO = lessonDAO;
         this.courseDAO = courseDAO;
@@ -34,17 +34,14 @@ public class LessonServiceImpl implements LessonService{
 
     @Override
     public DetailedLessonDTO get(String id) {
-        Optional<LessonEntity> lessonEntity = lessonDAO.findById(id);
-        DetailedLessonDTO detailedLesson = null;
-        if (lessonEntity.isPresent()) {
-            detailedLesson = lessonMapper.toDetailedDTO(lessonEntity.get());
-        }
-        return detailedLesson;
+        LessonEntity lesson = lessonDAO.findById(id)
+                .orElseThrow(() -> new LessonNotFoundException("No lesson with such id - " + id));
+        return lessonMapper.toDetailedDTO(lesson);
     }
 
     @Override
-    public List<DetailedLessonDTO> getAll() {
-        return lessonMapper.toDetailedDTO(lessonDAO.findAll());
+    public List<BasicLessonDTO> getAll() {
+        return lessonMapper.toBasicDTO(lessonDAO.findAll());
     }
 
     @Override
@@ -65,6 +62,17 @@ public class LessonServiceImpl implements LessonService{
 
         LessonEntity lessonEntity = lessonMapper.toEntity(lessonDTO);
         return lessonMapper.toDetailedDTO(lessonDAO.save(lessonEntity));
+    }
+
+    @Override
+    @Transactional
+    public DetailedLessonDTO update(BasicLessonDTO lessonDTO) {
+        LessonEntity existingLesson = lessonDAO.findById(lessonDTO.id())
+                .orElseThrow(() -> new LessonNotFoundException("No lesson with such id - " + lessonDTO.id()));
+
+        lessonMapper.updateEntityFromBasic(lessonDTO, existingLesson);
+
+        return lessonMapper.toDetailedDTO(lessonDAO.update(existingLesson));
     }
 
     @Override

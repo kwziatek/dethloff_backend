@@ -46,4 +46,9 @@ public class StudentDAOImpl implements StudentDAO{
     public void remove(StudentEntity theStudent) {
         entityManager.remove(theStudent);
     }
+
+    @Override
+    public StudentEntity createProxy(String id) {
+        return entityManager.getReference(StudentEntity.class, id);
+    }
 }

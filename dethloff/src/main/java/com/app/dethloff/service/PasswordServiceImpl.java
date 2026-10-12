@@ -7,8 +7,8 @@ import java.util.List;
 @Service
 public class PasswordServiceImpl implements PasswordService{
 
-    int minLength = 14;
-    int minSpecialSigns = 3;
+    final int minLength = 14;
+    final int minSpecialSigns = 3;
 
 
     @Override

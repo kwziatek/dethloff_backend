@@ -15,8 +15,8 @@ import java.util.List;
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
-    TeacherDAO teacherDAO;
-    TeacherMapper teacherMapper;
+    final TeacherDAO teacherDAO;
+    final TeacherMapper teacherMapper;
 
     @Autowired
     public TeacherServiceImpl(TeacherDAO teacherDAO, TeacherMapper teacherMapper) {
@@ -54,8 +54,7 @@ public class TeacherServiceImpl implements TeacherService {
         TeacherEntity existingTeacher = teacherDAO.findById(teacherDTO.id())
                 .orElseThrow(TeacherNotFoundException::new);
         teacherMapper.updateEntityFromDetailed(teacherDTO, existingTeacher);
-        TeacherEntity updatedTeacher = teacherDAO.update(existingTeacher);
-        return teacherMapper.entityToDetailed(updatedTeacher);
+        return teacherMapper.entityToDetailed(teacherDAO.update(existingTeacher));
     }
 
     @Override

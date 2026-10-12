@@ -11,4 +11,5 @@ public interface StudentDAO {
     Optional<StudentEntity> findById(String theId);
     Optional<List<StudentEntity>> findAll();
     void remove(StudentEntity theStudent);
+    StudentEntity createProxy(String id);
 }

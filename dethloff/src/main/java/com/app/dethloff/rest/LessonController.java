@@ -34,8 +34,8 @@ public class LessonController {
     }
 
     @GetMapping("/lesson")
-    ResponseEntity<List<DetailedLessonDTO>> getAllLessons() {
-        List<DetailedLessonDTO> response = lessonService.getAll();
+    ResponseEntity<List<BasicLessonDTO>> getAllLessons() {
+        List<BasicLessonDTO> response = lessonService.getAll();
 
         return ResponseEntity.ok(response);
     }
