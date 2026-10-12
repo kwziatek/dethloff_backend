@@ -1,6 +1,5 @@
 package com.app.dethloff.model.DTO.mappers;
 
-
 import com.app.dethloff.dao.SetOfCoursesDAO;
 import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.model.DTO.*;
@@ -10,18 +9,16 @@ import com.app.dethloff.model.TeacherEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import java.util.List;
 
 @Component
 public class CourseMapper {
 
-    TeacherDAO teacherDAO;
-    SetOfCoursesDAO setOfCoursesDAO;
-    TeacherMapper teacherMapper;
-    StudentMapper studentMapper;
-    SetOfCoursesMapper setOfCoursesMapper;
-
+    private final TeacherDAO teacherDAO;
+    private final SetOfCoursesDAO setOfCoursesDAO;
+    private final TeacherMapper teacherMapper;
+    private final StudentMapper studentMapper;
+    private final SetOfCoursesMapper setOfCoursesMapper;
 
     @Autowired
     public CourseMapper(TeacherDAO teacherDAO, TeacherMapper teacherMapper, StudentMapper studentMapper, SetOfCoursesDAO setOfCoursesDAO, SetOfCoursesMapper setOfCoursesMapper) {
@@ -46,7 +43,6 @@ public class CourseMapper {
             setOfCoursesDTO = setOfCoursesMapper.toDTO(course.getSetOfCourses());
         }
 
-
         return DetailedCourseDTO.builder()
                 .id(course.getId())
                 .name(course.getName())
@@ -61,7 +57,7 @@ public class CourseMapper {
                 .build();
     }
 
-    public CourseEntity basicToEntity(BasicCourseDTO basicCourseDTO) {
+    public CourseEntity toEntity(BasicCourseDTO basicCourseDTO) {
         TeacherEntity teacherProxy = null;
         if(basicCourseDTO.teacherId() != null) {
              teacherProxy = teacherDAO.createProxy(basicCourseDTO.teacherId());
@@ -71,7 +67,6 @@ public class CourseMapper {
         if(basicCourseDTO.setOfCoursesId() != null) {
             setOfCoursesProxy = setOfCoursesDAO.createProxy(basicCourseDTO.setOfCoursesId());
         }
-
 
         return CourseEntity.builder()
                 .id(basicCourseDTO.id())
@@ -99,9 +94,19 @@ public class CourseMapper {
                 .toList();
     }
 
-    public List<CourseEntity> basicToEntity(List<BasicCourseDTO> basicCourseDTOList) {
+    public List<CourseEntity> toEntity(List<BasicCourseDTO> basicCourseDTOList) {
         return basicCourseDTOList.stream()
-                .map(this::basicToEntity)
+                .map(this::toEntity)
                 .toList();
+    }
+
+    public void updateEntityFromDetailed(DetailedCourseDTO dto, CourseEntity entity) {
+        if (dto == null) return;
+        entity.setName(dto.name());
+        entity.setDescription(dto.description());
+        entity.setLevel(dto.level());
+        entity.setRoom(dto.room());
+        entity.setTotalCourseTime(dto.totalCourseTime());
+        entity.setCompletedCourseTime(dto.completedCourseTime());
     }
 }

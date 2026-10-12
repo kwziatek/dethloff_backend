@@ -7,13 +7,12 @@ import com.app.dethloff.model.pesel.Pesel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class StudentMapper {
 
-    PhoneNumberMapper phoneNumberMapper;
+    private final PhoneNumberMapper phoneNumberMapper;
 
     @Autowired
     public StudentMapper(PhoneNumberMapper phoneNumberMapper) {
@@ -34,11 +33,9 @@ public class StudentMapper {
     }
 
     public List<BasicStudentDTO> toBasicDTO(List<StudentEntity> studentEntities) {
-        List<BasicStudentDTO> basicEntities = new ArrayList<>();
-        for(StudentEntity entity: studentEntities) {
-            basicEntities.add(this.toBasicDTO(entity));
-        }
-        return basicEntities;
+        return studentEntities.stream()
+                .map(this::toBasicDTO)
+                .toList();
     }
 
     public StudentEntity toEntity(BasicStudentDTO basicStudentDTO) {
@@ -52,7 +49,6 @@ public class StudentMapper {
                 .isActive(basicStudentDTO.isActive())
                 .gender(basicStudentDTO.gender())
                 .build();
-
     }
 
     public void updateEntityFromDetailed(DetailedStudentDTO dto, StudentEntity entity) {
@@ -63,14 +59,12 @@ public class StudentMapper {
         String basicGuardianPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.guardianPhoneNumber());
         String basicCompanyPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.companyPhoneNumber());
 
-        // Update only the fields allowed to be changed
         entity.setName(dto.name());
         entity.setSurname(dto.surname());
-        entity.setPesel(dto.pesel()); // Ensure this is the String version now!
+        entity.setPesel(dto.pesel());
         entity.setGender(dto.gender());
         entity.setBirthDate(dto.birthDate());
         entity.setPlaceOfBirth(dto.placeOfBirth());
-//        entity.setIsActive(to.isActive()); -> it's calculated in service layer
         entity.setCity(dto.city());
         entity.setStreet(dto.street());
         entity.setFlatNumber(dto.flatNumber());
@@ -94,11 +88,7 @@ public class StudentMapper {
         entity.setCompanyPhoneNumber(basicCompanyPhoneNumber);
         entity.setCompanyEmail(dto.companyEmail());
         entity.setMarketingSources(dto.marketingSources());
-
-        // Note: We DO NOT set the ID here. The entity already has its ID.
     }
-
-
 
     public StudentEntity detailedToEntity(DetailedStudentDTO detailedStudentDTO) {
         String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.phoneNumber());
@@ -112,7 +102,6 @@ public class StudentMapper {
                 .placeOfBirth(detailedStudentDTO.placeOfBirth())
                 .birthDate(detailedStudentDTO.birthDate())
                 .gender(detailedStudentDTO.gender())
-//                .isActive(detailedStudentDTO.isActive()) // it's being determined in the service layer and applied directly to the entity
                 .city(detailedStudentDTO.city())
                 .street(detailedStudentDTO.street())
                 .flatNumber(detailedStudentDTO.flatNumber())
@@ -137,7 +126,6 @@ public class StudentMapper {
                 .companyEmail(detailedStudentDTO.companyEmail())
                 .marketingSources(detailedStudentDTO.marketingSources())
                 .build();
-
     }
 
     public DetailedStudentDTO entityToDetailed(StudentEntity studentEntity) {

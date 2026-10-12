@@ -1,10 +1,7 @@
 package com.app.dethloff.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
@@ -34,4 +31,8 @@ public class LessonEntity {
 
     @Column(name = "completed")
     private boolean completed;
+
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private LessonTimeEntity lessonTime;
 }

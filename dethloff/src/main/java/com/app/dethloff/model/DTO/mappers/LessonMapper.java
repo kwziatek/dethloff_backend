@@ -6,11 +6,13 @@ import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.DTO.BasicLessonDTO;
 import com.app.dethloff.model.DTO.DetailedLessonDTO;
 import com.app.dethloff.model.LessonEntity;
+import com.app.dethloff.model.LessonTimeEntity;
 import com.app.dethloff.model.TeacherEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class LessonMapper {
@@ -35,6 +37,9 @@ public class LessonMapper {
                 .description(lessonEntity.getDescription())
                 .teacherId(lessonEntity.getTeacher().getId())
                 .completed(lessonEntity.isCompleted())
+                .date(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getDate() : null)
+                .startTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getStartTime() : null)
+                .endTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getEndTime() : null)
                 .build();
     }
 
@@ -48,7 +53,7 @@ public class LessonMapper {
             teacherProxy = teacherDAO.createProxy(lessonDTO.teacherId());
         }
 
-        return LessonEntity.builder()
+        LessonEntity lesson = LessonEntity.builder()
                 .id(lessonDTO.id())
                 .name(lessonDTO.name())
                 .course(courseProxy)
@@ -56,6 +61,19 @@ public class LessonMapper {
                 .teacher(teacherProxy)
                 .completed(lessonDTO.completed())
                 .build();
+
+        if (lessonDTO.date() != null) {
+            LessonTimeEntity timeEntity = LessonTimeEntity.builder()
+                    .id(UUID.randomUUID().toString())
+                    .date(lessonDTO.date())
+                    .startTime(lessonDTO.startTime())
+                    .endTime(lessonDTO.endTime())
+                    .lesson(lesson)
+                    .build();
+            lesson.setLessonTime(timeEntity);
+        }
+
+        return lesson;
     }
 
     public DetailedLessonDTO toDetailedDTO(LessonEntity lessonEntity) {
@@ -66,6 +84,9 @@ public class LessonMapper {
                 .description(lessonEntity.getDescription())
                 .teacher(teacherMapper.toBasicDTO(lessonEntity.getTeacher()))
                 .completed(lessonEntity.isCompleted())
+                .date(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getDate() : null)
+                .startTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getStartTime() : null)
+                .endTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getEndTime() : null)
                 .build();
     }
 

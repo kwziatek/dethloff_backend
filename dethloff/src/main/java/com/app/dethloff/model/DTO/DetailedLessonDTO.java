@@ -1,6 +1,8 @@
 package com.app.dethloff.model.DTO;
 
 import lombok.Builder;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Builder
 public record DetailedLessonDTO(
@@ -9,5 +11,8 @@ public record DetailedLessonDTO(
         BasicCourseDTO course,
         String description,
         BasicTeacherDTO teacher,
-        Boolean completed
+        Boolean completed,
+        LocalDate date,
+        LocalTime startTime,
+        LocalTime endTime
 ) {}

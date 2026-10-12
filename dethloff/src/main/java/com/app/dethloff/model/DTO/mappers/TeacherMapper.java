@@ -21,7 +21,7 @@ public class TeacherMapper {
                 .build();
     }
 
-    public TeacherEntity toTeacher(BasicTeacherDTO teacherDTO) {
+    public TeacherEntity toEntity(BasicTeacherDTO teacherDTO) {
         return TeacherEntity.builder()
                 .id(teacherDTO.id())
                 .name(teacherDTO.name())
@@ -35,9 +35,9 @@ public class TeacherMapper {
                 .toList();
     }
 
-    public List<TeacherEntity> toTeacher(List<BasicTeacherDTO> teacherDTOs) {
+    public List<TeacherEntity> toEntity(List<BasicTeacherDTO> teacherDTOs) {
         return teacherDTOs.stream()
-                .map(this::toTeacher)
+                .map(this::toEntity)
                 .toList();
     }
 
@@ -50,7 +50,6 @@ public class TeacherMapper {
                 .placeOfBirth(detailedTeacherDTO.placeOfBirth())
                 .birthDate(detailedTeacherDTO.birthDate())
                 .gender(detailedTeacherDTO.gender())
-//                .isActive(detailedTeacherDTO.isActive()) // it's being determined in service layer and applied directly to entity
                 .city(detailedTeacherDTO.city())
                 .street(detailedTeacherDTO.street())
                 .flatNumber(detailedTeacherDTO.flatNumber())
@@ -66,7 +65,6 @@ public class TeacherMapper {
                 .companyPhoneNumber(detailedTeacherDTO.companyPhoneNumber())
                 .companyEmail(detailedTeacherDTO.companyEmail())
                 .build();
-
     }
 
     public DetailedTeacherDTO entityToDetailed(TeacherEntity teacherEntity) {
@@ -100,14 +98,12 @@ public class TeacherMapper {
         if (dto == null) {
             return;
         }
-        // Update only the fields allowed to be changed
         entity.setName(dto.name());
         entity.setSurname(dto.surname());
-        entity.setPesel(dto.pesel()); // Ensure this is the String version now!
+        entity.setPesel(dto.pesel());
         entity.setGender(dto.gender());
         entity.setBirthDate(dto.birthDate());
         entity.setPlaceOfBirth(dto.placeOfBirth());
-//        entity.setIsActive(to.isActive()); -> it's calculated in service layer
         entity.setCity(dto.city());
         entity.setStreet(dto.street());
         entity.setFlatNumber(dto.flatNumber());
@@ -122,7 +118,5 @@ public class TeacherMapper {
         entity.setCompanyPostalCode(dto.companyPostalCode());
         entity.setCompanyPhoneNumber(dto.companyPhoneNumber());
         entity.setCompanyEmail(dto.companyEmail());
-
-        // Note: We DO NOT set the ID here. The entity already has its ID.
     }
 }
