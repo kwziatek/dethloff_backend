@@ -28,25 +28,8 @@ public class LessonMapper {
         this.teacherMapper = teacherMapper;
     }
 
-    public BasicLessonDTO toBasicDTO (LessonEntity lessonEntity) {
-        return BasicLessonDTO.builder()
-                .id(lessonEntity.getId())
-                .name(lessonEntity.getName())
-                .courseId(lessonEntity.getCourse().getId())
-                .description(lessonEntity.getDescription())
-                .teacherId(lessonEntity.getTeacher().getId())
-                .completed(lessonEntity.isCompleted())
-                .date(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getDate() : null)
-                .startTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getStartTime() : null)
-                .endTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getEndTime() : null)
-                .build();
-    }
 
-    public List<BasicLessonDTO> toBasicDTO (List<LessonEntity> lessonEntities) {
-        return lessonEntities.stream().map(this::toBasicDTO).toList();
-    }
-
-    public LessonEntity toEntity (BasicLessonDTO lessonDTO) {
+    public LessonEntity toEntity (LessonRequestDTO lessonDTO) {
         CourseEntity courseProxy = null;
         if(lessonDTO.courseId() != null) {
             courseProxy = courseDAO.createProxy(lessonDTO.courseId());
@@ -79,29 +62,29 @@ public class LessonMapper {
         return lesson;
     }
 
-    public List<LessonEntity> toEntity(List<BasicLessonDTO> basicLessonDTOList) {
-        return basicLessonDTOList.stream()
+    public List<LessonEntity> toEntity(List<LessonRequestDTO> lessonRequestDTOList) {
+        return lessonRequestDTOList.stream()
                 .map(this::toEntity)
                 .toList();
     }
 
-    public DetailedLessonDTO toDetailedDTO(LessonEntity lessonEntity) {
-        BasicTeacherDTO basicTeacherDTO = null;
-        BasicCourseDTO basicCourseDTO = null;
+    public LessonResponseDTO toLessonResponseDTO(LessonEntity lessonEntity) {
+        TeacherResponseDTO teacherResponseDTO = null;
+        CourseResponseDTO courseResponseDTO = null;
 
         if(lessonEntity.getCourse() != null) {
-            basicCourseDTO = courseMapper.toBasicDTO(lessonEntity.getCourse());
+            courseResponseDTO = courseMapper.toCourseResponseDTO(lessonEntity.getCourse());
         }
         if(lessonEntity.getTeacher() != null) {
-            basicTeacherDTO = teacherMapper.toBasicDTO(lessonEntity.getTeacher());
+            teacherResponseDTO = teacherMapper.toTeacherResponseDTO(lessonEntity.getTeacher());
         }
 
-        return DetailedLessonDTO.builder()
+        return LessonResponseDTO.builder()
                 .id(lessonEntity.getId())
                 .name((lessonEntity.getName()))
-                .course(basicCourseDTO)
+                .course(courseResponseDTO)
                 .description(lessonEntity.getDescription())
-                .teacher(basicTeacherDTO)
+                .teacher(teacherResponseDTO)
                 .completed(lessonEntity.isCompleted())
                 .date(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getDate() : null)
                 .startTime(lessonEntity.getLessonTime() != null ? lessonEntity.getLessonTime().getStartTime() : null)
@@ -109,34 +92,11 @@ public class LessonMapper {
                 .build();
     }
 
-    public List<DetailedLessonDTO> toDetailedDTO(List<LessonEntity> lessonEntities) {
-        return lessonEntities.stream().map(this::toDetailedDTO).toList();
+    public List<LessonResponseDTO> toLessonResponseDTO(List<LessonEntity> lessonEntities) {
+        return lessonEntities.stream().map(this::toLessonResponseDTO).toList();
     }
 
-    public void updateEntityFromDetailed(DetailedLessonDTO dto, LessonEntity entity) {
-        if (dto == null) return;
-        entity.setName(dto.name());
-        entity.setDescription(dto.description());
-        entity.setCompleted(dto.completed());
-        if (dto.date() != null) {
-            if (entity.getLessonTime() == null) {
-                com.app.dethloff.model.LessonTimeEntity time = com.app.dethloff.model.LessonTimeEntity.builder()
-                        .id(java.util.UUID.randomUUID().toString())
-                        .date(dto.date())
-                        .startTime(dto.startTime())
-                        .endTime(dto.endTime())
-                        .lesson(entity)
-                        .build();
-                entity.setLessonTime(time);
-            } else {
-                entity.getLessonTime().setDate(dto.date());
-                entity.getLessonTime().setStartTime(dto.startTime());
-                entity.getLessonTime().setEndTime(dto.endTime());
-            }
-        }
-    }
-
-    public void updateEntityFromBasic(BasicLessonDTO dto, LessonEntity entity) {
+    public void updateEntityFromRequest(LessonRequestDTO dto, LessonEntity entity) {
         if (dto == null) return;
         entity.setName(dto.name());
         entity.setDescription(dto.description());

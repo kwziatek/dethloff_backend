@@ -1,17 +1,16 @@
 package com.app.dethloff.model.DTO;
 
 import lombok.Builder;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Builder
-public record BasicLessonDTO(
+public record LessonResponseDTO(
         String id,
         String name,
-        String courseId,
+        CourseResponseDTO course,
         String description,
-        String teacherId,
+        TeacherResponseDTO teacher,
         Boolean completed,
         LocalDate date,
         LocalTime startTime,

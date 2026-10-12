@@ -1,10 +1,10 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.model.DTO.LoginRequest;
-import com.app.dethloff.model.DTO.RegisterRequest;
+import com.app.dethloff.model.DTO.LoginRequestDTO;
+import com.app.dethloff.model.DTO.RegisterRequestDTO;
 
 public interface UserService {
-    void register(RegisterRequest request);
-    String verify(LoginRequest request);
+    void register(RegisterRequestDTO request);
+    String verify(LoginRequestDTO request);
     void changePassword(String username, String oldPassword, String newPassword);
 }

@@ -9,7 +9,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record DetailedStudentDTO(
+public record StudentResponseDTO(
     String id,
     String name,
     String surname,

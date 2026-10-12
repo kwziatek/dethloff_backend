@@ -1,8 +1,8 @@
 package com.app.dethloff.rest;
 
-import com.app.dethloff.model.DTO.BasicCourseDTO;
-import com.app.dethloff.model.DTO.DetailedCourseDTO;
-import com.app.dethloff.model.DTO.SetOfCoursesDTO;
+import com.app.dethloff.model.DTO.CourseRequestDTO;
+import com.app.dethloff.model.DTO.CourseResponseDTO;
+import com.app.dethloff.model.DTO.SetOfCoursesResponseDTO;
 import com.app.dethloff.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,37 +24,58 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<List<DetailedCourseDTO>> getAllCourses() {
-        List<DetailedCourseDTO> courses = courseService.getAll();
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
+        List<CourseResponseDTO> courses = courseService.getAll();
 
         return ResponseEntity.ok(courses);
     }
 
     @GetMapping("/courses/setsOfCourses/{setOfCoursesId}")
-    public ResponseEntity<List<DetailedCourseDTO>> getAllSetCourses(@PathVariable String setOfCoursesId) {
-        List<DetailedCourseDTO> courses = courseService.getAllFromParticularSet(setOfCoursesId);
+    public ResponseEntity<List<CourseResponseDTO>> getAllSetCourses(@PathVariable String setOfCoursesId) {
+        List<CourseResponseDTO> courses = courseService.getAllFromParticularSet(setOfCoursesId);
 
         return ResponseEntity.ok(courses);
     }
 
-    @GetMapping("courses/{courseId}")
-    public ResponseEntity<DetailedCourseDTO> getCourse(@PathVariable String courseId) {
-        DetailedCourseDTO detailedCourseDTO = courseService.get(courseId);
+    @GetMapping("courses/setsOfCourses")
+    public ResponseEntity<List<SetOfCoursesResponseDTO>> getAllSetsOfCourses() {
+        List<SetOfCoursesResponseDTO> setOfCoursesResponseDTOList = courseService.getAllSetsOfCourses();
 
-        return ResponseEntity.ok(detailedCourseDTO);
+        return ResponseEntity.ok(setOfCoursesResponseDTOList);
+    }
+
+    @GetMapping("courses/{courseId}")
+    public ResponseEntity<CourseResponseDTO> getCourse(@PathVariable String courseId) {
+        CourseResponseDTO courseResponseDTO = courseService.get(courseId);
+
+        return ResponseEntity.ok(courseResponseDTO);
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<DetailedCourseDTO> createCourse(@RequestBody BasicCourseDTO basicCourseDTO) {
-        DetailedCourseDTO detailedCourseDTO = courseService.create(basicCourseDTO);
+    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
+        CourseResponseDTO courseResponseDTO = courseService.create(courseRequestDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(detailedCourseDTO.id())
+                .buildAndExpand(courseResponseDTO.id())
                 .toUri();
 
-        return ResponseEntity.created(location).body(detailedCourseDTO);
+        return ResponseEntity.created(location).body(courseResponseDTO);
+    }
+
+    @PostMapping("/courses/{courseId}/students/{studentId}")
+    public ResponseEntity<?> enrollStudent(@PathVariable String courseId, @PathVariable String studentId) {
+        courseService.enrollStudent(courseId, studentId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/courses")
+    public ResponseEntity<CourseResponseDTO> updateCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
+        CourseResponseDTO courseResponseDTO = courseService.update(courseRequestDTO);
+
+        return ResponseEntity.ok(courseResponseDTO);
     }
 
     @DeleteMapping("/courses/{courseId}")
@@ -64,31 +85,10 @@ public class CourseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/courses")
-    public ResponseEntity<DetailedCourseDTO> updateCourse(@RequestBody BasicCourseDTO basicCourseDTO) {
-        DetailedCourseDTO detailedCourseDTO = courseService.update(basicCourseDTO);
-
-        return ResponseEntity.ok(detailedCourseDTO);
-    }
-
-    @PostMapping("/courses/{courseId}/students/{studentId}")
-    public ResponseEntity<?> enrollStudent(@PathVariable String courseId, @PathVariable String studentId) {
-    courseService.enrollStudent(courseId, studentId);
-
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/courses/{courseId}/students/{studentId}")
     public ResponseEntity<?> unenrollStudent(@PathVariable String courseId, @PathVariable String studentId) {
         courseService.unenrollStudent(courseId, studentId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("courses/setsOfCourses")
-    public ResponseEntity<?> getAllSetsOfCourses() {
-        List<SetOfCoursesDTO> setOfCoursesDTOS = courseService.getAllSetsOfCourses();
-
-        return ResponseEntity.ok(setOfCoursesDTOS);
     }
 }

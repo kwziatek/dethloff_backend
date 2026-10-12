@@ -4,7 +4,7 @@ import com.app.dethloff.dao.CourseDAO;
 import com.app.dethloff.dao.StudentDAO;
 import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.CourseLevel;
-import com.app.dethloff.model.DTO.DetailedCourseDTO;
+import com.app.dethloff.model.DTO.CourseResponseDTO;
 import com.app.dethloff.model.DTO.mappers.CourseMapper;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.model.TeacherEntity;
@@ -76,7 +76,7 @@ public class CourseEntityServiceImplUTest {
     void getCourse_shouldReturnDTO_whenIdExists() {
         // arrange
         when(courseDAO.findById(sampleCourse.getId())).thenReturn(Optional.ofNullable(sampleCourse));
-        when(courseMapper.toDetailedDTO(sampleCourse)).thenReturn(DetailedCourseDTO.builder()
+        when(courseMapper.toCourseResponseDTO(sampleCourse)).thenReturn(CourseResponseDTO.builder()
                         .id(sampleCourse.getId())
                         .name(sampleCourse.getName())
                         .description(sampleCourse.getDescription())
@@ -87,11 +87,11 @@ public class CourseEntityServiceImplUTest {
         );
 
         // act
-        DetailedCourseDTO detailedCourseDTO = courseService.get(sampleCourse.getId());
+        CourseResponseDTO courseResponseDTO = courseService.get(sampleCourse.getId());
 
         // assert
-        assertNotNull(detailedCourseDTO);
-        assertEquals(sampleCourse.getId(), detailedCourseDTO.id());
+        assertNotNull(courseResponseDTO);
+        assertEquals(sampleCourse.getId(), courseResponseDTO.id());
     }
 
     @Test

@@ -1,8 +1,8 @@
 package com.app.dethloff.rest;
 
 import com.app.dethloff.model.DTO.ChangePasswordRequestDTO;
-import com.app.dethloff.model.DTO.LoginRequest;
-import com.app.dethloff.model.DTO.RegisterRequest;
+import com.app.dethloff.model.DTO.LoginRequestDTO;
+import com.app.dethloff.model.DTO.RegisterRequestDTO;
 import com.app.dethloff.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,13 @@ public class UserController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO request) {
         userService.register(request);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         String token = userService.verify(request);
         return ResponseEntity.ok(token);
     }

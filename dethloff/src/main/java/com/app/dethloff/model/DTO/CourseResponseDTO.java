@@ -6,14 +6,14 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record DetailedCourseDTO(
+public record CourseResponseDTO(
         String id,
         String name,
         String description,
         CourseLevel level,
-        BasicTeacherDTO teacher,
-        List<BasicStudentDTO> students,
-        SetOfCoursesDTO setOfCourses,
+        TeacherResponseDTO teacher,
+        List<StudentResponseDTO> students,
+        SetOfCoursesResponseDTO setOfCourses,
         String room,
         Integer totalCourseTime,
         Integer completedCourseTime

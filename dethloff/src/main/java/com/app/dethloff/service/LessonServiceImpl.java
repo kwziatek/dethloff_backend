@@ -6,8 +6,8 @@ import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.LessonNotFoundException;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
-import com.app.dethloff.model.DTO.BasicLessonDTO;
-import com.app.dethloff.model.DTO.DetailedLessonDTO;
+import com.app.dethloff.model.DTO.LessonRequestDTO;
+import com.app.dethloff.model.DTO.LessonResponseDTO;
 import com.app.dethloff.model.DTO.mappers.LessonMapper;
 import com.app.dethloff.model.LessonEntity;
 import jakarta.transaction.Transactional;
@@ -33,25 +33,25 @@ public class LessonServiceImpl implements LessonService{
     }
 
     @Override
-    public DetailedLessonDTO get(String id) {
+    public LessonResponseDTO get(String id) {
         LessonEntity lesson = lessonDAO.findById(id)
                 .orElseThrow(() -> new LessonNotFoundException("No lesson with such id - " + id));
-        return lessonMapper.toDetailedDTO(lesson);
+        return lessonMapper.toLessonResponseDTO(lesson);
     }
 
     @Override
-    public List<BasicLessonDTO> getAll() {
-        return lessonMapper.toBasicDTO(lessonDAO.findAll());
+    public List<LessonResponseDTO> getAll() {
+        return lessonMapper.toLessonResponseDTO(lessonDAO.findAll());
     }
 
     @Override
-    public List<DetailedLessonDTO> getAllFromCourse(String courseId) {
-        return lessonMapper.toDetailedDTO(lessonDAO.findAllByCourseId(courseId));
+    public List<LessonResponseDTO> getAllFromCourse(String courseId) {
+        return lessonMapper.toLessonResponseDTO(lessonDAO.findAllByCourseId(courseId));
     }
 
     @Override
     @Transactional
-    public DetailedLessonDTO create(BasicLessonDTO lessonDTO) {
+    public LessonResponseDTO create(LessonRequestDTO lessonDTO) {
         Optional.ofNullable(lessonDTO.courseId())
                 .filter(courseDAO::existsById)
                 .orElseThrow(() -> new CourseNotFoundException(("Course not found or ID is null")));
@@ -61,18 +61,18 @@ public class LessonServiceImpl implements LessonService{
                 .orElseThrow(() -> new TeacherNotFoundException(("Teacher not found or ID is null")));
 
         LessonEntity lessonEntity = lessonMapper.toEntity(lessonDTO);
-        return lessonMapper.toDetailedDTO(lessonDAO.save(lessonEntity));
+        return lessonMapper.toLessonResponseDTO(lessonDAO.save(lessonEntity));
     }
 
     @Override
     @Transactional
-    public DetailedLessonDTO update(BasicLessonDTO lessonDTO) {
+    public LessonResponseDTO update(LessonRequestDTO lessonDTO) {
         LessonEntity existingLesson = lessonDAO.findById(lessonDTO.id())
                 .orElseThrow(() -> new LessonNotFoundException("No lesson with such id - " + lessonDTO.id()));
 
-        lessonMapper.updateEntityFromBasic(lessonDTO, existingLesson);
+        lessonMapper.updateEntityFromRequest(lessonDTO, existingLesson);
 
-        return lessonMapper.toDetailedDTO(lessonDAO.update(existingLesson));
+        return lessonMapper.toLessonResponseDTO(lessonDAO.update(existingLesson));
     }
 
     @Override

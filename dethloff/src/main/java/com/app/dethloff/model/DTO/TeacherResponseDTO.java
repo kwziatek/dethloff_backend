@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record DetailedTeacherDTO(
+public record TeacherResponseDTO(
         String id,
         String name,
         String surname,
@@ -29,5 +29,6 @@ public record DetailedTeacherDTO(
         String companyFlatNumber,
         String companyPostalCode,
         String companyPhoneNumber,
-        String companyEmail
+        String companyEmail,
+        String marketingSources
 ) {}

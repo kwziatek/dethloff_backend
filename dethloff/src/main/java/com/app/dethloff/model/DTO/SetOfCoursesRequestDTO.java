@@ -3,10 +3,8 @@ package com.app.dethloff.model.DTO;
 import lombok.Builder;
 
 @Builder
-public record BasicTeacherDTO(
+public record SetOfCoursesRequestDTO(
         String id,
         String name,
-        String surname,
-        String pesel,
-        Boolean isActive
+        String description
 ) {}

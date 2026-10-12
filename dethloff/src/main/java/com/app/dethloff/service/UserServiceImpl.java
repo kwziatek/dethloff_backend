@@ -5,8 +5,8 @@ import com.app.dethloff.exceptions.model.InvalidLoginOrPasswordException;
 import com.app.dethloff.exceptions.model.InvalidPasswordException;
 import com.app.dethloff.exceptions.model.UserNotFoundException;
 import com.app.dethloff.exceptions.model.UsernameTakenException;
-import com.app.dethloff.model.DTO.LoginRequest;
-import com.app.dethloff.model.DTO.RegisterRequest;
+import com.app.dethloff.model.DTO.LoginRequestDTO;
+import com.app.dethloff.model.DTO.RegisterRequestDTO;
 import com.app.dethloff.model.DTO.mappers.UserMapper;
 import com.app.dethloff.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
 
     private final BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder(12);
 
-    public void register(RegisterRequest request) {
+    public void register(RegisterRequestDTO request) {
         User user = userMapper.registerDTOToEntity(request);
         Optional<User> existingUser = userRepo.findByUsername(user.getUsername());
         if(existingUser.isPresent()) {
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
         userRepo.save(user);
     }
 
-    public String verify(LoginRequest request) {
+    public String verify(LoginRequestDTO request) {
         try {
             Authentication authentication = auth.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
             if(authentication.isAuthenticated()) {

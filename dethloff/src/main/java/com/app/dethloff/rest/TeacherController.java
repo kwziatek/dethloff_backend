@@ -1,7 +1,7 @@
 package com.app.dethloff.rest;
 
-import com.app.dethloff.model.DTO.BasicTeacherDTO;
-import com.app.dethloff.model.DTO.DetailedTeacherDTO;
+import com.app.dethloff.model.DTO.TeacherRequestDTO;
+import com.app.dethloff.model.DTO.TeacherResponseDTO;
 import com.app.dethloff.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,22 +23,22 @@ public class TeacherController {
     }
 
     @GetMapping("/teachers/{teacherId}")
-    public ResponseEntity<DetailedTeacherDTO> getTeacher(@PathVariable String teacherId) {
-        DetailedTeacherDTO teacherDTO = teacherService.get(teacherId);
+    public ResponseEntity<TeacherResponseDTO> getTeacher(@PathVariable String teacherId) {
+        TeacherResponseDTO teacherDTO = teacherService.get(teacherId);
 
         return ResponseEntity.ok(teacherDTO);
     }
 
     @GetMapping("/teachers")
-    public ResponseEntity<List<BasicTeacherDTO>> getAllTeacher() {
-        List<BasicTeacherDTO> teacherDTOs = teacherService.getAll();
+    public ResponseEntity<List<TeacherResponseDTO>> getAllTeacher() {
+        List<TeacherResponseDTO> teacherDTOs = teacherService.getAll();
 
         return ResponseEntity.ok(teacherDTOs);
     }
 
     @PostMapping("/teachers")
-    public ResponseEntity<DetailedTeacherDTO> createTeacher(@RequestBody DetailedTeacherDTO teacherDTO) {
-        DetailedTeacherDTO createdTeacher = teacherService.create(teacherDTO);
+    public ResponseEntity<TeacherResponseDTO> createTeacher(@RequestBody TeacherRequestDTO teacherDTO) {
+        TeacherResponseDTO createdTeacher = teacherService.create(teacherDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -50,8 +50,8 @@ public class TeacherController {
     }
 
     @PutMapping("/teachers")
-    public ResponseEntity<DetailedTeacherDTO> updateTeacher(@RequestBody DetailedTeacherDTO teacherDTO) {
-        DetailedTeacherDTO updatedTeacher = teacherService.update(teacherDTO);
+    public ResponseEntity<TeacherResponseDTO> updateTeacher(@RequestBody TeacherRequestDTO teacherDTO) {
+        TeacherResponseDTO updatedTeacher = teacherService.update(teacherDTO);
 
         return ResponseEntity.ok(updatedTeacher);
     }

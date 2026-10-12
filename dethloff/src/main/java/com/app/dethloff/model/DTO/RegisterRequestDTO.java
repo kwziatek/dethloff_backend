@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record RegisterRequest(
+public record RegisterRequestDTO(
         @NotBlank(message = "Username cannot be empty")
         String username,
         @NotBlank(message = "Password cannot be empty")

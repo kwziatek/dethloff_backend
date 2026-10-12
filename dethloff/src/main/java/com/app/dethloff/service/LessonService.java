@@ -1,15 +1,15 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.model.DTO.BasicLessonDTO;
-import com.app.dethloff.model.DTO.DetailedLessonDTO;
+import com.app.dethloff.model.DTO.LessonRequestDTO;
+import com.app.dethloff.model.DTO.LessonResponseDTO;
 
 import java.util.List;
 
 public interface LessonService {
-    DetailedLessonDTO create(BasicLessonDTO lessonDTO);
-    DetailedLessonDTO get(String id);
-    List<BasicLessonDTO> getAll();
-    DetailedLessonDTO update(BasicLessonDTO lessonDTO);
+    LessonResponseDTO create(LessonRequestDTO lessonRequestDTO);
+    LessonResponseDTO get(String id);
+    List<LessonResponseDTO> getAll();
+    LessonResponseDTO update(LessonRequestDTO lessonRequestDTO);
     void delete(String lessonId);
-    List<DetailedLessonDTO> getAllFromCourse(String courseId);
+    List<LessonResponseDTO> getAllFromCourse(String courseId);
 }

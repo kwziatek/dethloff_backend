@@ -30,90 +30,73 @@ public class CourseMapper {
         this.setOfCoursesMapper = setOfCoursesMapper;
     }
 
-    public CourseEntity toEntity(BasicCourseDTO basicCourseDTO) {
+    public CourseEntity toEntity(CourseRequestDTO courseRequestDTO) {
         TeacherEntity teacherProxy = null;
-        if(basicCourseDTO.teacherId() != null) {
-             teacherProxy = teacherDAO.createProxy(basicCourseDTO.teacherId());
+        if(courseRequestDTO.teacherId() != null) {
+             teacherProxy = teacherDAO.createProxy(courseRequestDTO.teacherId());
         }
 
         SetOfCoursesEntity setOfCoursesProxy = null;
-        if(basicCourseDTO.setOfCoursesId() != null) {
-            setOfCoursesProxy = setOfCoursesDAO.createProxy(basicCourseDTO.setOfCoursesId());
+        if(courseRequestDTO.setOfCoursesId() != null) {
+            setOfCoursesProxy = setOfCoursesDAO.createProxy(courseRequestDTO.setOfCoursesId());
         }
         List<StudentEntity> studentProxies = null;
-        if(basicCourseDTO.studentIds() != null) {
-            studentProxies = basicCourseDTO.studentIds().stream().map(studentDAO::createProxy).toList();
+        if(courseRequestDTO.studentIds() != null) {
+            studentProxies = courseRequestDTO.studentIds().stream().map(studentDAO::createProxy).toList();
         }
 
         return CourseEntity.builder()
-                .id(basicCourseDTO.id())
-                .name(basicCourseDTO.name())
-                .level(basicCourseDTO.level())
-                .description(basicCourseDTO.description())
+                .id(courseRequestDTO.id())
+                .name(courseRequestDTO.name())
+                .level(courseRequestDTO.level())
+                .description(courseRequestDTO.description())
                 .students(studentProxies)
                 .teacher(teacherProxy)
                 .setOfCourses(setOfCoursesProxy)
                 .build();
     }
 
-    public List<CourseEntity> toEntity(List<BasicCourseDTO> basicCourseDTOList) {
-        return basicCourseDTOList.stream()
+    public List<CourseEntity> toEntity(List<CourseRequestDTO> courseRequestDTOList) {
+        return courseRequestDTOList.stream()
                 .map(this::toEntity)
                 .toList();
     }
 
-    public BasicCourseDTO toBasicDTO(CourseEntity course) {
-        return BasicCourseDTO.builder()
-                .id(course.getId())
-                .name(course.getName())
-                .description(course.getDescription())
-                .studentIds(course.getStudents().stream().map(PersonAbstractEntity::getId).toList())
-                .teacherId(course.getTeacher().getId())
-                .setOfCoursesId(course.getSetOfCourses().getId())
-                .build();
-    }
-
-    public List<BasicCourseDTO> toBasicDTO(List<CourseEntity> courseList) {
-        return courseList.stream()
-                .map(this::toBasicDTO)
-                .toList();
-    }
-
-    public DetailedCourseDTO toDetailedDTO(CourseEntity course) {
-        BasicTeacherDTO basicTeacherDTO = null;
-        List<BasicStudentDTO> basicStudentDTOs = null;
-        SetOfCoursesDTO setOfCoursesDTO = null;
+    public CourseResponseDTO toCourseResponseDTO(CourseEntity course) {
+        TeacherResponseDTO teacherResponseDTO = null;
+        List<StudentResponseDTO> studentResponseDTOList = null;
+        SetOfCoursesResponseDTO setOfCoursesRequestDTO = null;
         if(course.getTeacher() != null) {
-            basicTeacherDTO = teacherMapper.toBasicDTO(course.getTeacher());
+            teacherResponseDTO = teacherMapper.toTeacherResponseDTO(course.getTeacher());
         }
         if(course.getStudents() != null) {
-            basicStudentDTOs = studentMapper.toBasicDTO(course.getStudents());
+            studentResponseDTOList = studentMapper.toStudentResponseDTO(course.getStudents());
         }
         if(course.getSetOfCourses() != null) {
-            setOfCoursesDTO = setOfCoursesMapper.toDTO(course.getSetOfCourses());
+            setOfCoursesRequestDTO = setOfCoursesMapper.toSetOfCoursesResponseDTO(course.getSetOfCourses());
         }
 
-        return DetailedCourseDTO.builder()
+        return CourseResponseDTO.builder()
                 .id(course.getId())
                 .name(course.getName())
                 .level(course.getLevel())
                 .description(course.getDescription())
-                .teacher(basicTeacherDTO)
-                .students(basicStudentDTOs)
-                .setOfCourses(setOfCoursesDTO)
+                .teacher(teacherResponseDTO)
+                .students(studentResponseDTOList)
+                .setOfCourses(setOfCoursesRequestDTO)
                 .room(course.getRoom())
                 .totalCourseTime(course.getTotalCourseTime())
                 .completedCourseTime(course.getCompletedCourseTime())
                 .build();
     }
 
-    public List<DetailedCourseDTO> toDetailedDTO(List<CourseEntity> courseList) {
+    public List<CourseResponseDTO> toCourseResponseDTO(List<CourseEntity> courseList) {
         return courseList.stream()
-                .map(this::toDetailedDTO)
+                .map(this::toCourseResponseDTO)
                 .toList();
     }
 
-    public void updateEntityFromBasic(BasicCourseDTO dto, CourseEntity entity) {
+    public void updateEntityFromRequest(CourseRequestDTO dto, CourseEntity entity) {
         if (dto == null) return;
         CourseEntity newCourseEntity = toEntity(dto);
 

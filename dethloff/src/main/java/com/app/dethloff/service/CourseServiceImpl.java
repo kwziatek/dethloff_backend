@@ -9,14 +9,13 @@ import com.app.dethloff.exceptions.model.SetOfCoursesNotFoundException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.CourseEntity;
-import com.app.dethloff.model.DTO.BasicCourseDTO;
-import com.app.dethloff.model.DTO.DetailedCourseDTO;
-import com.app.dethloff.model.DTO.SetOfCoursesDTO;
+import com.app.dethloff.model.DTO.CourseRequestDTO;
+import com.app.dethloff.model.DTO.CourseResponseDTO;
+import com.app.dethloff.model.DTO.SetOfCoursesResponseDTO;
 import com.app.dethloff.model.DTO.mappers.CourseMapper;
 import com.app.dethloff.model.DTO.mappers.SetOfCoursesMapper;
 import com.app.dethloff.model.SetOfCoursesEntity;
 import com.app.dethloff.model.StudentEntity;
-import jakarta.persistence.Basic;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,60 +44,60 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public DetailedCourseDTO get(String id) {
+    public CourseResponseDTO get(String id) {
         CourseEntity course = courseDAO.findById(id)
                 .orElseThrow(CourseNotFoundException::new);
-        return courseMapper.toDetailedDTO(course);
+        return courseMapper.toCourseResponseDTO(course);
     }
 
     @Override
-    public List<DetailedCourseDTO> getAll() {
-        return courseMapper.toDetailedDTO(courseDAO.findAll());
+    public List<CourseResponseDTO> getAll() {
+        return courseMapper.toCourseResponseDTO(courseDAO.findAll());
     }
 
     @Override
-    public List<DetailedCourseDTO> getAllFromParticularSet(String setOfCoursesId) {
+    public List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId) {
         List<CourseEntity> courses = courseDAO.findAllBySetId(setOfCoursesId)
                 .orElseThrow(() -> new CourseNotFoundException("No course belongs to set of courses with such id - " + setOfCoursesId));
 
-        return courseMapper.toDetailedDTO(courses);
+        return courseMapper.toCourseResponseDTO(courses);
     }
 
     @Override
-    public List<SetOfCoursesDTO> getAllSetsOfCourses() {
+    public List<SetOfCoursesResponseDTO> getAllSetsOfCourses() {
         List<SetOfCoursesEntity> list = setOfCoursesDAO.findAll()
                 .orElseThrow(SetOfCoursesNotFoundException::new);
 
-        return setOfCoursesMapper.toDTO(list);
+        return setOfCoursesMapper.toSetOfCoursesResponseDTO(list);
     }
 
     @Override
     @Transactional
-    public DetailedCourseDTO create(BasicCourseDTO basicCourseDTO) {
+    public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
 
-        Optional.ofNullable(basicCourseDTO.teacherId())
+        Optional.ofNullable(courseRequestDTO.teacherId())
                 .filter(teacherDAO::existsById)
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher not found or ID is null"));
 
-        Optional.ofNullable(basicCourseDTO.setOfCoursesId())
+        Optional.ofNullable(courseRequestDTO.setOfCoursesId())
                 .filter(setOfCoursesDAO::existsById)
                 .orElseThrow(() -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
 
-        CourseEntity course = courseMapper.toEntity(basicCourseDTO);
+        CourseEntity course = courseMapper.toEntity(courseRequestDTO);
         courseDAO.save(course);
-        return courseMapper.toDetailedDTO(course);
+        return courseMapper.toCourseResponseDTO(course);
     }
 
     @Transactional
     @Override
-    public DetailedCourseDTO update(BasicCourseDTO basicCourseDTO) {
-        CourseEntity existingCourse = courseDAO.findById(basicCourseDTO.id())
+    public CourseResponseDTO update(CourseRequestDTO courseRequestDTO) {
+        CourseEntity existingCourse = courseDAO.findById(courseRequestDTO.id())
                 .orElseThrow(CourseNotFoundException::new);
 
-        courseMapper.updateEntityFromBasic(basicCourseDTO, existingCourse);
+        courseMapper.updateEntityFromRequest(courseRequestDTO, existingCourse);
 
         CourseEntity updatedCourse = courseDAO.update(existingCourse);
-        return courseMapper.toDetailedDTO(updatedCourse);
+        return courseMapper.toCourseResponseDTO(updatedCourse);
     }
 
     @Transactional

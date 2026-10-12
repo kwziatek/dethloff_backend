@@ -52,4 +52,7 @@ public class TeacherEntity extends PersonAbstractEntity {
 
     @Column(name = "company_email")
     String companyEmail;
+
+    @Column(name = "marketing_sources")
+    String marketingSources;
 }

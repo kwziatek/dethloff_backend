@@ -5,7 +5,7 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
-    - add list of Students to basicCourseDTO
+    - add list of Students to courseRequestDTO
 
     - create other endpoints for lesson
 

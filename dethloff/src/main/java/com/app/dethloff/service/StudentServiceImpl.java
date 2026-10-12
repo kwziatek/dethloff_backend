@@ -1,10 +1,10 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.dao.StudentDAO;
-import com.app.dethloff.model.DTO.BasicStudentDTO;
-import com.app.dethloff.model.DTO.DetailedStudentDTO;
-import com.app.dethloff.model.DTO.mappers.StudentMapper;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
+import com.app.dethloff.model.DTO.StudentRequestDTO;
+import com.app.dethloff.model.DTO.StudentResponseDTO;
+import com.app.dethloff.model.DTO.mappers.StudentMapper;
 import com.app.dethloff.model.StudentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,29 +26,29 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public DetailedStudentDTO create(DetailedStudentDTO detailedStudentDTO) {
-        StudentEntity student = studentMapper.detailedToEntity(detailedStudentDTO);
+    public StudentResponseDTO create(StudentRequestDTO studentRequestDTO) {
+        StudentEntity student = studentMapper.toEntity(studentRequestDTO);
 
         student.setIsActive(false);
         studentDAO.save(student);
 
-        return studentMapper.entityToDetailed(student);
+        return studentMapper.toStudentResponseDTO(student);
     }
 
     @Override
-    public DetailedStudentDTO get(String id) {
+    public StudentResponseDTO get(String id) {
         StudentEntity student = studentDAO.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
 
-        return studentMapper.entityToDetailed(student);
+        return studentMapper.toStudentResponseDTO(student);
     }
 
     @Override
-    public List<BasicStudentDTO> getAll() {
+    public List<StudentResponseDTO> getAll() {
         List<StudentEntity> list = studentDAO.findAll()
                 .orElseThrow(() -> new StudentNotFoundException("No students found"));
 
-        return studentMapper.toBasicDTO(list);
+        return studentMapper.toStudentResponseDTO(list);
     }
 
     @Override
@@ -61,13 +61,13 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public DetailedStudentDTO update(DetailedStudentDTO detailedStudentDTO) {
-        StudentEntity existingStudent = studentDAO.findById(detailedStudentDTO.id())
-                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + detailedStudentDTO.id()));
+    public StudentResponseDTO update(StudentRequestDTO studentRequestDTO) {
+        StudentEntity existingStudent = studentDAO.findById(studentRequestDTO.id())
+                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentRequestDTO.id()));
 
-        studentMapper.updateEntityFromDetailed(detailedStudentDTO, existingStudent);
+        studentMapper.updateEntityFromRequest(studentRequestDTO, existingStudent);
 
         StudentEntity savedStudent = studentDAO.update(existingStudent);
-        return studentMapper.entityToDetailed(savedStudent);
+        return studentMapper.toStudentResponseDTO(savedStudent);
     }
 }

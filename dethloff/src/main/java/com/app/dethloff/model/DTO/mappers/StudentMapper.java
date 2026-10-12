@@ -1,7 +1,7 @@
 package com.app.dethloff.model.DTO.mappers;
 
-import com.app.dethloff.model.DTO.BasicStudentDTO;
-import com.app.dethloff.model.DTO.DetailedStudentDTO;
+import com.app.dethloff.model.DTO.StudentRequestDTO;
+import com.app.dethloff.model.DTO.StudentResponseDTO;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.model.pesel.Pesel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,39 +19,98 @@ public class StudentMapper {
         this.phoneNumberMapper = phoneNumberMapper;
     }
 
-    public BasicStudentDTO toBasicDTO(StudentEntity studentEntity) {
-        return BasicStudentDTO.builder()
+
+    public StudentEntity toEntity(StudentRequestDTO studentRequestDTO) {
+        String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(studentRequestDTO.phoneNumber());
+        String basicGuardianPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(studentRequestDTO.guardianPhoneNumber());
+        String basicCompanyPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(studentRequestDTO.companyPhoneNumber());
+        return StudentEntity.builder()
+                .id(studentRequestDTO.id())
+                .name(studentRequestDTO.name())
+                .surname(studentRequestDTO.surname())
+                .pesel(new Pesel(studentRequestDTO.pesel()))
+                .placeOfBirth(studentRequestDTO.placeOfBirth())
+                .birthDate(studentRequestDTO.birthDate())
+                .gender(studentRequestDTO.gender())
+                .isActive(studentRequestDTO.isActive())
+                .city(studentRequestDTO.city())
+                .street(studentRequestDTO.street())
+                .flatNumber(studentRequestDTO.flatNumber())
+                .postalCode(studentRequestDTO.postalCode())
+                .email(studentRequestDTO.email())
+                .phoneNumber(basicPhoneNumber)
+                .guardianName(studentRequestDTO.guardianName())
+                .guardianSurname(studentRequestDTO.guardianSurname())
+                .guardianCity(studentRequestDTO.guardianCity())
+                .guardianStreet(studentRequestDTO.guardianStreet())
+                .guardianFlatNumber(studentRequestDTO.guardianFlatNumber())
+                .guardianPostalCode(studentRequestDTO.guardianPostalCode())
+                .guardianPhoneNumber(basicGuardianPhoneNumber)
+                .guardianEmail(studentRequestDTO.guardianEmail())
+                .companyName(studentRequestDTO.companyName())
+                .NIP(studentRequestDTO.NIP())
+                .companyCity(studentRequestDTO.companyCity())
+                .companyStreet(studentRequestDTO.companyStreet())
+                .companyFlatNumber(studentRequestDTO.companyFlatNumber())
+                .companyPostalCode(studentRequestDTO.companyPostalCode())
+                .companyPhoneNumber(basicCompanyPhoneNumber)
+                .companyEmail(studentRequestDTO.companyEmail())
+                .marketingSources(studentRequestDTO.marketingSources())
+                .build();
+    }
+
+    public List<StudentEntity> toEntity(List<StudentRequestDTO> studentRequestDTOList) {
+        return studentRequestDTOList.stream()
+            .map(this::toEntity)
+            .toList();
+    }
+
+    public StudentResponseDTO toStudentResponseDTO(StudentEntity studentEntity) {
+        String extendedPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getPhoneNumber());
+        String extendedGuardianPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getGuardianPhoneNumber());
+        String extendedCompanyPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getCompanyPhoneNumber());
+        return StudentResponseDTO.builder()
                 .id(studentEntity.getId())
                 .name(studentEntity.getName())
                 .surname(studentEntity.getSurname())
                 .pesel(String.valueOf(studentEntity.getPesel()))
-                .placeOfBirth(studentEntity.getPlaceOfBirth())
                 .birthDate(studentEntity.getBirthDate())
-                .isActive(studentEntity.getIsActive())
+                .placeOfBirth(studentEntity.getPlaceOfBirth())
                 .gender(studentEntity.getGender())
+                .isActive(studentEntity.getIsActive())
+                .city(studentEntity.getCity())
+                .street(studentEntity.getStreet())
+                .flatNumber(studentEntity.getFlatNumber())
+                .postalCode(studentEntity.getPostalCode())
+                .email(studentEntity.getEmail())
+                .phoneNumber(extendedPhoneNumber)
+                .guardianName(studentEntity.getGuardianName())
+                .guardianSurname(studentEntity.getGuardianSurname())
+                .guardianCity(studentEntity.getGuardianCity())
+                .guardianStreet(studentEntity.getGuardianStreet())
+                .guardianFlatNumber(studentEntity.getGuardianFlatNumber())
+                .guardianPostalCode(studentEntity.getGuardianPostalCode())
+                .guardianPhoneNumber(extendedGuardianPhoneNumber)
+                .guardianEmail(studentEntity.getGuardianEmail())
+                .companyName(studentEntity.getCompanyName())
+                .NIP(studentEntity.getNIP())
+                .companyCity(studentEntity.getCompanyCity())
+                .companyStreet(studentEntity.getCompanyStreet())
+                .companyFlatNumber(studentEntity.getCompanyFlatNumber())
+                .companyPostalCode(studentEntity.getCompanyPostalCode())
+                .companyPhoneNumber(extendedCompanyPhoneNumber)
+                .companyEmail(studentEntity.getCompanyEmail())
+                .marketingSources(studentEntity.getMarketingSources())
                 .build();
     }
 
-    public List<BasicStudentDTO> toBasicDTO(List<StudentEntity> studentEntities) {
+    public List<StudentResponseDTO> toStudentResponseDTO(List<StudentEntity> studentEntities) {
         return studentEntities.stream()
-                .map(this::toBasicDTO)
+                .map(this::toStudentResponseDTO)
                 .toList();
     }
 
-    public StudentEntity toEntity(BasicStudentDTO basicStudentDTO) {
-        return StudentEntity.builder()
-                .id(basicStudentDTO.id())
-                .name(basicStudentDTO.name())
-                .surname(basicStudentDTO.surname())
-                .pesel(new Pesel(basicStudentDTO.pesel()))
-                .placeOfBirth(basicStudentDTO.placeOfBirth())
-                .birthDate(basicStudentDTO.birthDate())
-                .isActive(basicStudentDTO.isActive())
-                .gender(basicStudentDTO.gender())
-                .build();
-    }
-
-    public void updateEntityFromDetailed(DetailedStudentDTO dto, StudentEntity entity) {
+    public void updateEntityFromRequest(StudentRequestDTO dto, StudentEntity entity) {
         if (dto == null){
             return;
         }
@@ -88,82 +147,5 @@ public class StudentMapper {
         entity.setCompanyPhoneNumber(basicCompanyPhoneNumber);
         entity.setCompanyEmail(dto.companyEmail());
         entity.setMarketingSources(dto.marketingSources());
-    }
-
-    public StudentEntity detailedToEntity(DetailedStudentDTO detailedStudentDTO) {
-        String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.phoneNumber());
-        String basicGuardianPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.guardianPhoneNumber());
-        String basicCompanyPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(detailedStudentDTO.companyPhoneNumber());
-        return StudentEntity.builder()
-                .id(detailedStudentDTO.id())
-                .name(detailedStudentDTO.name())
-                .surname(detailedStudentDTO.surname())
-                .pesel(new Pesel(detailedStudentDTO.pesel()))
-                .placeOfBirth(detailedStudentDTO.placeOfBirth())
-                .birthDate(detailedStudentDTO.birthDate())
-                .gender(detailedStudentDTO.gender())
-                .city(detailedStudentDTO.city())
-                .street(detailedStudentDTO.street())
-                .flatNumber(detailedStudentDTO.flatNumber())
-                .postalCode(detailedStudentDTO.postalCode())
-                .email(detailedStudentDTO.email())
-                .phoneNumber(basicPhoneNumber)
-                .guardianName(detailedStudentDTO.guardianName())
-                .guardianSurname(detailedStudentDTO.guardianSurname())
-                .guardianCity(detailedStudentDTO.guardianCity())
-                .guardianStreet(detailedStudentDTO.guardianStreet())
-                .guardianFlatNumber(detailedStudentDTO.guardianFlatNumber())
-                .guardianPostalCode(detailedStudentDTO.guardianPostalCode())
-                .guardianPhoneNumber(basicGuardianPhoneNumber)
-                .guardianEmail(detailedStudentDTO.guardianEmail())
-                .companyName(detailedStudentDTO.companyName())
-                .NIP(detailedStudentDTO.NIP())
-                .companyCity(detailedStudentDTO.companyCity())
-                .companyStreet(detailedStudentDTO.companyStreet())
-                .companyFlatNumber(detailedStudentDTO.companyFlatNumber())
-                .companyPostalCode(detailedStudentDTO.companyPostalCode())
-                .companyPhoneNumber(basicCompanyPhoneNumber)
-                .companyEmail(detailedStudentDTO.companyEmail())
-                .marketingSources(detailedStudentDTO.marketingSources())
-                .build();
-    }
-
-    public DetailedStudentDTO entityToDetailed(StudentEntity studentEntity) {
-        String extendedPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getPhoneNumber());
-        String extendedGuardianPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getGuardianPhoneNumber());
-        String extendedCompanyPhoneNumber = phoneNumberMapper.toExtendedPhoneNumber(studentEntity.getCompanyPhoneNumber());
-        return DetailedStudentDTO.builder()
-                .id(studentEntity.getId())
-                .name(studentEntity.getName())
-                .surname(studentEntity.getSurname())
-                .pesel(String.valueOf(studentEntity.getPesel()))
-                .birthDate(studentEntity.getBirthDate())
-                .placeOfBirth(studentEntity.getPlaceOfBirth())
-                .gender(studentEntity.getGender())
-                .isActive(studentEntity.getIsActive())
-                .city(studentEntity.getCity())
-                .street(studentEntity.getStreet())
-                .flatNumber(studentEntity.getFlatNumber())
-                .postalCode(studentEntity.getPostalCode())
-                .email(studentEntity.getEmail())
-                .phoneNumber(extendedPhoneNumber)
-                .guardianName(studentEntity.getGuardianName())
-                .guardianSurname(studentEntity.getGuardianSurname())
-                .guardianCity(studentEntity.getGuardianCity())
-                .guardianStreet(studentEntity.getGuardianStreet())
-                .guardianFlatNumber(studentEntity.getGuardianFlatNumber())
-                .guardianPostalCode(studentEntity.getGuardianPostalCode())
-                .guardianPhoneNumber(extendedGuardianPhoneNumber)
-                .guardianEmail(studentEntity.getGuardianEmail())
-                .companyName(studentEntity.getCompanyName())
-                .NIP(studentEntity.getNIP())
-                .companyCity(studentEntity.getCompanyCity())
-                .companyStreet(studentEntity.getCompanyStreet())
-                .companyFlatNumber(studentEntity.getCompanyFlatNumber())
-                .companyPostalCode(studentEntity.getCompanyPostalCode())
-                .companyPhoneNumber(extendedCompanyPhoneNumber)
-                .companyEmail(studentEntity.getCompanyEmail())
-                .marketingSources(studentEntity.getMarketingSources())
-                .build();
     }
 }
