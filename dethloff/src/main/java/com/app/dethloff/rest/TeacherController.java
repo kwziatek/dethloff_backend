@@ -3,6 +3,7 @@ package com.app.dethloff.rest;
 import com.app.dethloff.model.DTO.TeacherRequestDTO;
 import com.app.dethloff.model.DTO.TeacherResponseDTO;
 import com.app.dethloff.service.TeacherService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class TeacherController {
     }
 
     @PostMapping("/teachers")
-    public ResponseEntity<TeacherResponseDTO> createTeacher(@RequestBody TeacherRequestDTO teacherDTO) {
+    public ResponseEntity<TeacherResponseDTO> createTeacher(@Valid @RequestBody TeacherRequestDTO teacherDTO) {
         TeacherResponseDTO createdTeacher = teacherService.create(teacherDTO);
 
         URI location = ServletUriComponentsBuilder
@@ -50,7 +51,7 @@ public class TeacherController {
     }
 
     @PutMapping("/teachers")
-    public ResponseEntity<TeacherResponseDTO> updateTeacher(@RequestBody TeacherRequestDTO teacherDTO) {
+    public ResponseEntity<TeacherResponseDTO> updateTeacher(@Valid @RequestBody TeacherRequestDTO teacherDTO) {
         TeacherResponseDTO updatedTeacher = teacherService.update(teacherDTO);
 
         return ResponseEntity.ok(updatedTeacher);

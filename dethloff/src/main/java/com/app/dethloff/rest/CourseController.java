@@ -4,6 +4,7 @@ import com.app.dethloff.model.DTO.CourseRequestDTO;
 import com.app.dethloff.model.DTO.CourseResponseDTO;
 import com.app.dethloff.model.DTO.SetOfCoursesResponseDTO;
 import com.app.dethloff.service.CourseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,7 @@ public class CourseController {
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
+    public ResponseEntity<CourseResponseDTO> createCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
         CourseResponseDTO courseResponseDTO = courseService.create(courseRequestDTO);
 
         URI location = ServletUriComponentsBuilder
@@ -72,7 +73,7 @@ public class CourseController {
     }
 
     @PutMapping("/courses")
-    public ResponseEntity<CourseResponseDTO> updateCourse(@RequestBody CourseRequestDTO courseRequestDTO) {
+    public ResponseEntity<CourseResponseDTO> updateCourse(@Valid @RequestBody CourseRequestDTO courseRequestDTO) {
         CourseResponseDTO courseResponseDTO = courseService.update(courseRequestDTO);
 
         return ResponseEntity.ok(courseResponseDTO);

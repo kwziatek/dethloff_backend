@@ -39,7 +39,7 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO studentDTO) {
+    public ResponseEntity<StudentResponseDTO> createStudent(@Valid @RequestBody StudentRequestDTO studentDTO) {
         StudentResponseDTO createdStudent = studentService.create(studentDTO);
 
         URI location = ServletUriComponentsBuilder

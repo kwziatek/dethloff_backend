@@ -99,26 +99,26 @@ public class TeacherMapper {
         String basicPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.phoneNumber());
         String basicCompanyPhoneNumber = phoneNumberMapper.toBasicPhoneNumber(dto.companyPhoneNumber());
 
-        entity.setName(dto.name());
-        entity.setSurname(dto.surname());
-        entity.setPesel(dto.pesel());
-        entity.setGender(dto.gender());
-        entity.setBirthDate(dto.birthDate());
-        entity.setPlaceOfBirth(dto.placeOfBirth());
-        entity.setCity(dto.city());
-        entity.setStreet(dto.street());
-        entity.setFlatNumber(dto.flatNumber());
-        entity.setPostalCode(dto.postalCode());
-        entity.setPhoneNumber(basicPhoneNumber);
-        entity.setEmail(dto.email());
-        entity.setCompanyName(dto.companyName());
-        entity.setNIP(dto.NIP());
-        entity.setCompanyCity(dto.companyCity());
-        entity.setCompanyStreet(dto.companyStreet());
-        entity.setCompanyFlatNumber(dto.companyFlatNumber());
-        entity.setCompanyPostalCode(dto.companyPostalCode());
-        entity.setCompanyPhoneNumber(basicCompanyPhoneNumber);
-        entity.setCompanyEmail(dto.companyEmail());
-        entity.setMarketingSources(dto.marketingSources());
+        if (dto.name() != null) entity.setName(dto.name());
+        if (dto.surname() != null) entity.setSurname(dto.surname());
+        if (dto.pesel() != null) entity.setPesel(dto.pesel());
+        if (dto.gender() != null) entity.setGender(dto.gender());
+        if (dto.birthDate() != null) entity.setBirthDate(dto.birthDate());
+        if (dto.placeOfBirth() != null) entity.setPlaceOfBirth(dto.placeOfBirth());
+        if (dto.city() != null) entity.setCity(dto.city());
+        if (dto.street() != null) entity.setStreet(dto.street());
+        if (dto.flatNumber() != null) entity.setFlatNumber(dto.flatNumber());
+        if (dto.postalCode() != null) entity.setPostalCode(dto.postalCode());
+        if (basicPhoneNumber != null) entity.setPhoneNumber(basicPhoneNumber);
+        if (dto.email() != null) entity.setEmail(dto.email());
+        if (dto.companyName() != null) entity.setCompanyName(dto.companyName());
+        if (dto.NIP() != null) entity.setNIP(dto.NIP());
+        if (dto.companyCity() != null) entity.setCompanyCity(dto.companyCity());
+        if (dto.companyStreet() != null) entity.setCompanyStreet(dto.companyStreet());
+        if (dto.companyFlatNumber() != null) entity.setCompanyFlatNumber(dto.companyFlatNumber());
+        if (dto.companyPostalCode() != null) entity.setCompanyPostalCode(dto.companyPostalCode());
+        if (basicCompanyPhoneNumber != null) entity.setCompanyPhoneNumber(basicCompanyPhoneNumber);
+        if (dto.companyEmail() != null) entity.setCompanyEmail(dto.companyEmail());
+        if (dto.marketingSources() != null) entity.setMarketingSources(dto.marketingSources());
     }
 }

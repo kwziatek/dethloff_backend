@@ -5,7 +5,13 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
-    - add list of Students to courseRequestDTO
+    - check DTO's (request and response for each entity)
+
+    - check mappers (especially update entity from request methods)
+
+    - check service layer (if it's unified)
+
+    - check controller layer (if it's unified)
 
     - create other endpoints for lesson
 
