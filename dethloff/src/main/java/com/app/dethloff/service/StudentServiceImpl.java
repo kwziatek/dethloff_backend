@@ -2,9 +2,9 @@ package com.app.dethloff.service;
 
 import com.app.dethloff.dao.StudentDAO;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
-import com.app.dethloff.model.DTO.StudentRequestDTO;
-import com.app.dethloff.model.DTO.StudentResponseDTO;
-import com.app.dethloff.model.DTO.mappers.StudentMapper;
+import com.app.dethloff.rest.DTO.StudentRequestDTO;
+import com.app.dethloff.rest.DTO.StudentResponseDTO;
+import com.app.dethloff.rest.mappers.StudentMapper;
 import com.app.dethloff.model.StudentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

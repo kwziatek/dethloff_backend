@@ -1,9 +1,9 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.dao.TeacherDAO;
-import com.app.dethloff.model.DTO.TeacherRequestDTO;
-import com.app.dethloff.model.DTO.TeacherResponseDTO;
-import com.app.dethloff.model.DTO.mappers.TeacherMapper;
+import com.app.dethloff.rest.DTO.TeacherRequestDTO;
+import com.app.dethloff.rest.DTO.TeacherResponseDTO;
+import com.app.dethloff.rest.mappers.TeacherMapper;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.TeacherEntity;
 import jakarta.transaction.Transactional;

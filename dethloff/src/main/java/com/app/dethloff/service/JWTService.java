@@ -1,6 +1,6 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.login.Role;
+import com.app.dethloff.model.Role;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JWTService {

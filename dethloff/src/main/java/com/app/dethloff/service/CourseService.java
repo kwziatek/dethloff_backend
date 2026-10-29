@@ -1,8 +1,8 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.model.DTO.CourseRequestDTO;
-import com.app.dethloff.model.DTO.CourseResponseDTO;
-import com.app.dethloff.model.DTO.SetOfCoursesResponseDTO;
+import com.app.dethloff.rest.DTO.CourseRequestDTO;
+import com.app.dethloff.rest.DTO.CourseResponseDTO;
+import com.app.dethloff.rest.DTO.SetOfCoursesResponseDTO;
 
 import java.util.List;
 

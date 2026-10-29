@@ -95,4 +95,8 @@
     - DTO classes should be implemented as record classes - records are immutable which is perfect for data transfer
     - I need mappers from classes to DTO's and the other way around, otherwise I'll be implementing them in service layer which is suboptimal
     - Phone number format: "+48 xxx xxx xxx"
+
+    solution to updating problem:
+    - get entity from db
+    - convert dto to entity (provided the fetched entity) using spring map struct, there is some property that overrides only not null values
     -- SOME GENERAL INFO ------------------------------------------------------------------------------------------------------------------------------------

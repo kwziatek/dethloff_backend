@@ -1,8 +1,7 @@
 package com.app.dethloff.model;
 
-import com.app.dethloff.model.coverters.PeselConverter;
+import com.app.dethloff.rest.mappers.PeselMapper;
 import com.app.dethloff.model.pesel.Pesel;
-import com.app.dethloff.model.pesel.PeselDecoder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +35,7 @@ public abstract class PersonAbstractEntity {
     protected String placeOfBirth;
 
     @Column(name = "pesel", length = 11)
-    @Convert(converter = PeselConverter.class)
+    @Convert(converter = PeselMapper.class)
     protected Pesel pesel;
 
     @Enumerated(EnumType.STRING)

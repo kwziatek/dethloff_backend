@@ -1,6 +1,5 @@
 package com.app.dethloff.model;
 
-import com.app.dethloff.login.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

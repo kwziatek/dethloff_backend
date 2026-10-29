@@ -1,7 +1,7 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.model.DTO.TeacherRequestDTO;
-import com.app.dethloff.model.DTO.TeacherResponseDTO;
+import com.app.dethloff.rest.DTO.TeacherRequestDTO;
+import com.app.dethloff.rest.DTO.TeacherResponseDTO;
 
 import java.util.List;
 

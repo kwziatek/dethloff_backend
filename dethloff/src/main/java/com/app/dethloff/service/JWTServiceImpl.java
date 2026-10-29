@@ -1,6 +1,6 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.login.Role;
+import com.app.dethloff.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
