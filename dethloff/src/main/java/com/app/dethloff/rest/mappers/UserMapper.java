@@ -1,13 +1,13 @@
 package com.app.dethloff.rest.mappers;
 
 import com.app.dethloff.rest.DTO.RegisterRequestDTO;
-import com.app.dethloff.model.User;
+import com.app.dethloff.model.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-    public User registerDTOToEntity(RegisterRequestDTO register) {
-        return User.builder()
+    public UserEntity registerDTOToEntity(RegisterRequestDTO register) {
+        return UserEntity.builder()
                 .id(null)
                 .username(register.username())
                 .password(register.password())

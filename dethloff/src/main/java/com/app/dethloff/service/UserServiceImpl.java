@@ -1,14 +1,14 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.dao.UserRepo;
+import com.app.dethloff.repository.UserRepository;
 import com.app.dethloff.exceptions.model.InvalidLoginOrPasswordException;
 import com.app.dethloff.exceptions.model.InvalidPasswordException;
 import com.app.dethloff.exceptions.model.UserNotFoundException;
 import com.app.dethloff.exceptions.model.UsernameTakenException;
+import com.app.dethloff.model.UserEntity;
 import com.app.dethloff.rest.DTO.LoginRequestDTO;
 import com.app.dethloff.rest.DTO.RegisterRequestDTO;
 import com.app.dethloff.rest.mappers.UserMapper;
-import com.app.dethloff.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private final UserRepo userRepo;
+    private final UserRepository userRepository;
 
     private final AuthenticationManager auth;
 
@@ -32,8 +32,8 @@ public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, AuthenticationManager auth, JWTServiceImpl jwtService, PasswordService passwordService, UserMapper userMapper) {
-        this.userRepo = userRepo;
+    public UserServiceImpl(UserRepository userRepository, AuthenticationManager auth, JWTServiceImpl jwtService, PasswordService passwordService, UserMapper userMapper) {
+        this.userRepository = userRepository;
         this.auth = auth;
         this.jwtService = jwtService;
         this.passwordService = passwordService;
@@ -43,28 +43,28 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder(12);
 
     public void register(RegisterRequestDTO request) {
-        User user = userMapper.registerDTOToEntity(request);
-        Optional<User> existingUser = userRepo.findByUsername(user.getUsername());
+        UserEntity userEntity = userMapper.registerDTOToEntity(request);
+        Optional<UserEntity> existingUser = userRepository.findByUsername(userEntity.getUsername());
         if(existingUser.isPresent()) {
             throw new UsernameTakenException("this username is already taken");
         }
 
-        if(passwordService.validateNewPassword(user.getPassword())) {
-            user.setPassword(encoder.encode(user.getPassword()));
+        if(passwordService.validateNewPassword(userEntity.getPassword())) {
+            userEntity.setPassword(encoder.encode(userEntity.getPassword()));
         } else {
             throw new InvalidPasswordException("given password doesn't meet the requirements");
         }
 
-        userRepo.save(user);
+        userRepository.save(userEntity);
     }
 
     public String verify(LoginRequestDTO request) {
         try {
             Authentication authentication = auth.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
             if(authentication.isAuthenticated()) {
-                User existingUser = userRepo.findByUsername(request.username())
+                UserEntity existingUserEntity = userRepository.findByUsername(request.username())
                         .orElseThrow(() -> new UserNotFoundException("No user with username: " + request.username()));
-                return jwtService.generateToken(existingUser.getUsername(), existingUser.getRole());
+                return jwtService.generateToken(existingUserEntity.getUsername(), existingUserEntity.getRole());
             }
         } catch (RuntimeException exc) {
             throw new InvalidLoginOrPasswordException("invalid username or password");
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void changePassword(String username, String oldPassword, String newPassword) {
-        User existingUser = userRepo.findByUsername(username)
+        UserEntity existingUserEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("No user with username: " + username));
 
         Authentication authentication = auth.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
@@ -88,11 +88,11 @@ public class UserServiceImpl implements UserService{
         }
 
         if(passwordService.validateNewPassword(newPassword)) {
-            existingUser.setPassword(encoder.encode(newPassword));
+            existingUserEntity.setPassword(encoder.encode(newPassword));
         } else {
             throw new InvalidPasswordException("given password doesn't meet the requirements");
         }
 
-        userRepo.save(existingUser);
+        userRepository.save(existingUserEntity);
     }
 }
