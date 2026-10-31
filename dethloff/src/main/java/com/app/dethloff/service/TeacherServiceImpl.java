@@ -1,6 +1,6 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.dao.TeacherDAO;
+import com.app.dethloff.repository.TeacherRepository;
 import com.app.dethloff.rest.DTO.TeacherRequestDTO;
 import com.app.dethloff.rest.DTO.TeacherResponseDTO;
 import com.app.dethloff.rest.mappers.TeacherMapper;
@@ -15,26 +15,25 @@ import java.util.List;
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
-    final TeacherDAO teacherDAO;
+    final TeacherRepository teacherRepo;
     final TeacherMapper teacherMapper;
 
     @Autowired
-    public TeacherServiceImpl(TeacherDAO teacherDAO, TeacherMapper teacherMapper) {
-        this.teacherDAO = teacherDAO;
+    public TeacherServiceImpl(TeacherRepository teacherRepo, TeacherMapper teacherMapper) {
+        this.teacherRepo = teacherRepo;
         this.teacherMapper = teacherMapper;
     }
 
     @Override
     public TeacherResponseDTO get(String id) {
-        TeacherEntity teacher = teacherDAO.findById(id)
+        TeacherEntity teacher = teacherRepo.findById(id)
                 .orElseThrow(TeacherNotFoundException::new);
         return teacherMapper.toTeacherResponseDTO(teacher);
     }
 
     @Override
     public List<TeacherResponseDTO> getAll() {
-        List<TeacherEntity> teachers = teacherDAO.findAll()
-                .orElseThrow(() -> new TeacherNotFoundException("No teachers found"));
+        List<TeacherEntity> teachers = teacherRepo.findAll();
         return teacherMapper.toTeacherResponseDTO(teachers);
     }
 
@@ -44,24 +43,24 @@ public class TeacherServiceImpl implements TeacherService {
         TeacherEntity teacher = teacherMapper.toEntity(teacherDTO);
 
         teacher.setIsActive(false);
-        teacherDAO.save(teacher);
+        teacherRepo.save(teacher);
         return teacherMapper.toTeacherResponseDTO(teacher);
     }
 
     @Override
     @Transactional
     public TeacherResponseDTO update(TeacherRequestDTO teacherDTO) {
-        TeacherEntity existingTeacher = teacherDAO.findById(teacherDTO.id())
+        TeacherEntity existingTeacher = teacherRepo.findById(teacherDTO.id())
                 .orElseThrow(TeacherNotFoundException::new);
         teacherMapper.updateEntityFromRequest(teacherDTO, existingTeacher);
-        return teacherMapper.toTeacherResponseDTO(teacherDAO.update(existingTeacher));
+        return teacherMapper.toTeacherResponseDTO(teacherRepo.save(existingTeacher));
     }
 
     @Override
     @Transactional
     public void delete(String id) {
-        teacherDAO.findById(id)
+        TeacherEntity teacher= teacherRepo.findById(id)
                 .orElseThrow(TeacherNotFoundException::new);
-        teacherDAO.delete(id);
+        teacherRepo.delete(teacher);
     }
 }

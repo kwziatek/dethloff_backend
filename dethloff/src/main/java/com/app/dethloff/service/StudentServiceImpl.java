@@ -1,7 +1,7 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.dao.StudentDAO;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
+import com.app.dethloff.repository.StudentRepository;
 import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.mappers.StudentMapper;
@@ -15,12 +15,12 @@ import java.util.List;
 @Service
 public class StudentServiceImpl implements StudentService{
 
-    private final StudentDAO studentDAO;
+    private final StudentRepository studentRepo;
     private final StudentMapper studentMapper;
 
     @Autowired
-    public StudentServiceImpl(StudentDAO studentDAO, StudentMapper studentMapper) {
-        this.studentDAO = studentDAO;
+    public StudentServiceImpl(StudentRepository studentRepo, StudentMapper studentMapper) {
+        this.studentRepo = studentRepo;
         this.studentMapper = studentMapper;
     }
 
@@ -30,14 +30,14 @@ public class StudentServiceImpl implements StudentService{
         StudentEntity student = studentMapper.toEntity(studentRequestDTO);
 
         student.setIsActive(false);
-        studentDAO.save(student);
+        studentRepo.save(student);
 
         return studentMapper.toStudentResponseDTO(student);
     }
 
     @Override
     public StudentResponseDTO get(String id) {
-        StudentEntity student = studentDAO.findById(id)
+        StudentEntity student = studentRepo.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
 
         return studentMapper.toStudentResponseDTO(student);
@@ -45,8 +45,7 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public List<StudentResponseDTO> getAll() {
-        List<StudentEntity> list = studentDAO.findAll()
-                .orElseThrow(() -> new StudentNotFoundException("No students found"));
+        List<StudentEntity> list = studentRepo.findAll();
 
         return studentMapper.toStudentResponseDTO(list);
     }
@@ -54,20 +53,20 @@ public class StudentServiceImpl implements StudentService{
     @Override
     @Transactional
     public void delete(String id) {
-        StudentEntity toBeDeleted = studentDAO.findById(id)
+        StudentEntity toBeDeleted = studentRepo.findById(id)
                         .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
-        studentDAO.remove(toBeDeleted);
+        studentRepo.delete(toBeDeleted);
     }
 
     @Override
     @Transactional
     public StudentResponseDTO update(StudentRequestDTO studentRequestDTO) {
-        StudentEntity existingStudent = studentDAO.findById(studentRequestDTO.id())
+        StudentEntity existingStudent = studentRepo.findById(studentRequestDTO.id())
                 .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentRequestDTO.id()));
 
         studentMapper.updateEntityFromRequest(studentRequestDTO, existingStudent);
 
-        StudentEntity savedStudent = studentDAO.update(existingStudent);
+        StudentEntity savedStudent = studentRepo.save(existingStudent);
         return studentMapper.toStudentResponseDTO(savedStudent);
     }
 }

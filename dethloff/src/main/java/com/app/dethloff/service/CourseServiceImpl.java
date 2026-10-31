@@ -1,21 +1,21 @@
 package com.app.dethloff.service;
 
-import com.app.dethloff.dao.CourseDAO;
-import com.app.dethloff.dao.SetOfCoursesDAO;
-import com.app.dethloff.dao.StudentDAO;
-import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.SetOfCoursesNotFoundException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.CourseEntity;
+import com.app.dethloff.model.SetOfCoursesEntity;
+import com.app.dethloff.model.StudentEntity;
+import com.app.dethloff.repository.CourseRepository;
+import com.app.dethloff.repository.SetOfCoursesRepository;
+import com.app.dethloff.repository.StudentRepository;
+import com.app.dethloff.repository.TeacherRepository;
 import com.app.dethloff.rest.DTO.CourseRequestDTO;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.DTO.SetOfCoursesResponseDTO;
 import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.rest.mappers.SetOfCoursesMapper;
-import com.app.dethloff.model.SetOfCoursesEntity;
-import com.app.dethloff.model.StudentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,47 +26,45 @@ import java.util.Optional;
 @Service
 public class CourseServiceImpl implements CourseService{
 
-    private final CourseDAO courseDAO;
-    private final StudentDAO studentDAO;
-    private final TeacherDAO teacherDAO;
-    private final SetOfCoursesDAO setOfCoursesDAO;
+    private final CourseRepository courseRepo;
+    private final StudentRepository studentRepo;
+    private final TeacherRepository teacherRepo;
+    private final SetOfCoursesRepository setOfCoursesRepo;
     private final CourseMapper courseMapper;
     private final SetOfCoursesMapper setOfCoursesMapper;
 
     @Autowired
-    public CourseServiceImpl(CourseDAO courseDAO, StudentDAO studentDAO, TeacherDAO teacherDAO, CourseMapper courseMapper, SetOfCoursesDAO setOfCoursesDAO, SetOfCoursesMapper setOfCoursesMapper) {
-        this.courseDAO = courseDAO;
-        this.studentDAO = studentDAO;
-        this.teacherDAO = teacherDAO;
+    public CourseServiceImpl(CourseRepository courseRepo, StudentRepository studentRepo, TeacherRepository teacherRepo, CourseMapper courseMapper, SetOfCoursesRepository setOfCoursesRepo, SetOfCoursesMapper setOfCoursesMapper) {
+        this.courseRepo = courseRepo;
+        this.studentRepo = studentRepo;
+        this.teacherRepo = teacherRepo;
         this.courseMapper = courseMapper;
-        this.setOfCoursesDAO = setOfCoursesDAO;
+        this.setOfCoursesRepo = setOfCoursesRepo;
         this.setOfCoursesMapper = setOfCoursesMapper;
     }
 
     @Override
     public CourseResponseDTO get(String id) {
-        CourseEntity course = courseDAO.findById(id)
+        CourseEntity course = courseRepo.findById(id)
                 .orElseThrow(CourseNotFoundException::new);
         return courseMapper.toCourseResponseDTO(course);
     }
 
     @Override
     public List<CourseResponseDTO> getAll() {
-        return courseMapper.toCourseResponseDTO(courseDAO.findAll());
+        return courseMapper.toCourseResponseDTO(courseRepo.findAll());
     }
 
     @Override
     public List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId) {
-        List<CourseEntity> courses = courseDAO.findAllBySetId(setOfCoursesId)
-                .orElseThrow(() -> new CourseNotFoundException("No course belongs to set of courses with such id - " + setOfCoursesId));
+        List<CourseEntity> courses = courseRepo.findAllBySetOfCourses_Id(setOfCoursesId);
 
         return courseMapper.toCourseResponseDTO(courses);
     }
 
     @Override
     public List<SetOfCoursesResponseDTO> getAllSetsOfCourses() {
-        List<SetOfCoursesEntity> list = setOfCoursesDAO.findAll()
-                .orElseThrow(SetOfCoursesNotFoundException::new);
+        List<SetOfCoursesEntity> list = setOfCoursesRepo.findAll();
 
         return setOfCoursesMapper.toSetOfCoursesResponseDTO(list);
     }
@@ -76,44 +74,44 @@ public class CourseServiceImpl implements CourseService{
     public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
 
         Optional.ofNullable(courseRequestDTO.teacherId())
-                .filter(teacherDAO::existsById)
+                .filter(teacherRepo::existsById)
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher not found or ID is null"));
 
         Optional.ofNullable(courseRequestDTO.setOfCoursesId())
-                .filter(setOfCoursesDAO::existsById)
+                .filter(setOfCoursesRepo::existsById)
                 .orElseThrow(() -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
 
         CourseEntity course = courseMapper.toEntity(courseRequestDTO);
-        courseDAO.save(course);
+        courseRepo.save(course);
         return courseMapper.toCourseResponseDTO(course);
     }
 
     @Transactional
     @Override
     public CourseResponseDTO update(CourseRequestDTO courseRequestDTO) {
-        CourseEntity existingCourse = courseDAO.findById(courseRequestDTO.id())
+        CourseEntity existingCourse = courseRepo.findById(courseRequestDTO.id())
                 .orElseThrow(CourseNotFoundException::new);
 
         courseMapper.updateEntityFromRequest(courseRequestDTO, existingCourse);
 
-        CourseEntity updatedCourse = courseDAO.update(existingCourse);
+        CourseEntity updatedCourse = courseRepo.save(existingCourse);
         return courseMapper.toCourseResponseDTO(updatedCourse);
     }
 
     @Transactional
     @Override
     public void delete(String id) {
-        CourseEntity course = courseDAO.findById(id)
+        CourseEntity course = courseRepo.findById(id)
                 .orElseThrow(CourseNotFoundException::new);
-        courseDAO.remove(course);
+        courseRepo.delete(course);
     }
 
     @Override
     @Transactional
     public void enrollStudent(String courseId, String studentId) {
-        CourseEntity course = courseDAO.findById(courseId)
+        CourseEntity course = courseRepo.findById(courseId)
                 .orElseThrow(CourseNotFoundException::new);
-        StudentEntity student = studentDAO.findById(studentId)
+        StudentEntity student = studentRepo.findById(studentId)
                 .orElseThrow(StudentNotFoundException::new);
         course.addStudent(student);
         student.setIsActive(true);
@@ -122,9 +120,9 @@ public class CourseServiceImpl implements CourseService{
     @Override
     @Transactional
     public void unenrollStudent(String courseId, String studentId) {
-        CourseEntity course = courseDAO.findById(courseId)
+        CourseEntity course = courseRepo.findById(courseId)
                 .orElseThrow(CourseNotFoundException::new);
-        StudentEntity student = studentDAO.findById(studentId)
+        StudentEntity student = studentRepo.findById(studentId)
                 .orElseThrow(StudentNotFoundException::new);
         course.removeStudent(student);
         if(student.getCourses().isEmpty()) {
