@@ -11,9 +11,9 @@ public record CourseResponseDTO(
         String name,
         String description,
         CourseLevel level,
-        TeacherResponseDTO teacher,
-        List<StudentResponseDTO> students,
-        SetOfCoursesResponseDTO setOfCourses,
+        String teacherId,
+        List<String> studentIds,
+        String setOfCoursesId,
         String room,
         Integer totalCourseTime,
         Integer completedCourseTime

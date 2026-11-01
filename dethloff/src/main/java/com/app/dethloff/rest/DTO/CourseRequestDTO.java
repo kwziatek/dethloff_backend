@@ -13,5 +13,8 @@ public record CourseRequestDTO(
     String description,
     List<String> studentIds,
     String teacherId,
-    String setOfCoursesId
+    String setOfCoursesId,
+    String room,
+    Integer totalCourseTime,
+    Integer completedCourseTime
 ) {}

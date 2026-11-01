@@ -47,19 +47,19 @@ public class CourseServiceImpl implements CourseService{
     public CourseResponseDTO get(String id) {
         CourseEntity course = courseRepo.findById(id)
                 .orElseThrow(CourseNotFoundException::new);
-        return courseMapper.toCourseResponseDTO(course);
+        return courseMapper.entityToResponse(course);
     }
 
     @Override
     public List<CourseResponseDTO> getAll() {
-        return courseMapper.toCourseResponseDTO(courseRepo.findAll());
+        return courseRepo.findAll().stream().map(courseMapper::entityToResponse).toList();
     }
 
     @Override
     public List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId) {
         List<CourseEntity> courses = courseRepo.findAllBySetOfCourses_Id(setOfCoursesId);
 
-        return courseMapper.toCourseResponseDTO(courses);
+        return courses.stream().map(courseMapper::entityToResponse).toList();
     }
 
     @Override
@@ -83,9 +83,9 @@ public class CourseServiceImpl implements CourseService{
                 .filter(setOfCoursesRepo::existsById)
                 .orElseThrow(() -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
 
-        CourseEntity course = courseMapper.toEntity(courseRequestDTO);
+        CourseEntity course = courseMapper.requestToEntity(courseRequestDTO);
         courseRepo.save(course);
-        return courseMapper.toCourseResponseDTO(course);
+        return courseMapper.entityToResponse(course);
     }
 
     @Transactional
@@ -97,7 +97,7 @@ public class CourseServiceImpl implements CourseService{
         courseMapper.updateEntityFromRequest(courseRequestDTO, existingCourse);
 
         CourseEntity updatedCourse = courseRepo.save(existingCourse);
-        return courseMapper.toCourseResponseDTO(updatedCourse);
+        return courseMapper.entityToResponse(updatedCourse);
     }
 
     @Transactional
