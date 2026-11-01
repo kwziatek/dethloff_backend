@@ -5,15 +5,9 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
-    - check DTO's (request and response for each entity)
+    - delete DAO package - has been fully replaced by the repository package
 
-    - check mappers (especially update entity from request methods)
-
-    - check service layer (if it's unified)
-
-    - check controller layer (if it's unified)
-
-    - create other endpoints for lesson
+    - look into the service layer, think how to throw meaningful exceptions to the FE, try to unify methods across all services if possible
 
     - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
 
@@ -37,6 +31,16 @@
     -- SKIPPED ----------------------------------------------------------------------------------------------------------------------------------------------
 
     -- DONE -------------------------------------------------------------------------------------------------------------------------------------------------
+
+    - check DTO's (request and response for each entity)
+
+    - check mappers (especially update entity from request methods)
+
+    - check service layer (if it's unified)
+
+    - check controller layer (if it's unified)
+
+    - create other endpoints for lesson
 
     - delete addressDataId from the student table
 
