@@ -70,7 +70,7 @@ public class LessonMapper {
                 .name(entity.getName())
                 .course(entity.getCourse() != null ? courseMapper.toCourseResponseDTO(entity.getCourse()) : null)
                 .description(entity.getDescription())
-                .teacher(entity.getTeacher() != null ? teacherMapper.toTeacherResponseDTO(entity.getTeacher()) : null)
+                .teacher(entity.getTeacher() != null ? teacherMapper.entityToResponse(entity.getTeacher()) : null)
                 .completed(entity.isCompleted())
                 .date(entity.getLessonTime() != null ? entity.getLessonTime().getDate() : null)
                 .startTime(entity.getLessonTime() != null ? entity.getLessonTime().getStartTime() : null)
