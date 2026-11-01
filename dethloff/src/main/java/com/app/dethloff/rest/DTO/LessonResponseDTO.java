@@ -12,10 +12,10 @@ public record LessonResponseDTO(
         @NotNull
         String name,
         @NotNull
-        CourseResponseDTO course,
+        String courseId,
         String description,
         @NotNull
-        TeacherResponseDTO teacher,
+        String teacherId,
         @NotNull
         Boolean completed,
         @NotNull

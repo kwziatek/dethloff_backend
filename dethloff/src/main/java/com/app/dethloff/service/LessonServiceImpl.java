@@ -36,17 +36,17 @@ public class LessonServiceImpl implements LessonService{
     public LessonResponseDTO get(String id) {
         LessonEntity lesson = lessonRepo.findById(id)
                 .orElseThrow(() -> new LessonNotFoundException("No lesson with such id - " + id));
-        return lessonMapper.toLessonResponseDTO(lesson);
+        return lessonMapper.entityToResponse(lesson);
     }
 
     @Override
     public List<LessonResponseDTO> getAll() {
-        return lessonMapper.toLessonResponseDTO(lessonRepo.findAll());
+        return lessonRepo.findAll().stream().map(lessonMapper::entityToResponse).toList();
     }
 
     @Override
     public List<LessonResponseDTO> getAllFromCourse(String courseId) {
-        return lessonMapper.toLessonResponseDTO(lessonRepo.findAllByCourse_Id(courseId));
+        return lessonRepo.findAllByCourse_Id(courseId).stream().map(lessonMapper::entityToResponse).toList();
     }
 
     @Override
@@ -60,8 +60,8 @@ public class LessonServiceImpl implements LessonService{
                 .filter(teacherRepo::existsById)
                 .orElseThrow(() -> new TeacherNotFoundException(("Teacher not found or ID is null")));
 
-        LessonEntity lessonEntity = lessonMapper.toEntity(lessonDTO);
-        return lessonMapper.toLessonResponseDTO(lessonRepo.save(lessonEntity));
+        LessonEntity lessonEntity = lessonMapper.requestToEntity(lessonDTO);
+        return lessonMapper.entityToResponse(lessonRepo.save(lessonEntity));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class LessonServiceImpl implements LessonService{
 
         lessonMapper.updateEntityFromRequest(lessonDTO, existingLesson);
 
-        return lessonMapper.toLessonResponseDTO(lessonRepo.save(existingLesson));
+        return lessonMapper.entityToResponse(lessonRepo.save(existingLesson));
     }
 
     @Override
