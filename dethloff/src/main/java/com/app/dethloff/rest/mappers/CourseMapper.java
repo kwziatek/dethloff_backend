@@ -73,7 +73,7 @@ public class CourseMapper {
             studentResponseDTOList = course.getStudents().stream().map(studentMapper::entityToResponse).toList();
         }
         if(course.getSetOfCourses() != null) {
-            setOfCoursesRequestDTO = setOfCoursesMapper.toSetOfCoursesResponseDTO(course.getSetOfCourses());
+            setOfCoursesRequestDTO = setOfCoursesMapper.entityToResponse(course.getSetOfCourses());
         }
 
         return CourseResponseDTO.builder()

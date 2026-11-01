@@ -66,7 +66,9 @@ public class CourseServiceImpl implements CourseService{
     public List<SetOfCoursesResponseDTO> getAllSetsOfCourses() {
         List<SetOfCoursesEntity> list = setOfCoursesRepo.findAll();
 
-        return setOfCoursesMapper.toSetOfCoursesResponseDTO(list);
+        return list.stream()
+                .map(setOfCoursesMapper::entityToResponse)
+                .toList();
     }
 
     @Override
