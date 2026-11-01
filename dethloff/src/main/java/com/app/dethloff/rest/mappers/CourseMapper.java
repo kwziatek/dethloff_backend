@@ -4,7 +4,6 @@ import com.app.dethloff.dao.SetOfCoursesDAO;
 import com.app.dethloff.dao.StudentDAO;
 import com.app.dethloff.dao.TeacherDAO;
 import com.app.dethloff.model.*;
-import com.app.dethloff.model.DTO.*;
 import com.app.dethloff.rest.DTO.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

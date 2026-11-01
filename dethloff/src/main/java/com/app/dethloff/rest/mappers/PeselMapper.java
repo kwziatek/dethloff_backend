@@ -4,7 +4,9 @@ package com.app.dethloff.rest.mappers;
 import com.app.dethloff.model.pesel.Pesel;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 @Converter(autoApply = true)
 public class PeselMapper implements AttributeConverter<Pesel, String> {
 
