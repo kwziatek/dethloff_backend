@@ -8,9 +8,14 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {PeselMapper.class, PhoneNumberMapper.class})
 public interface TeacherMapper {
 
+    default String teacherToId(TeacherEntity entity) {
+        return entity != null ? entity.getId() : null;
+    }
+
     //For creation
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "courses", ignore = true)
     @Mapping(target = "phoneNumber", qualifiedByName = "toBasic")
     @Mapping(target = "companyPhoneNumber", qualifiedByName = "toBasic")
     TeacherEntity requestToEntity(TeacherRequestDTO request);
@@ -19,6 +24,7 @@ public interface TeacherMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "isActive", ignore = true)
+    @Mapping(target = "courses", ignore = true)
     @Mapping(target = "phoneNumber", qualifiedByName = "toBasic")
     @Mapping(target = "companyPhoneNumber", qualifiedByName = "toBasic")
     void updateEntityFromRequest(TeacherRequestDTO request, @MappingTarget TeacherEntity entity);

@@ -12,5 +12,5 @@ public record SetOfCoursesResponseDTO(
         @NotNull
         String name,
         String description,
-        List<String> coursesIds
+        List<String> courseIds
 ) {}

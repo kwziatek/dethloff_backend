@@ -47,8 +47,6 @@ public record TeacherResponseDTO(
         @Nullable
         String NIP,
         @Nullable
-        String companySurname,
-        @Nullable
         String companyCity,
         @Nullable
         String companyStreet,
