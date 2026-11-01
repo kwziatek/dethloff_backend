@@ -70,7 +70,7 @@ public class CourseMapper {
             teacherResponseDTO = teacherMapper.toTeacherResponseDTO(course.getTeacher());
         }
         if(course.getStudents() != null) {
-            studentResponseDTOList = studentMapper.toStudentResponseDTO(course.getStudents());
+            studentResponseDTOList = course.getStudents().stream().map(studentMapper::entityToResponse).toList();
         }
         if(course.getSetOfCourses() != null) {
             setOfCoursesRequestDTO = setOfCoursesMapper.toSetOfCoursesResponseDTO(course.getSetOfCourses());

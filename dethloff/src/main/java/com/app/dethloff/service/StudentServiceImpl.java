@@ -1,11 +1,11 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
+import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.repository.StudentRepository;
 import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.mappers.StudentMapper;
-import com.app.dethloff.model.StudentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,12 +27,12 @@ public class StudentServiceImpl implements StudentService{
     @Override
     @Transactional
     public StudentResponseDTO create(StudentRequestDTO studentRequestDTO) {
-        StudentEntity student = studentMapper.toEntity(studentRequestDTO);
+        StudentEntity student = studentMapper.requestToEntity(studentRequestDTO);
 
         student.setIsActive(false);
         studentRepo.save(student);
 
-        return studentMapper.toStudentResponseDTO(student);
+        return studentMapper.entityToResponse(student);
     }
 
     @Override
@@ -40,14 +40,16 @@ public class StudentServiceImpl implements StudentService{
         StudentEntity student = studentRepo.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
 
-        return studentMapper.toStudentResponseDTO(student);
+        return studentMapper.entityToResponse(student);
     }
 
     @Override
     public List<StudentResponseDTO> getAll() {
         List<StudentEntity> list = studentRepo.findAll();
 
-        return studentMapper.toStudentResponseDTO(list);
+        return list.stream()
+                .map(studentMapper::entityToResponse)
+                .toList();
     }
 
     @Override
@@ -67,6 +69,6 @@ public class StudentServiceImpl implements StudentService{
         studentMapper.updateEntityFromRequest(studentRequestDTO, existingStudent);
 
         StudentEntity savedStudent = studentRepo.save(existingStudent);
-        return studentMapper.toStudentResponseDTO(savedStudent);
+        return studentMapper.entityToResponse(savedStudent);
     }
 }

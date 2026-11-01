@@ -1,10 +1,12 @@
 package com.app.dethloff.rest.mappers;
 
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PhoneNumberMapper {
 
+    @Named("toExtended")
     public String toExtendedPhoneNumber(String basicPhoneNumber) {
         if(basicPhoneNumber == null) {
             return null;
@@ -18,6 +20,7 @@ public class PhoneNumberMapper {
         return stringBuilder.toString();
     }
 
+    @Named("toBasic")
     public String toBasicPhoneNumber(String extendedPhoneNumber) {
         if(extendedPhoneNumber == null) {
             return null;

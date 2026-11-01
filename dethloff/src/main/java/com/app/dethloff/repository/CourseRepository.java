@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<CourseEntity, String> {
     List<CourseEntity> findAllBySetOfCourses_Id(String setOfCoursesId);
-
     List<CourseEntity> findAllBySetOfCourses(SetOfCoursesEntity setOfCourses);
 }
