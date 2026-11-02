@@ -9,8 +9,6 @@ import com.app.dethloff.repository.UserRepository;
 import com.app.dethloff.rest.DTO.LoginRequestDTO;
 import com.app.dethloff.rest.DTO.RegisterRequestDTO;
 import com.app.dethloff.rest.mappers.UserMapper;
-
-
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -87,9 +85,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void changePassword(String username, String oldPassword, String newPassword) {
     UserEntity existingUserEntity =
-        userRepository
-            .findByUsername(username)
-            .orElseThrow(UserNotFoundException::new);
+        userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
     Authentication authentication =
         auth.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));

@@ -2,7 +2,6 @@ package com.app.dethloff.rest.DTO;
 
 import com.app.dethloff.model.Role;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder

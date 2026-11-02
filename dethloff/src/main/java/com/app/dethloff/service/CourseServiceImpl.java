@@ -7,6 +7,7 @@ import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.SetOfCoursesEntity;
 import com.app.dethloff.model.StudentEntity;
+import com.app.dethloff.model.TeacherEntity;
 import com.app.dethloff.repository.CourseRepository;
 import com.app.dethloff.repository.SetOfCoursesRepository;
 import com.app.dethloff.repository.StudentRepository;
@@ -18,7 +19,6 @@ import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.rest.mappers.SetOfCoursesMapper;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +49,29 @@ public class CourseServiceImpl implements CourseService {
   }
 
   @Override
+  @Transactional
+  public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
+    TeacherEntity teacher =
+        teacherRepo
+            .findById(courseRequestDTO.teacherId())
+            .orElseThrow(TeacherNotFoundException::new);
+
+    SetOfCoursesEntity setOfCourses =
+        setOfCoursesRepo
+            .findById(courseRequestDTO.setOfCoursesId())
+            .orElseThrow(SetOfCoursesNotFoundException::new);
+
+    List<StudentEntity> students = studentRepo.findAllById(courseRequestDTO.studentIds());
+
+    CourseEntity course = courseMapper.requestToEntity(courseRequestDTO);
+    course.setTeacher(teacher);
+    course.setSetOfCourses(setOfCourses);
+    course.setStudents(students);
+    courseRepo.save(course);
+    return courseMapper.entityToResponse(course);
+  }
+
+  @Override
   public CourseResponseDTO get(String id) {
     CourseEntity course = courseRepo.findById(id).orElseThrow(CourseNotFoundException::new);
     return courseMapper.entityToResponse(course);
@@ -62,33 +85,13 @@ public class CourseServiceImpl implements CourseService {
   @Override
   public List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId) {
     List<CourseEntity> courses = courseRepo.findAllBySetOfCourses_Id(setOfCoursesId);
-
     return courses.stream().map(courseMapper::entityToResponse).toList();
   }
 
   @Override
   public List<SetOfCoursesResponseDTO> getAllSetsOfCourses() {
     List<SetOfCoursesEntity> list = setOfCoursesRepo.findAll();
-
     return list.stream().map(setOfCoursesMapper::entityToResponse).toList();
-  }
-
-  @Override
-  @Transactional
-  public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
-
-    Optional.ofNullable(courseRequestDTO.teacherId())
-        .filter(teacherRepo::existsById)
-        .orElseThrow(() -> new TeacherNotFoundException("Teacher not found or ID is null"));
-
-    Optional.ofNullable(courseRequestDTO.setOfCoursesId())
-        .filter(setOfCoursesRepo::existsById)
-        .orElseThrow(
-            () -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
-
-    CourseEntity course = courseMapper.requestToEntity(courseRequestDTO);
-    courseRepo.save(course);
-    return courseMapper.entityToResponse(course);
   }
 
   @Transactional
@@ -98,7 +101,6 @@ public class CourseServiceImpl implements CourseService {
         courseRepo.findById(courseRequestDTO.id()).orElseThrow(CourseNotFoundException::new);
 
     courseMapper.updateEntityFromRequest(courseRequestDTO, existingCourse);
-
     CourseEntity updatedCourse = courseRepo.save(existingCourse);
     return courseMapper.entityToResponse(updatedCourse);
   }

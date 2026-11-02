@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     Optional<UserEntity> user = repo.findByUsername(username);
 
     if (user.isEmpty()) {
-      throw new UserNotFoundException("User not found");
+      throw new UserNotFoundException();
     }
 
     return new UserPrincipal(user.get());
