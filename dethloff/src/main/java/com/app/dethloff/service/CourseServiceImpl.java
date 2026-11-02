@@ -130,6 +130,8 @@ public class CourseServiceImpl implements CourseService {
         studentRepo.findById(studentId).orElseThrow(StudentNotFoundException::new);
     course.removeStudent(student);
     if (student.getCourses().isEmpty()) {
+      // checks for all courses, should check for current ones
+      // TODO: check just for current courses
       student.setIsActive(false);
     }
   }

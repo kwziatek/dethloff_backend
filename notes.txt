@@ -5,32 +5,33 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
-    - modify controllers so that the take Validation Groups into account
+    - implement unit tests
 
-    - look into the service layer, think how to throw meaningful exceptions to the FE, try to unify methods across all services if possible
-
-    - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
-
-    - unit tests!
+    - implement integration tests
 
     - ci/cd pipeline
 
-    - in student details add reference to attended courses (FD)
+    - further development...
 
-    - create a db relations visualization (Idroo should be okay)
+        - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
 
-    - wonder how to easily create working/de    mo env to present the app
+        - fix logic bug -> student inactive after being unenrolled
+
+        - add course start and end date
+
+        - attendance list for a lesson
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
     -- SKIPPED ----------------------------------------------------------------------------------------------------------------------------------------------
 
-        - implement integration tests
-        - implement unit tests
-
     -- SKIPPED ----------------------------------------------------------------------------------------------------------------------------------------------
 
     -- DONE -------------------------------------------------------------------------------------------------------------------------------------------------
+
+    - look into the service layer, think how to throw meaningful exceptions to the FE, try to unify methods across all services if possible
+
+    - modify controllers so that the take Validation Groups into account
 
     - delete DAO package - has been fully replaced by the repository package
 
