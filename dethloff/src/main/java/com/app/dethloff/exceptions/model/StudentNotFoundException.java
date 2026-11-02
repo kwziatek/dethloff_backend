@@ -7,6 +7,6 @@ public class StudentNotFoundException extends RuntimeException{
     }
 
     public StudentNotFoundException() {
-        super("No such student found");
+        super("STUDENT_NOT_FOUND");
     }
 }

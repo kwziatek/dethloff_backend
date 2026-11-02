@@ -6,6 +6,6 @@ public class CourseNotFoundException extends RuntimeException {
     }
 
     public CourseNotFoundException() {
-        super("No such course found");
+        super("COURSE_NOT_FOUND");
     }
 }

@@ -6,7 +6,7 @@ public class LessonNotFoundException extends RuntimeException {
     }
 
     public LessonNotFoundException() {
-        super("No such lesson found");
+        super("LESSON_NOT_FOUND");
     }
 }
 

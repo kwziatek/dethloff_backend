@@ -7,6 +7,6 @@ public class TeacherNotFoundException extends RuntimeException{
     }
 
     public TeacherNotFoundException() {
-        super("No such teacher found");
+        super("TEACHER_NOT_FOUND");
     }
 }

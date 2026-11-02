@@ -6,6 +6,6 @@ public class SetOfCoursesNotFoundException extends RuntimeException {
     }
 
     public SetOfCoursesNotFoundException() {
-        super("No such set of courses found");
+        super("SETOFCOURSES_NOT_FOUND");
     }
 }
