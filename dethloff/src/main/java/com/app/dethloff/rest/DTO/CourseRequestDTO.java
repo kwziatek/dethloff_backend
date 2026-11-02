@@ -1,9 +1,8 @@
 package com.app.dethloff.rest.DTO;
 
 import com.app.dethloff.model.CourseLevel;
-import lombok.Builder;
-
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public record CourseRequestDTO(
@@ -16,5 +15,4 @@ public record CourseRequestDTO(
     String setOfCoursesId,
     String room,
     Integer totalCourseTime,
-    Integer completedCourseTime
-) {}
+    Integer completedCourseTime) {}

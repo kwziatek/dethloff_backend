@@ -1,9 +1,9 @@
 package com.app.dethloff.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.*;
 
 @Entity
 @Table(name = "lesson_time")
@@ -12,21 +12,21 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LessonTimeEntity {
-    @Id
-    @Column(length = 36)
-    private String id;
+  @Id
+  @Column(length = 36)
+  private String id;
 
-    @OneToOne
-    @JoinColumn(name = "lesson_id", nullable = false, unique = true)
-    @ToString.Exclude
-    private LessonEntity lesson;
+  @OneToOne
+  @JoinColumn(name = "lesson_id", nullable = false, unique = true)
+  @ToString.Exclude
+  private LessonEntity lesson;
 
-    @Column(nullable = false)
-    private LocalDate date;
+  @Column(nullable = false)
+  private LocalDate date;
 
-    @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
+  @Column(name = "start_time", nullable = false)
+  private LocalTime startTime;
 
-    @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
+  @Column(name = "end_time", nullable = false)
+  private LocalTime endTime;
 }

@@ -11,13 +11,14 @@ import lombok.*;
 @AllArgsConstructor
 public class UserEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-    private String username;
-    private String password;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
-    @Enumerated(EnumType.STRING)
-    // tells hibernate to treat enum as a String
-    private Role role;
+  private String username;
+  private String password;
+
+  @Enumerated(EnumType.STRING)
+  // tells hibernate to treat enum as a String
+  private Role role;
 }

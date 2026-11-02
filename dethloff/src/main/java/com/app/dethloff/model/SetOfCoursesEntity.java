@@ -1,9 +1,8 @@
 package com.app.dethloff.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "set_of_courses")
@@ -14,17 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 public class SetOfCoursesEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column
+  private String id;
 
-    @Column
-    private String name;
+  @Column private String name;
 
-    @Column
-    private String description;
+  @Column private String description;
 
-    @OneToMany(mappedBy = "setOfCourses")
-    private List<CourseEntity> courses;
+  @OneToMany(mappedBy = "setOfCourses")
+  private List<CourseEntity> courses;
 }

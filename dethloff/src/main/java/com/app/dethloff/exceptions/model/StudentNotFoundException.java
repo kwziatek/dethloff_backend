@@ -1,12 +1,12 @@
 package com.app.dethloff.exceptions.model;
 
-public class StudentNotFoundException extends RuntimeException{
+public class StudentNotFoundException extends RuntimeException {
 
-    public StudentNotFoundException(String message) {
-        super(message);
-    }
+  public StudentNotFoundException(String message) {
+    super(message);
+  }
 
-    public StudentNotFoundException() {
-        super("STUDENT_NOT_FOUND");
-    }
+  public StudentNotFoundException() {
+    super("STUDENT_NOT_FOUND");
+  }
 }

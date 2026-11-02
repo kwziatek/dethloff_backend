@@ -17,118 +17,118 @@ import com.app.dethloff.rest.DTO.SetOfCoursesResponseDTO;
 import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.rest.mappers.SetOfCoursesMapper;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
-public class CourseServiceImpl implements CourseService{
+public class CourseServiceImpl implements CourseService {
 
-    private final CourseRepository courseRepo;
-    private final StudentRepository studentRepo;
-    private final TeacherRepository teacherRepo;
-    private final SetOfCoursesRepository setOfCoursesRepo;
-    private final CourseMapper courseMapper;
-    private final SetOfCoursesMapper setOfCoursesMapper;
+  private final CourseRepository courseRepo;
+  private final StudentRepository studentRepo;
+  private final TeacherRepository teacherRepo;
+  private final SetOfCoursesRepository setOfCoursesRepo;
+  private final CourseMapper courseMapper;
+  private final SetOfCoursesMapper setOfCoursesMapper;
 
-    @Autowired
-    public CourseServiceImpl(CourseRepository courseRepo, StudentRepository studentRepo, TeacherRepository teacherRepo, CourseMapper courseMapper, SetOfCoursesRepository setOfCoursesRepo, SetOfCoursesMapper setOfCoursesMapper) {
-        this.courseRepo = courseRepo;
-        this.studentRepo = studentRepo;
-        this.teacherRepo = teacherRepo;
-        this.courseMapper = courseMapper;
-        this.setOfCoursesRepo = setOfCoursesRepo;
-        this.setOfCoursesMapper = setOfCoursesMapper;
+  @Autowired
+  public CourseServiceImpl(
+      CourseRepository courseRepo,
+      StudentRepository studentRepo,
+      TeacherRepository teacherRepo,
+      CourseMapper courseMapper,
+      SetOfCoursesRepository setOfCoursesRepo,
+      SetOfCoursesMapper setOfCoursesMapper) {
+    this.courseRepo = courseRepo;
+    this.studentRepo = studentRepo;
+    this.teacherRepo = teacherRepo;
+    this.courseMapper = courseMapper;
+    this.setOfCoursesRepo = setOfCoursesRepo;
+    this.setOfCoursesMapper = setOfCoursesMapper;
+  }
+
+  @Override
+  public CourseResponseDTO get(String id) {
+    CourseEntity course = courseRepo.findById(id).orElseThrow(CourseNotFoundException::new);
+    return courseMapper.entityToResponse(course);
+  }
+
+  @Override
+  public List<CourseResponseDTO> getAll() {
+    return courseRepo.findAll().stream().map(courseMapper::entityToResponse).toList();
+  }
+
+  @Override
+  public List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId) {
+    List<CourseEntity> courses = courseRepo.findAllBySetOfCourses_Id(setOfCoursesId);
+
+    return courses.stream().map(courseMapper::entityToResponse).toList();
+  }
+
+  @Override
+  public List<SetOfCoursesResponseDTO> getAllSetsOfCourses() {
+    List<SetOfCoursesEntity> list = setOfCoursesRepo.findAll();
+
+    return list.stream().map(setOfCoursesMapper::entityToResponse).toList();
+  }
+
+  @Override
+  @Transactional
+  public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
+
+    Optional.ofNullable(courseRequestDTO.teacherId())
+        .filter(teacherRepo::existsById)
+        .orElseThrow(() -> new TeacherNotFoundException("Teacher not found or ID is null"));
+
+    Optional.ofNullable(courseRequestDTO.setOfCoursesId())
+        .filter(setOfCoursesRepo::existsById)
+        .orElseThrow(
+            () -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
+
+    CourseEntity course = courseMapper.requestToEntity(courseRequestDTO);
+    courseRepo.save(course);
+    return courseMapper.entityToResponse(course);
+  }
+
+  @Transactional
+  @Override
+  public CourseResponseDTO update(CourseRequestDTO courseRequestDTO) {
+    CourseEntity existingCourse =
+        courseRepo.findById(courseRequestDTO.id()).orElseThrow(CourseNotFoundException::new);
+
+    courseMapper.updateEntityFromRequest(courseRequestDTO, existingCourse);
+
+    CourseEntity updatedCourse = courseRepo.save(existingCourse);
+    return courseMapper.entityToResponse(updatedCourse);
+  }
+
+  @Transactional
+  @Override
+  public void delete(String id) {
+    CourseEntity course = courseRepo.findById(id).orElseThrow(CourseNotFoundException::new);
+    courseRepo.delete(course);
+  }
+
+  @Override
+  @Transactional
+  public void enrollStudent(String courseId, String studentId) {
+    CourseEntity course = courseRepo.findById(courseId).orElseThrow(CourseNotFoundException::new);
+    StudentEntity student =
+        studentRepo.findById(studentId).orElseThrow(StudentNotFoundException::new);
+    course.addStudent(student);
+    student.setIsActive(true);
+  }
+
+  @Override
+  @Transactional
+  public void unenrollStudent(String courseId, String studentId) {
+    CourseEntity course = courseRepo.findById(courseId).orElseThrow(CourseNotFoundException::new);
+    StudentEntity student =
+        studentRepo.findById(studentId).orElseThrow(StudentNotFoundException::new);
+    course.removeStudent(student);
+    if (student.getCourses().isEmpty()) {
+      student.setIsActive(false);
     }
-
-    @Override
-    public CourseResponseDTO get(String id) {
-        CourseEntity course = courseRepo.findById(id)
-                .orElseThrow(CourseNotFoundException::new);
-        return courseMapper.entityToResponse(course);
-    }
-
-    @Override
-    public List<CourseResponseDTO> getAll() {
-        return courseRepo.findAll().stream().map(courseMapper::entityToResponse).toList();
-    }
-
-    @Override
-    public List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId) {
-        List<CourseEntity> courses = courseRepo.findAllBySetOfCourses_Id(setOfCoursesId);
-
-        return courses.stream().map(courseMapper::entityToResponse).toList();
-    }
-
-    @Override
-    public List<SetOfCoursesResponseDTO> getAllSetsOfCourses() {
-        List<SetOfCoursesEntity> list = setOfCoursesRepo.findAll();
-
-        return list.stream()
-                .map(setOfCoursesMapper::entityToResponse)
-                .toList();
-    }
-
-    @Override
-    @Transactional
-    public CourseResponseDTO create(CourseRequestDTO courseRequestDTO) {
-
-        Optional.ofNullable(courseRequestDTO.teacherId())
-                .filter(teacherRepo::existsById)
-                .orElseThrow(() -> new TeacherNotFoundException("Teacher not found or ID is null"));
-
-        Optional.ofNullable(courseRequestDTO.setOfCoursesId())
-                .filter(setOfCoursesRepo::existsById)
-                .orElseThrow(() -> new SetOfCoursesNotFoundException("Set of courses not found or ID is null"));
-
-        CourseEntity course = courseMapper.requestToEntity(courseRequestDTO);
-        courseRepo.save(course);
-        return courseMapper.entityToResponse(course);
-    }
-
-    @Transactional
-    @Override
-    public CourseResponseDTO update(CourseRequestDTO courseRequestDTO) {
-        CourseEntity existingCourse = courseRepo.findById(courseRequestDTO.id())
-                .orElseThrow(CourseNotFoundException::new);
-
-        courseMapper.updateEntityFromRequest(courseRequestDTO, existingCourse);
-
-        CourseEntity updatedCourse = courseRepo.save(existingCourse);
-        return courseMapper.entityToResponse(updatedCourse);
-    }
-
-    @Transactional
-    @Override
-    public void delete(String id) {
-        CourseEntity course = courseRepo.findById(id)
-                .orElseThrow(CourseNotFoundException::new);
-        courseRepo.delete(course);
-    }
-
-    @Override
-    @Transactional
-    public void enrollStudent(String courseId, String studentId) {
-        CourseEntity course = courseRepo.findById(courseId)
-                .orElseThrow(CourseNotFoundException::new);
-        StudentEntity student = studentRepo.findById(studentId)
-                .orElseThrow(StudentNotFoundException::new);
-        course.addStudent(student);
-        student.setIsActive(true);
-    }
-
-    @Override
-    @Transactional
-    public void unenrollStudent(String courseId, String studentId) {
-        CourseEntity course = courseRepo.findById(courseId)
-                .orElseThrow(CourseNotFoundException::new);
-        StudentEntity student = studentRepo.findById(studentId)
-                .orElseThrow(StudentNotFoundException::new);
-        course.removeStudent(student);
-        if(student.getCourses().isEmpty()) {
-            student.setIsActive(false);
-        }
-    }
+  }
 }

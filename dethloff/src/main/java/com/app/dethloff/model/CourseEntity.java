@@ -1,13 +1,12 @@
 package com.app.dethloff.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -17,64 +16,60 @@ import java.util.List;
 @AllArgsConstructor
 public class CourseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "id")
+  String id;
 
-    @Column(name = "name")
-    String name;
+  @Column(name = "name")
+  String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "course_level")
-    CourseLevel level;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "course_level")
+  CourseLevel level;
 
-    @Column(name = "description")
-    String description;
+  @Column(name = "description")
+  String description;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_student",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    List<StudentEntity> students = new ArrayList<>();
+  @ManyToMany
+  @JoinTable(
+      name = "course_student",
+      joinColumns = @JoinColumn(name = "course_id"),
+      inverseJoinColumns = @JoinColumn(name = "student_id"))
+  List<StudentEntity> students = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    private TeacherEntity teacher;
+  @ManyToOne
+  @JoinColumn(name = "teacher_id")
+  private TeacherEntity teacher;
 
-    @ManyToOne
-    @JoinColumn(name = "set_of_courses_id")
-    private SetOfCoursesEntity setOfCourses;
+  @ManyToOne
+  @JoinColumn(name = "set_of_courses_id")
+  private SetOfCoursesEntity setOfCourses;
 
-    @Column(name = "room")
-    String room;
+  @Column(name = "room")
+  String room;
 
-    @Column(name = "total_course_time")
-    Integer totalCourseTime;
+  @Column(name = "total_course_time")
+  Integer totalCourseTime;
 
-    @Column(name = "completed_course_time")
-    Integer completedCourseTime;
+  @Column(name = "completed_course_time")
+  Integer completedCourseTime;
 
-    public void addStudent(StudentEntity student) {
-        if(students == null) {
-            students = new ArrayList<>();
-        }
-
-        if(!students.contains(student)) {
-            students.add(student);
-            student.getCourses().add(this);
-        }
-
+  public void addStudent(StudentEntity student) {
+    if (students == null) {
+      students = new ArrayList<>();
     }
 
-    public void removeStudent(StudentEntity student) {
-        if(students != null && students.contains(student)) {
-            students.remove(student);
-            student.getCourses().remove(this);
-        }
-
+    if (!students.contains(student)) {
+      students.add(student);
+      student.getCourses().add(this);
     }
+  }
 
+  public void removeStudent(StudentEntity student) {
+    if (students != null && students.contains(student)) {
+      students.remove(student);
+      student.getCourses().remove(this);
+    }
+  }
 }
