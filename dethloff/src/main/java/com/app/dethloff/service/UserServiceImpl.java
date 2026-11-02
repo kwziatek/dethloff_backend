@@ -9,6 +9,8 @@ import com.app.dethloff.repository.UserRepository;
 import com.app.dethloff.rest.DTO.LoginRequestDTO;
 import com.app.dethloff.rest.DTO.RegisterRequestDTO;
 import com.app.dethloff.rest.mappers.UserMapper;
+
+
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,13 +52,13 @@ public class UserServiceImpl implements UserService {
     UserEntity userEntity = userMapper.registerDTOToEntity(request);
     Optional<UserEntity> existingUser = userRepository.findByUsername(userEntity.getUsername());
     if (existingUser.isPresent()) {
-      throw new UsernameTakenException("this username is already taken");
+      throw new UsernameTakenException();
     }
 
     if (passwordService.validateNewPassword(userEntity.getPassword())) {
       userEntity.setPassword(encoder.encode(userEntity.getPassword()));
     } else {
-      throw new InvalidPasswordException("given password doesn't meet the requirements");
+      throw new InvalidPasswordException();
     }
 
     userRepository.save(userEntity);
@@ -71,14 +73,12 @@ public class UserServiceImpl implements UserService {
         UserEntity existingUserEntity =
             userRepository
                 .findByUsername(request.username())
-                .orElseThrow(
-                    () ->
-                        new UserNotFoundException("No user with username: " + request.username()));
+                .orElseThrow(UserNotFoundException::new);
         return jwtService.generateToken(
             existingUserEntity.getUsername(), existingUserEntity.getRole());
       }
     } catch (RuntimeException exc) {
-      throw new InvalidLoginOrPasswordException("invalid username or password");
+      throw new InvalidLoginOrPasswordException();
     }
 
     return "login failed";
@@ -89,19 +89,19 @@ public class UserServiceImpl implements UserService {
     UserEntity existingUserEntity =
         userRepository
             .findByUsername(username)
-            .orElseThrow(() -> new UserNotFoundException("No user with username: " + username));
+            .orElseThrow(UserNotFoundException::new);
 
     Authentication authentication =
         auth.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
 
     if (!authentication.isAuthenticated()) {
-      throw new InvalidPasswordException("Bad password");
+      throw new InvalidPasswordException("WRONG_PASSWORD");
     }
 
     if (passwordService.validateNewPassword(newPassword)) {
       existingUserEntity.setPassword(encoder.encode(newPassword));
     } else {
-      throw new InvalidPasswordException("given password doesn't meet the requirements");
+      throw new InvalidPasswordException();
     }
 
     userRepository.save(existingUserEntity);
