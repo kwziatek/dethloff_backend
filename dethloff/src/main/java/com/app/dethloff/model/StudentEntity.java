@@ -20,10 +20,6 @@ public class StudentEntity extends PersonAbstractEntity {
     @Builder.Default
     private List<CourseEntity> courses = new ArrayList<>();
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "address_data_id", referencedColumnName = "id")
-//    private StudentAddressDataEntity addressData;
-
     @Column(nullable = false)
     private Boolean isActive = false;
 

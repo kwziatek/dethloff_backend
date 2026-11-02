@@ -28,25 +28,21 @@ public class StudentServiceImpl implements StudentService{
     @Transactional
     public StudentResponseDTO create(StudentRequestDTO studentRequestDTO) {
         StudentEntity student = studentMapper.requestToEntity(studentRequestDTO);
-
         student.setIsActive(false);
         studentRepo.save(student);
-
         return studentMapper.entityToResponse(student);
     }
 
     @Override
     public StudentResponseDTO get(String id) {
         StudentEntity student = studentRepo.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
-
+                .orElseThrow(StudentNotFoundException::new);
         return studentMapper.entityToResponse(student);
     }
 
     @Override
     public List<StudentResponseDTO> getAll() {
         List<StudentEntity> list = studentRepo.findAll();
-
         return list.stream()
                 .map(studentMapper::entityToResponse)
                 .toList();
@@ -54,21 +50,21 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     @Transactional
-    public void delete(String id) {
-        StudentEntity toBeDeleted = studentRepo.findById(id)
-                        .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + id));
-        studentRepo.delete(toBeDeleted);
-    }
-
-    @Override
-    @Transactional
     public StudentResponseDTO update(StudentRequestDTO studentRequestDTO) {
         StudentEntity existingStudent = studentRepo.findById(studentRequestDTO.id())
-                .orElseThrow(() -> new StudentNotFoundException("No student with such id - " + studentRequestDTO.id()));
+                .orElseThrow(StudentNotFoundException::new);
 
         studentMapper.updateEntityFromRequest(studentRequestDTO, existingStudent);
 
         StudentEntity savedStudent = studentRepo.save(existingStudent);
         return studentMapper.entityToResponse(savedStudent);
+    }
+
+    @Override
+    @Transactional
+    public void delete(String id) {
+        StudentEntity toBeDeleted = studentRepo.findById(id)
+                .orElseThrow(StudentNotFoundException::new);
+        studentRepo.delete(toBeDeleted);
     }
 }

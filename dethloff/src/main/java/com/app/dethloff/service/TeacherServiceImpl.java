@@ -25,6 +25,15 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @Transactional
+    public TeacherResponseDTO create(TeacherRequestDTO teacherDTO) {
+        TeacherEntity teacher = teacherMapper.requestToEntity(teacherDTO);
+        teacher.setIsActive(false);
+        teacherRepo.save(teacher);
+        return teacherMapper.entityToResponse(teacher);
+    }
+
+    @Override
     public TeacherResponseDTO get(String id) {
         TeacherEntity teacher = teacherRepo.findById(id)
                 .orElseThrow(TeacherNotFoundException::new);
@@ -37,17 +46,6 @@ public class TeacherServiceImpl implements TeacherService {
         return teachers.stream()
                 .map(teacherMapper::entityToResponse)
                 .toList();
-    }
-
-    @Override
-    @Transactional
-    public TeacherResponseDTO create(TeacherRequestDTO teacherDTO) {
-        TeacherEntity teacher = teacherMapper.requestToEntity(teacherDTO);
-
-        teacher.setIsActive(false);
-        teacherRepo.save(teacher);
-
-        return teacherMapper.entityToResponse(teacher);
     }
 
     @Override

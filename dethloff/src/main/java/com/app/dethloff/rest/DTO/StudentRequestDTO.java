@@ -1,31 +1,40 @@
 package com.app.dethloff.rest.DTO;
 
 import com.app.dethloff.model.Gender;
+import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
+import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
+
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import lombok.Builder;
 
 import java.time.LocalDate;
 
 @Builder
 public record StudentRequestDTO(
-        @NotNull
+        @NotNull(groups = UpdateAction.class, message = "STUDENT_NOT_FOUND")
+        @Null(groups = CreateAction.class, message = "STUDENT_ID_MUST_BE_NULL")
         String id,
-        @NotNull
+        @Size(min=2, groups = {CreateAction.class, UpdateAction.class}, message = "NAME_MUST_BE_LONGER_THAN_1_CHAR")
+        @NotNull(groups = {CreateAction.class})
         String name,
-        @NotNull
+        @Size(min=2, groups = {CreateAction.class, UpdateAction.class}, message = "SURNAME_MUST_BE_LONGER_THAN_1_CHAR")
+        @NotNull(groups = {CreateAction.class})
         String surname,
-        @Nullable
+        @NotNull(groups = {CreateAction.class})
         String pesel,
-        @Nullable
+        @NotNull(groups = {CreateAction.class})
         String placeOfBirth,
-        @Nullable
+        @NotNull(groups = {CreateAction.class})
         LocalDate birthDate,
         @Nullable
         Gender gender,
-        @Nullable
+        @Null
         Boolean isActive,
         @Nullable
         String city,
@@ -34,12 +43,12 @@ public record StudentRequestDTO(
         @Nullable
         String flatNumber,
         @Nullable
-        @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "Invalid postal code")
+        @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "INVALID_POSTAL_CODE")
         String postalCode,
         @Nullable
-        @Pattern(regexp = "\\+48 \\d{3} \\d{3} \\d{3}", message = "Invalid phone format")
+        @Pattern(regexp = "\\+48 \\d{3} \\d{3} \\d{3}", message = "INVALID_PHONE_FORMAT")
         String phoneNumber,
-        @Email(message = "Invalid email")
+        @Email(message = "INVALID_EMAIL")
         @Nullable
         String email,
         @Nullable
@@ -53,13 +62,13 @@ public record StudentRequestDTO(
         @Nullable
         String guardianFlatNumber,
         @Nullable
-        @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "Invalid postal code")
+        @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "INVALID_POSTAL_CODE")
         String guardianPostalCode,
         @Nullable
-        @Pattern(regexp = "\\+48 \\d{3} \\d{3} \\d{3}", message = "Invalid phone format")
+        @Pattern(regexp = "\\+48 \\d{3} \\d{3} \\d{3}", message = "INVALID_PHONE_FORMAT")
         String guardianPhoneNumber,
         @Nullable
-        @Email(message = "Invalid email")
+        @Email(message = "INVALID_EMAIL")
         String guardianEmail,
         @Nullable
         String companyName,
@@ -74,13 +83,13 @@ public record StudentRequestDTO(
         @Nullable
         String companyFlatNumber,
         @Nullable
-        @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "Invalid postal code")
+        @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "INVALID_POSTAL_CODE")
         String companyPostalCode,
         @Nullable
-        @Pattern(regexp = "\\+48 \\d{3} \\d{3} \\d{3}", message = "Invalid phone format")
+        @Pattern(regexp = "\\+48 \\d{3} \\d{3} \\d{3}", message = "INVALID_PHONE_FORMAT")
         String companyPhoneNumber,
         @Nullable
-        @Email(message = "Invalid email")
+        @Email(message = "INVALID_EMAIL")
         String companyEmail,
         @Nullable
         String marketingSources
