@@ -7,6 +7,6 @@ import lombok.Builder;
 
 @Builder
 public record RegisterRequestDTO(
-    @NotBlank(message = "Username cannot be empty") String username,
-    @NotBlank(message = "Password cannot be empty") String password,
-    @NotNull(message = "Role cannot be null") Role role) {}
+    @NotBlank(message = "USERNAME_CANNOT_BE_EMPTY") String username,
+    @NotBlank(message = "PASSWORD_CANNOT_BE_EMPTY") String password,
+    @NotBlank(message = "ROLE_CANNOT_BE_EMPTY") Role role) {}

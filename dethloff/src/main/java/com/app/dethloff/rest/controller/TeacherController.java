@@ -2,12 +2,14 @@ package com.app.dethloff.rest.controller;
 
 import com.app.dethloff.rest.DTO.TeacherRequestDTO;
 import com.app.dethloff.rest.DTO.TeacherResponseDTO;
+import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
+import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
 import com.app.dethloff.service.TeacherService;
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,7 +40,7 @@ public class TeacherController {
 
   @PostMapping("/teachers")
   public ResponseEntity<TeacherResponseDTO> createTeacher(
-      @Valid @RequestBody TeacherRequestDTO teacherDTO) {
+      @Validated(CreateAction.class) @RequestBody TeacherRequestDTO teacherDTO) {
     TeacherResponseDTO createdTeacher = teacherService.create(teacherDTO);
 
     URI location =
@@ -52,7 +54,7 @@ public class TeacherController {
 
   @PutMapping("/teachers")
   public ResponseEntity<TeacherResponseDTO> updateTeacher(
-      @Valid @RequestBody TeacherRequestDTO teacherDTO) {
+      @Validated(UpdateAction.class) @RequestBody TeacherRequestDTO teacherDTO) {
     TeacherResponseDTO updatedTeacher = teacherService.update(teacherDTO);
 
     return ResponseEntity.ok(updatedTeacher);

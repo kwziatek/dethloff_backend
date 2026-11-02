@@ -3,12 +3,14 @@ package com.app.dethloff.rest.controller;
 import com.app.dethloff.rest.DTO.CourseRequestDTO;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.DTO.SetOfCoursesResponseDTO;
+import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
+import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
 import com.app.dethloff.service.CourseService;
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -54,7 +56,7 @@ public class CourseController {
 
   @PostMapping("/courses")
   public ResponseEntity<CourseResponseDTO> createCourse(
-      @Valid @RequestBody CourseRequestDTO courseRequestDTO) {
+      @Validated(CreateAction.class) @RequestBody CourseRequestDTO courseRequestDTO) {
     CourseResponseDTO courseResponseDTO = courseService.create(courseRequestDTO);
 
     URI location =
@@ -76,7 +78,7 @@ public class CourseController {
 
   @PutMapping("/courses")
   public ResponseEntity<CourseResponseDTO> updateCourse(
-      @Valid @RequestBody CourseRequestDTO courseRequestDTO) {
+      @Validated(UpdateAction.class) @RequestBody CourseRequestDTO courseRequestDTO) {
     CourseResponseDTO courseResponseDTO = courseService.update(courseRequestDTO);
 
     return ResponseEntity.ok(courseResponseDTO);

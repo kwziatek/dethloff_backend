@@ -2,12 +2,14 @@ package com.app.dethloff.rest.controller;
 
 import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
+import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
+import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
 import com.app.dethloff.service.StudentService;
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,7 +40,7 @@ public class StudentController {
 
   @PostMapping("/students")
   public ResponseEntity<StudentResponseDTO> createStudent(
-      @Valid @RequestBody StudentRequestDTO studentDTO) {
+      @Validated(CreateAction.class) @RequestBody StudentRequestDTO studentDTO) {
     StudentResponseDTO createdStudent = studentService.create(studentDTO);
 
     URI location =
@@ -52,7 +54,7 @@ public class StudentController {
 
   @PutMapping("/students")
   public ResponseEntity<StudentResponseDTO> updateStudent(
-      @Valid @RequestBody StudentRequestDTO studentDTO) {
+      @Validated(UpdateAction.class) @RequestBody StudentRequestDTO studentDTO) {
     StudentResponseDTO updatedStudent = studentService.update(studentDTO);
 
     return ResponseEntity.ok(updatedStudent);

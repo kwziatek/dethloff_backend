@@ -5,6 +5,8 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
+    - modify controllers so that the take Validation Groups into account
+
     - look into the service layer, think how to throw meaningful exceptions to the FE, try to unify methods across all services if possible
 
     - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
@@ -17,7 +19,7 @@
 
     - create a db relations visualization (Idroo should be okay)
 
-    - wonder how to easily create working/demo env to present the app
+    - wonder how to easily create working/de    mo env to present the app
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 

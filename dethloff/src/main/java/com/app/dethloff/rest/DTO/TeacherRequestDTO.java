@@ -3,37 +3,35 @@ package com.app.dethloff.rest.DTO;
 import com.app.dethloff.model.Gender;
 import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
 import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
-
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
 public record TeacherRequestDTO(
-        @NotNull(groups = UpdateAction.class, message = "STUDENT_NOT_FOUND")
+    @NotNull(groups = UpdateAction.class, message = "STUDENT_NOT_FOUND")
         @Null(groups = CreateAction.class, message = "STUDENT_ID_MUST_BE_NULL")
         String id,
-        @Size(
-                min = 2,
-                groups = {CreateAction.class, UpdateAction.class},
-                message = "NAME_MUST_BE_LONGER_THAN_1_CHAR")
+    @Size(
+            min = 2,
+            groups = {CreateAction.class, UpdateAction.class},
+            message = "NAME_MUST_BE_LONGER_THAN_1_CHAR")
         @NotNull(groups = {CreateAction.class})
         String name,
-        @Size(
-                min = 2,
-                groups = {CreateAction.class, UpdateAction.class},
-                message = "SURNAME_MUST_BE_LONGER_THAN_1_CHAR")
+    @Size(
+            min = 2,
+            groups = {CreateAction.class, UpdateAction.class},
+            message = "SURNAME_MUST_BE_LONGER_THAN_1_CHAR")
         @NotNull(groups = {CreateAction.class})
         String surname,
-        @NotNull(groups = {CreateAction.class}) String pesel,
-        @NotNull(groups = {CreateAction.class}) String placeOfBirth,
-        @NotNull(groups = {CreateAction.class}) LocalDate birthDate,
+    @NotNull(groups = {CreateAction.class}) String pesel,
+    @NotNull(groups = {CreateAction.class}) String placeOfBirth,
+    @NotNull(groups = {CreateAction.class}) LocalDate birthDate,
     @Nullable Gender gender,
     @Null Boolean isActive,
     @Nullable String city,
