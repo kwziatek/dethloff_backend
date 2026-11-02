@@ -5,8 +5,6 @@
 
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
-    - delete DAO package - has been fully replaced by the repository package
-
     - look into the service layer, think how to throw meaningful exceptions to the FE, try to unify methods across all services if possible
 
     - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
@@ -31,6 +29,8 @@
     -- SKIPPED ----------------------------------------------------------------------------------------------------------------------------------------------
 
     -- DONE -------------------------------------------------------------------------------------------------------------------------------------------------
+
+    - delete DAO package - has been fully replaced by the repository package
 
     - check DTO's (request and response for each entity)
 
