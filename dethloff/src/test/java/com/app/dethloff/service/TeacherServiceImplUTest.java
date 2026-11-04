@@ -88,20 +88,19 @@ public class TeacherServiceImplUTest {
 
   @Test
   void getAllReturnEmptyListWhenDatabaseIsEmpty() {
-      // given
-      when(teacherRepository.findAll()).thenReturn(List.of());
+    // given
+    when(teacherRepository.findAll()).thenReturn(List.of());
 
-      // when
-      List<TeacherResponseDTO> response = teacherService.getAll();
+    // when
+    List<TeacherResponseDTO> response = teacherService.getAll();
 
-      // then
-      // 1. Check if findAll() was called
-      // 2. Check if none of teacherMapper methods were called (no mapping due to the empty list)
-      // 3. Check if the response list is empty
-      verify(teacherRepository).findAll();
-      verifyNoInteractions(teacherMapper);
-      assertThat(response).isEmpty();
-
+    // then
+    // 1. Check if findAll() was called
+    // 2. Check if none of teacherMapper methods were called (no mapping due to the empty list)
+    // 3. Check if the response list is empty
+    verify(teacherRepository).findAll();
+    verifyNoInteractions(teacherMapper);
+    assertThat(response).isEmpty();
   }
 
   @Test
@@ -164,15 +163,14 @@ public class TeacherServiceImplUTest {
     verify(teacherRepository, never()).delete(any());
   }
 
-  // TODO: tests for update method
   @Test
   void updateThrowsExceptionWhenTeacherNotFound() {
-    //given
+    // given
     TeacherRequestDTO requestDTO = buildTeacherRequestDTO2();
     String id = requestDTO.id();
     when(teacherRepository.findById(id)).thenReturn(Optional.empty());
 
-    //when and then
+    // when and then
     assertThrows(TeacherNotFoundException.class, () -> teacherService.update(requestDTO));
 
     // verify
@@ -185,24 +183,24 @@ public class TeacherServiceImplUTest {
   @Test
   void updateCorrectlyUpdatesTeacher() {
     // given
-      TeacherRequestDTO requestDTO = buildTeacherRequestDTO2();
-      TeacherEntity entity = buildTeacherEntity2();
-      TeacherResponseDTO expectedResponse = buildTeacherResponseDTO2();
-      String id = requestDTO.id();
-      when(teacherRepository.findById(id)).thenReturn(Optional.of(entity));
-      when(teacherRepository.save(entity)).thenReturn(entity);
-      when(teacherMapper.entityToResponse(entity)).thenReturn(expectedResponse);
+    TeacherRequestDTO requestDTO = buildTeacherRequestDTO2();
+    TeacherEntity entity = buildTeacherEntity2();
+    TeacherResponseDTO expectedResponse = buildTeacherResponseDTO2();
+    String id = requestDTO.id();
+    when(teacherRepository.findById(id)).thenReturn(Optional.of(entity));
+    when(teacherRepository.save(entity)).thenReturn(entity);
+    when(teacherMapper.entityToResponse(entity)).thenReturn(expectedResponse);
 
-      // when
+    // when
     TeacherResponseDTO responseDTO = teacherService.update(requestDTO);
 
     // then
-    // 1. Verify that mapper was called with the target entity and that the target entity has been saved
+    // 1. Verify that mapper was called with the target entity and that the target entity has been
+    // saved
     // 2. Check if the expected response and actual response are the same
     verify(teacherMapper).updateEntityFromRequest(requestDTO, entity);
     verify(teacherRepository).save(entity);
-    assertThat(responseDTO)
-            .isEqualTo(expectedResponse);
+    assertThat(responseDTO).isEqualTo(expectedResponse);
   }
 
   private TeacherRequestDTO buildTeacherRequestDTO1() {
