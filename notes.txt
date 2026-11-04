@@ -9,7 +9,7 @@
 
     - implement integration tests
 
-    - ci/cd pipeline
+    - ci/cd pipeline - checking out if github actions work...
 
     - further development...
 
