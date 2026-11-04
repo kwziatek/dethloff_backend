@@ -1,4 +1,4 @@
-package com.app.dethloff.service;
+package com.app.dethloff.service.impl;
 
 import com.app.dethloff.exceptions.model.UserNotFoundException;
 import com.app.dethloff.model.UserEntity;

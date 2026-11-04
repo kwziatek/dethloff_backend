@@ -1,7 +1,7 @@
 package com.app.dethloff.config;
 
-import com.app.dethloff.service.CustomUserDetailsService;
-import com.app.dethloff.service.JWTServiceImpl;
+import com.app.dethloff.service.impl.CustomUserDetailsService;
+import com.app.dethloff.service.impl.JWTServiceImpl;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.app.dethloff.service;
+package com.app.dethloff.service.inte;
 
 import com.app.dethloff.rest.DTO.CourseRequestDTO;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;

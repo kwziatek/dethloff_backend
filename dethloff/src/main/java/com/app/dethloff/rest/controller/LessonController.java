@@ -4,7 +4,7 @@ import com.app.dethloff.rest.DTO.LessonRequestDTO;
 import com.app.dethloff.rest.DTO.LessonResponseDTO;
 import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
 import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
-import com.app.dethloff.service.LessonService;
+import com.app.dethloff.service.inte.LessonService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

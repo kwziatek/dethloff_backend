@@ -5,7 +5,7 @@ import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.DTO.SetOfCoursesResponseDTO;
 import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
 import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
-import com.app.dethloff.service.CourseService;
+import com.app.dethloff.service.inte.CourseService;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.app.dethloff.service;
+package com.app.dethloff.service.impl;
 
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.LessonNotFoundException;
@@ -12,6 +12,7 @@ import com.app.dethloff.repository.TeacherRepository;
 import com.app.dethloff.rest.DTO.LessonRequestDTO;
 import com.app.dethloff.rest.DTO.LessonResponseDTO;
 import com.app.dethloff.rest.mappers.LessonMapper;
+import com.app.dethloff.service.inte.LessonService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

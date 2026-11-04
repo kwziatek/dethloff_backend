@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.app.dethloff.service.impl.TeacherServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +32,8 @@ public class TeacherServiceImplUTest {
 
   @Mock TeacherRepository teacherRepository;
 
-  @InjectMocks TeacherServiceImpl teacherService;
+  @InjectMocks
+  TeacherServiceImpl teacherService;
 
   @Captor ArgumentCaptor<TeacherEntity> entityCaptor;
 

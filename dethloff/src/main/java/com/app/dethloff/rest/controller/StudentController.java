@@ -4,7 +4,7 @@ import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
 import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
-import com.app.dethloff.service.StudentService;
+import com.app.dethloff.service.inte.StudentService;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

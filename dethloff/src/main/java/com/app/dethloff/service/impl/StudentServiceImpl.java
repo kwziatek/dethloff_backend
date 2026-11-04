@@ -1,4 +1,4 @@
-package com.app.dethloff.service;
+package com.app.dethloff.service.impl;
 
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.StudentEntity;
@@ -6,6 +6,7 @@ import com.app.dethloff.repository.StudentRepository;
 import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.mappers.StudentMapper;
+import com.app.dethloff.service.inte.StudentService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

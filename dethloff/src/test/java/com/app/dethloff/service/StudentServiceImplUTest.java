@@ -7,6 +7,7 @@ import com.app.dethloff.repository.StudentRepository;
 import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.mappers.StudentMapper;
+import com.app.dethloff.service.impl.StudentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -31,7 +32,8 @@ public class StudentServiceImplUTest {
 
   @Mock StudentMapper studentMapper;
 
-  @InjectMocks StudentServiceImpl studentService;
+  @InjectMocks
+  StudentServiceImpl studentService;
 
   @Captor ArgumentCaptor<StudentEntity> entityCaptor;
 

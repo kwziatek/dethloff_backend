@@ -1,4 +1,4 @@
-package com.app.dethloff.service;
+package com.app.dethloff.service.inte;
 
 public interface PasswordService {
 

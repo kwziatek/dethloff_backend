@@ -1,4 +1,4 @@
-package com.app.dethloff.service;
+package com.app.dethloff.service.impl;
 
 import com.app.dethloff.exceptions.model.InvalidLoginOrPasswordException;
 import com.app.dethloff.exceptions.model.InvalidPasswordException;
@@ -9,13 +9,17 @@ import com.app.dethloff.repository.UserRepository;
 import com.app.dethloff.rest.DTO.LoginRequestDTO;
 import com.app.dethloff.rest.DTO.RegisterRequestDTO;
 import com.app.dethloff.rest.mappers.UserMapper;
-import java.util.Optional;
+import com.app.dethloff.service.inte.JWTService;
+import com.app.dethloff.service.inte.PasswordService;
+import com.app.dethloff.service.inte.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {

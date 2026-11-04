@@ -3,7 +3,7 @@ package com.app.dethloff.rest.controller;
 import com.app.dethloff.rest.DTO.ChangePasswordRequestDTO;
 import com.app.dethloff.rest.DTO.LoginRequestDTO;
 import com.app.dethloff.rest.DTO.RegisterRequestDTO;
-import com.app.dethloff.service.UserService;
+import com.app.dethloff.service.inte.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
