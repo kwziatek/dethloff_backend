@@ -9,6 +9,8 @@ import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.mappers.StudentMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,6 +32,8 @@ public class StudentServiceImplUTest {
   @Mock StudentMapper studentMapper;
 
   @InjectMocks StudentServiceImpl studentService;
+
+  @Captor ArgumentCaptor<StudentEntity> entityCaptor;
 
   @Test
   void getReturnsTheStudentCorrectly() {
@@ -102,6 +106,100 @@ public class StudentServiceImplUTest {
     verify(studentRepository).findAll();
     verifyNoInteractions(studentMapper);
     assertThat(responseDTOS).isEmpty();
+  }
+
+  @Test
+  void createSavesStudentAsInactiveAndReturnsResponse() {
+    // given
+    StudentRequestDTO request = buildStudentRequestDTO2();
+    StudentResponseDTO expectedResponse = buildStudentResponseDTO2();
+
+    StudentEntity entity = buildStudentEntity2();
+    entity.setIsActive(true);
+
+    when(studentMapper.requestToEntity(request)).thenReturn(entity);
+    when(studentMapper.entityToResponse(entity)).thenReturn(expectedResponse);
+
+    // when
+    StudentResponseDTO actualResponse = studentService.create(request);
+
+    // then
+    // 1. Verify that save() was called and capture the entity
+    verify(studentRepository).save(entityCaptor.capture());
+    StudentEntity savedEntity = entityCaptor.getValue();
+
+    // 2. Assert business logic was applied before saving
+    assertThat(savedEntity.getIsActive()).isFalse();
+    // 3. Check if the expected response matches the actual one
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+  }
+
+  @Test
+  void deleteThrowsExceptionWhenStudentNotFound() {
+    // given
+    String id = UUID.randomUUID().toString();
+    when(studentRepository.findById(id)).thenReturn(Optional.empty());
+
+    // when and then
+    assertThrows(StudentNotFoundException.class, () -> studentService.delete(id));
+
+    // 1. assert delete() from repo was NEVER called
+    verify(studentRepository, never()).delete(any());
+  }
+
+  @Test
+  void deleteCorrectlyRemovesStudentFromDB() {
+    // given
+    String id = UUID.randomUUID().toString();
+    StudentEntity entity = buildStudentEntity1();
+    when(studentRepository.findById(id)).thenReturn(Optional.of(entity));
+
+    // when
+    studentService.delete(id);
+
+    // then
+    // 1. verify that delete() was called on entity
+    verify(studentRepository).delete(entity);
+  }
+
+  @Test
+  void updateThrowsExceptionWhenStudentNotFound() {
+    // given
+    StudentRequestDTO requestDTO = buildStudentRequestDTO1();
+    String id = requestDTO.id();
+    when(studentRepository.findById(id)).thenReturn(Optional.empty());
+
+    // when and then
+    assertThrows(StudentNotFoundException.class, () -> studentService.update(requestDTO));
+
+    // verify
+    // 1. Verify that save was NEVER called
+    // 2. Verify that updateEntityFromRequest (mapping) was NEVER called
+    verify(studentRepository, never()).save(any());
+    verify(studentMapper, never()).updateEntityFromRequest(any(), any());
+  }
+
+  @Test
+  void updateCorrectlyUpdatesStudent() {
+    // given
+    StudentRequestDTO requestDTO = buildStudentRequestDTO2();
+    StudentEntity entity = buildStudentEntity2();
+    StudentResponseDTO expectedResponse = buildStudentResponseDTO2();
+    String id = requestDTO.id();
+    when(studentRepository.findById(id)).thenReturn(Optional.of(entity));
+    when(studentRepository.save(entity)).thenReturn(entity);
+    when(studentMapper.entityToResponse(entity)).thenReturn(expectedResponse);
+
+    // when
+    StudentResponseDTO responseDTO = studentService.update(requestDTO);
+
+    // then
+    // 1. Verify that mapper was called with the target entity and that the target entity has been
+    // saved
+    // 2. Check if the expected response and actual response are the same
+    verify(studentMapper).updateEntityFromRequest(requestDTO, entity);
+    verify(studentRepository).save(entity);
+    assertThat(responseDTO).isEqualTo(expectedResponse);
   }
 
   private StudentEntity buildStudentEntity1() {
