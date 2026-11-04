@@ -1,5 +1,9 @@
 package com.app.dethloff.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 import com.app.dethloff.exceptions.model.TeacherNotFoundException;
 import com.app.dethloff.model.TeacherEntity;
 import com.app.dethloff.model.pesel.Pesel;
@@ -7,6 +11,10 @@ import com.app.dethloff.repository.TeacherRepository;
 import com.app.dethloff.rest.DTO.TeacherRequestDTO;
 import com.app.dethloff.rest.DTO.TeacherResponseDTO;
 import com.app.dethloff.rest.mappers.TeacherMapper;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,15 +22,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TeacherServiceImplUTest {
@@ -36,7 +35,7 @@ public class TeacherServiceImplUTest {
   @Captor ArgumentCaptor<TeacherEntity> entityCaptor;
 
   @Test
-  void getReturnsCorrectTeacher() {
+  void getReturnsTheTeacherCorrectly() {
     // given
     TeacherEntity entity = buildTeacherEntity1();
     String id = entity.getId();
@@ -49,6 +48,8 @@ public class TeacherServiceImplUTest {
     TeacherResponseDTO response = teacherService.get(id);
 
     // then
+    // 1. Verify that findById() was called
+    // 2. Verify that the expected response matches the actual response
     verify(teacherRepository).findById(id);
     assertThat(response).isEqualTo(expectedResponse);
   }
@@ -64,7 +65,9 @@ public class TeacherServiceImplUTest {
     assertThrows(TeacherNotFoundException.class, () -> teacherService.get(id));
 
     // 1. Verify if findById was called
+    // 2. Check if none of the teacherMapper methods were called
     verify(teacherRepository).findById(id);
+    verifyNoInteractions(teacherMapper);
   }
 
   @Test
@@ -87,7 +90,7 @@ public class TeacherServiceImplUTest {
   }
 
   @Test
-  void getAllReturnEmptyListWhenDatabaseIsEmpty() {
+  void getAllReturnsEmptyListWhenDatabaseIsEmpty() {
     // given
     when(teacherRepository.findAll()).thenReturn(List.of());
 
