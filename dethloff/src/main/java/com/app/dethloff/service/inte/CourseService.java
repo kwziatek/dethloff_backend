@@ -23,4 +23,6 @@ public interface CourseService {
   List<CourseResponseDTO> getAllFromParticularSet(String setOfCoursesId);
 
   List<SetOfCoursesResponseDTO> getAllSetsOfCourses();
+
+  void updateStartAndEndDateForCourse(String id);
 }

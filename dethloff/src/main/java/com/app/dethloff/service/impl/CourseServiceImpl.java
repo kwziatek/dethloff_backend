@@ -1,14 +1,8 @@
 package com.app.dethloff.service.impl;
 
 import com.app.dethloff.exceptions.model.*;
-import com.app.dethloff.model.CourseEntity;
-import com.app.dethloff.model.SetOfCoursesEntity;
-import com.app.dethloff.model.StudentEntity;
-import com.app.dethloff.model.TeacherEntity;
-import com.app.dethloff.repository.CourseRepository;
-import com.app.dethloff.repository.SetOfCoursesRepository;
-import com.app.dethloff.repository.StudentRepository;
-import com.app.dethloff.repository.TeacherRepository;
+import com.app.dethloff.model.*;
+import com.app.dethloff.repository.*;
 import com.app.dethloff.rest.DTO.CourseRequestDTO;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.DTO.SetOfCoursesResponseDTO;
@@ -19,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,6 +22,7 @@ public class CourseServiceImpl implements CourseService {
   private final CourseRepository courseRepo;
   private final StudentRepository studentRepo;
   private final TeacherRepository teacherRepo;
+  private final LessonRepository lessonRepo;
   private final SetOfCoursesRepository setOfCoursesRepo;
   private final CourseMapper courseMapper;
   private final SetOfCoursesMapper setOfCoursesMapper;
@@ -36,12 +32,14 @@ public class CourseServiceImpl implements CourseService {
       CourseRepository courseRepo,
       StudentRepository studentRepo,
       TeacherRepository teacherRepo,
+      LessonRepository lessonRepo,
       CourseMapper courseMapper,
       SetOfCoursesRepository setOfCoursesRepo,
       SetOfCoursesMapper setOfCoursesMapper) {
     this.courseRepo = courseRepo;
     this.studentRepo = studentRepo;
     this.teacherRepo = teacherRepo;
+    this.lessonRepo = lessonRepo;
     this.courseMapper = courseMapper;
     this.setOfCoursesRepo = setOfCoursesRepo;
     this.setOfCoursesMapper = setOfCoursesMapper;
@@ -142,6 +140,43 @@ public class CourseServiceImpl implements CourseService {
         // TODO: check just for current courses
         student.setIsActive(false);
       }
+    }
+  }
+
+  @Transactional
+  @Override
+  public void updateStartAndEndDateForCourse(String id) {
+    CourseEntity course = courseRepo.findById(id).orElseThrow(StudentNotFoundException::new);
+
+    LessonEntity oldestLesson =
+        lessonRepo.findFirstByCourseIdOrderByLessonTimeDateAsc(course.getId()).orElse(null);
+    LessonEntity newestLesson =
+        lessonRepo.findFirstByCourseIdOrderByLessonTimeDateDesc(course.getId()).orElse(null);
+
+    boolean shouldBeSaved = false;
+
+    if (oldestLesson != null
+        && !oldestLesson.getLessonTime().getDate().equals(course.getStartDate())) {
+      course.setStartDate(oldestLesson.getLessonTime().getDate());
+      shouldBeSaved = true;
+    }
+
+    if (newestLesson != null
+        && !newestLesson.getLessonTime().getDate().equals(course.getEndDate())) {
+      course.setEndDate(newestLesson.getLessonTime().getDate());
+      shouldBeSaved = true;
+    }
+
+    // no need to mark shouldBeSaved, if startDate or endDate don't change, active status won't either
+    if(course.getStartDate() != null && course.getEndDate() != null) {
+        // check if the current date is not before the course start date and not after the course end date
+        course.setActive(!LocalDate.now().isBefore(course.getStartDate()) && !LocalDate.now().isAfter(course.getEndDate()));
+    } else {
+        course.setActive(false);
+    }
+
+    if (shouldBeSaved) {
+      courseRepo.save(course);
     }
   }
 }
