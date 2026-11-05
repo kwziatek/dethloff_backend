@@ -12,14 +12,13 @@ import com.app.dethloff.rest.mappers.UserMapper;
 import com.app.dethloff.service.inte.JWTService;
 import com.app.dethloff.service.inte.PasswordService;
 import com.app.dethloff.service.inte.UserService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {

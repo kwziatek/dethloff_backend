@@ -1,5 +1,9 @@
 package com.app.dethloff.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.StudentEntity;
 import com.app.dethloff.model.pesel.Pesel;
@@ -8,6 +12,10 @@ import com.app.dethloff.rest.DTO.StudentRequestDTO;
 import com.app.dethloff.rest.DTO.StudentResponseDTO;
 import com.app.dethloff.rest.mappers.StudentMapper;
 import com.app.dethloff.service.impl.StudentServiceImpl;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,15 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceImplUTest {
 
@@ -32,8 +31,7 @@ public class StudentServiceImplUTest {
 
   @Mock StudentMapper studentMapper;
 
-  @InjectMocks
-  StudentServiceImpl studentService;
+  @InjectMocks StudentServiceImpl studentService;
 
   @Captor ArgumentCaptor<StudentEntity> entityCaptor;
 
@@ -62,7 +60,7 @@ public class StudentServiceImplUTest {
     String id = UUID.randomUUID().toString();
     when(studentRepository.findById(id)).thenReturn(Optional.empty());
 
-    // when and then
+    // when && then
     assertThrows(StudentNotFoundException.class, () -> studentService.get(id));
 
     // verify
@@ -142,7 +140,7 @@ public class StudentServiceImplUTest {
     String id = UUID.randomUUID().toString();
     when(studentRepository.findById(id)).thenReturn(Optional.empty());
 
-    // when and then
+    // when && then
     assertThrows(StudentNotFoundException.class, () -> studentService.delete(id));
 
     // 1. assert delete() from repo was NEVER called
@@ -152,8 +150,8 @@ public class StudentServiceImplUTest {
   @Test
   void deleteCorrectlyRemovesStudentFromDB() {
     // given
-    String id = UUID.randomUUID().toString();
     StudentEntity entity = buildStudentEntity1();
+    String id = entity.getId();
     when(studentRepository.findById(id)).thenReturn(Optional.of(entity));
 
     // when
@@ -171,7 +169,7 @@ public class StudentServiceImplUTest {
     String id = requestDTO.id();
     when(studentRepository.findById(id)).thenReturn(Optional.empty());
 
-    // when and then
+    // when && then
     assertThrows(StudentNotFoundException.class, () -> studentService.update(requestDTO));
 
     // verify

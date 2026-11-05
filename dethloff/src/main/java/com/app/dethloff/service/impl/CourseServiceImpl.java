@@ -1,9 +1,6 @@
 package com.app.dethloff.service.impl;
 
-import com.app.dethloff.exceptions.model.CourseNotFoundException;
-import com.app.dethloff.exceptions.model.SetOfCoursesNotFoundException;
-import com.app.dethloff.exceptions.model.StudentNotFoundException;
-import com.app.dethloff.exceptions.model.TeacherNotFoundException;
+import com.app.dethloff.exceptions.model.*;
 import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.SetOfCoursesEntity;
 import com.app.dethloff.model.StudentEntity;
@@ -119,8 +116,12 @@ public class CourseServiceImpl implements CourseService {
     CourseEntity course = courseRepo.findById(courseId).orElseThrow(CourseNotFoundException::new);
     StudentEntity student =
         studentRepo.findById(studentId).orElseThrow(StudentNotFoundException::new);
-    course.addStudent(student);
-    student.setIsActive(true);
+    if (course.getStudents().contains(student)) {
+      throw new StudentAlreadyEnrolledException();
+    } else {
+      course.addStudent(student);
+      student.setIsActive(true);
+    }
   }
 
   @Override
@@ -129,11 +130,15 @@ public class CourseServiceImpl implements CourseService {
     CourseEntity course = courseRepo.findById(courseId).orElseThrow(CourseNotFoundException::new);
     StudentEntity student =
         studentRepo.findById(studentId).orElseThrow(StudentNotFoundException::new);
-    course.removeStudent(student);
-    if (student.getCourses().isEmpty()) {
-      // checks for all courses, should check for current ones
-      // TODO: check just for current courses
-      student.setIsActive(false);
+    if (!course.getStudents().contains(student)) {
+      throw new StudentNotEnrolledException();
+    } else {
+      course.removeStudent(student);
+      if (student.getCourses().isEmpty()) {
+        // checks for all courses, should check for current ones
+        // TODO: check just for current courses
+        student.setIsActive(false);
+      }
     }
   }
 }

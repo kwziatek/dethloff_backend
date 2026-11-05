@@ -11,12 +11,11 @@ import com.app.dethloff.repository.TeacherRepository;
 import com.app.dethloff.rest.DTO.TeacherRequestDTO;
 import com.app.dethloff.rest.DTO.TeacherResponseDTO;
 import com.app.dethloff.rest.mappers.TeacherMapper;
+import com.app.dethloff.service.impl.TeacherServiceImpl;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import com.app.dethloff.service.impl.TeacherServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -32,8 +31,7 @@ public class TeacherServiceImplUTest {
 
   @Mock TeacherRepository teacherRepository;
 
-  @InjectMocks
-  TeacherServiceImpl teacherService;
+  @InjectMocks TeacherServiceImpl teacherService;
 
   @Captor ArgumentCaptor<TeacherEntity> entityCaptor;
 
@@ -64,7 +62,7 @@ public class TeacherServiceImplUTest {
 
     when(teacherRepository.findById(id)).thenReturn(Optional.empty());
 
-    // when and then
+    // when && then
     assertThrows(TeacherNotFoundException.class, () -> teacherService.get(id));
 
     // 1. Verify if findById was called
@@ -162,7 +160,7 @@ public class TeacherServiceImplUTest {
 
     when(teacherRepository.findById(id)).thenReturn(Optional.empty());
 
-    // when and then
+    // when && then
     assertThrows(TeacherNotFoundException.class, () -> teacherService.delete(id));
 
     // 1. Verify that delete was NEVER called
@@ -176,7 +174,7 @@ public class TeacherServiceImplUTest {
     String id = requestDTO.id();
     when(teacherRepository.findById(id)).thenReturn(Optional.empty());
 
-    // when and then
+    // when && then
     assertThrows(TeacherNotFoundException.class, () -> teacherService.update(requestDTO));
 
     // verify
