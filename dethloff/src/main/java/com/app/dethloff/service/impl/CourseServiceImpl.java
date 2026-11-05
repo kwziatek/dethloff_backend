@@ -16,10 +16,9 @@ import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.rest.mappers.SetOfCoursesMapper;
 import com.app.dethloff.service.inte.CourseService;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CourseServiceImpl implements CourseService {
