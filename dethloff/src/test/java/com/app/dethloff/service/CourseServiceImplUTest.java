@@ -1,6 +1,8 @@
 package com.app.dethloff.service;
 
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
+import com.app.dethloff.exceptions.model.StudentAlreadyEnrolledException;
+import com.app.dethloff.exceptions.model.StudentNotEnrolledException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.CourseLevel;
@@ -158,28 +160,6 @@ public class CourseServiceImplUTest {
   }
 
   @Test
-  void unenrollStudentWorksCorrectly() {
-    // given
-    when(courseRepository.findById(sampleCourse.getId()))
-        .thenReturn(Optional.ofNullable(sampleCourse));
-    when(studentRepository.findById(sampleStudent.getId()))
-        .thenReturn(Optional.ofNullable(sampleStudent));
-    // student must be added to the course, otherwise unenrollStudent() throws exception as it should
-    // TODO: create test cases for trying to enroll enrolled student and unenroll the unenrolled one.
-
-    // when
-    courseService.unenrollStudent(sampleCourse.getId(), sampleStudent.getId());
-
-    // then
-    assertFalse(sampleCourse.getStudents().contains(sampleStudent));
-    assertFalse(sampleStudent.getCourses().contains(sampleCourse));
-
-    // verify
-    verify(courseRepository).findById(sampleCourse.getId());
-    verify(studentRepository).findById(sampleStudent.getId());
-  }
-
-  @Test
   void enrollStudentThrowsExceptionWhenCourseNotFound() {
     // given
     when(courseRepository.findById("NON-EXISTENT")).thenReturn(Optional.empty());
@@ -214,6 +194,48 @@ public class CourseServiceImplUTest {
   }
 
   @Test
+  void enrollStudentThrowsExceptionWhenStudentIsAlreadyEnrolled() {
+    // given
+    when(courseRepository.findById(sampleCourse.getId())).thenReturn(Optional.of(sampleCourse));
+    when(studentRepository.findById(sampleStudent.getId())).thenReturn(Optional.of(sampleStudent));
+    // make sure the student is enrolled before enrolling them
+    sampleCourse.addStudent(sampleStudent);
+
+    // when && then
+    assertThrows(
+        StudentAlreadyEnrolledException.class,
+        () -> courseService.enrollStudent(sampleCourse.getId(), sampleStudent.getId()));
+
+    // verify
+    // 1. Check if nothing was saved
+    verify(courseRepository, never()).save(any());
+    verify(studentRepository, never()).save(any());
+  }
+
+  @Test
+  void unenrollStudentWorksCorrectly() {
+    // given
+    when(courseRepository.findById(sampleCourse.getId()))
+        .thenReturn(Optional.ofNullable(sampleCourse));
+    when(studentRepository.findById(sampleStudent.getId()))
+        .thenReturn(Optional.ofNullable(sampleStudent));
+    // student must be added to the course, otherwise unenrollStudent() throws exception as it
+    // should
+    sampleCourse.addStudent(sampleStudent);
+
+    // when
+    courseService.unenrollStudent(sampleCourse.getId(), sampleStudent.getId());
+
+    // then
+    assertFalse(sampleCourse.getStudents().contains(sampleStudent));
+    assertFalse(sampleStudent.getCourses().contains(sampleCourse));
+
+    // verify
+    verify(courseRepository).findById(sampleCourse.getId());
+    verify(studentRepository).findById(sampleStudent.getId());
+  }
+
+  @Test
   void unenrollStudentThrowsExceptionWhenCourseNotFound() {
     // given
     when(courseRepository.findById("NON-EXISTENT")).thenReturn(Optional.empty());
@@ -238,6 +260,25 @@ public class CourseServiceImplUTest {
     assertThrows(
         StudentNotFoundException.class,
         () -> courseService.unenrollStudent(sampleCourse.getId(), "NON-EXISTENT"));
+
+    // verify
+    // 1. Check if nothing was saved
+    verify(courseRepository, never()).save(any());
+    verify(studentRepository, never()).save(any());
+  }
+
+  @Test
+  void unenrollStudentThrowsExceptionWhenStudentIsAlreadyEnrolled() {
+    // given
+    when(courseRepository.findById(sampleCourse.getId())).thenReturn(Optional.of(sampleCourse));
+    when(studentRepository.findById(sampleStudent.getId())).thenReturn(Optional.of(sampleStudent));
+    // make sure the student is unenrolled before unenrolling them
+    sampleCourse.removeStudent(sampleStudent);
+
+    // when && then
+    assertThrows(
+        StudentNotEnrolledException.class,
+        () -> courseService.unenrollStudent(sampleCourse.getId(), sampleStudent.getId()));
 
     // verify
     // 1. Check if nothing was saved
