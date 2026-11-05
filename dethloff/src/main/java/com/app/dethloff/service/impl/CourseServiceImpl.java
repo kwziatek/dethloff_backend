@@ -10,11 +10,10 @@ import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.rest.mappers.SetOfCoursesMapper;
 import com.app.dethloff.service.inte.CourseService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -167,12 +166,16 @@ public class CourseServiceImpl implements CourseService {
       shouldBeSaved = true;
     }
 
-    // no need to mark shouldBeSaved, if startDate or endDate don't change, active status won't either
-    if(course.getStartDate() != null && course.getEndDate() != null) {
-        // check if the current date is not before the course start date and not after the course end date
-        course.setActive(!LocalDate.now().isBefore(course.getStartDate()) && !LocalDate.now().isAfter(course.getEndDate()));
+    // no need to mark shouldBeSaved, if startDate or endDate don't change, active status won't
+    // either
+    if (course.getStartDate() != null && course.getEndDate() != null) {
+      // check if the current date is not before the course start date and not after the course end
+      // date
+      course.setActive(
+          !LocalDate.now().isBefore(course.getStartDate())
+              && !LocalDate.now().isAfter(course.getEndDate()));
     } else {
-        course.setActive(false);
+      course.setActive(false);
     }
 
     if (shouldBeSaved) {
