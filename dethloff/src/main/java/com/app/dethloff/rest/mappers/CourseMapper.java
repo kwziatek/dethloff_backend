@@ -6,10 +6,12 @@ import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(
     componentModel = "spring",
-    uses = {StudentMapper.class})
+    uses = {StudentMapper.class},
+    unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CourseMapper {
 
   default String courseToId(CourseEntity entity) {

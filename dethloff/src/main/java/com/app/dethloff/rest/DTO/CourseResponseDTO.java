@@ -1,6 +1,7 @@
 package com.app.dethloff.rest.DTO;
 
 import com.app.dethloff.model.CourseLevel;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
 
@@ -15,4 +16,7 @@ public record CourseResponseDTO(
     String setOfCoursesId,
     String room,
     Integer totalCourseTime,
-    Integer completedCourseTime) {}
+    Integer completedCourseTime,
+    LocalDate startDate,
+    LocalDate endDate,
+    boolean isActive) {}
