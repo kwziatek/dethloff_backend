@@ -1,5 +1,8 @@
 package com.app.dethloff.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.StudentAlreadyEnrolledException;
 import com.app.dethloff.exceptions.model.StudentNotEnrolledException;
@@ -13,19 +16,15 @@ import com.app.dethloff.repository.StudentRepository;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.service.impl.CourseServiceImpl;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CourseServiceImplUTest {

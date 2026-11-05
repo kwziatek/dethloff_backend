@@ -1,12 +1,14 @@
 package com.app.dethloff.model;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -59,6 +61,14 @@ public class CourseEntity {
   // not. Might be determined according to oldest and newest lesson. (Student and Teacher are active
   // iff they are assigned to current course).
   // TODO: implement what's above
+  @Column(name = "start_date")
+  LocalDate startDate;
+
+  @Column(name = "end_date")
+  LocalDate endDate;
+
+  @Column(name = "is_active")
+  boolean isActive;
 
   public void addStudent(StudentEntity student) {
     if (students == null) {
