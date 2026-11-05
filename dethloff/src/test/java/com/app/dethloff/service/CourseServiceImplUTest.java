@@ -1,8 +1,5 @@
 package com.app.dethloff.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.app.dethloff.exceptions.model.CourseNotFoundException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.CourseEntity;
@@ -14,15 +11,19 @@ import com.app.dethloff.repository.StudentRepository;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.service.impl.CourseServiceImpl;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CourseServiceImplUTest {
@@ -163,6 +164,8 @@ public class CourseServiceImplUTest {
         .thenReturn(Optional.ofNullable(sampleCourse));
     when(studentRepository.findById(sampleStudent.getId()))
         .thenReturn(Optional.ofNullable(sampleStudent));
+    // student must be added to the course, otherwise unenrollStudent() throws exception as it should
+    // TODO: create test cases for trying to enroll enrolled student and unenroll the unenrolled one.
 
     // when
     courseService.unenrollStudent(sampleCourse.getId(), sampleStudent.getId());
