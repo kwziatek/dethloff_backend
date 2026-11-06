@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Date;
 
 public class JWTServiceImplUTest {
 
