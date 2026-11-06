@@ -9,15 +9,15 @@ import com.app.dethloff.exceptions.model.StudentAlreadyEnrolledException;
 import com.app.dethloff.exceptions.model.StudentNotEnrolledException;
 import com.app.dethloff.exceptions.model.StudentNotFoundException;
 import com.app.dethloff.model.*;
-import com.app.dethloff.repository.CourseRepository;
-import com.app.dethloff.repository.LessonRepository;
-import com.app.dethloff.repository.StudentRepository;
+import com.app.dethloff.repository.*;
+import com.app.dethloff.rest.DTO.CourseRequestDTO;
 import com.app.dethloff.rest.DTO.CourseResponseDTO;
 import com.app.dethloff.rest.mappers.CourseMapper;
 import com.app.dethloff.service.impl.CourseServiceImpl;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,13 +38,17 @@ public class CourseServiceImplUTest {
 
   @Mock private LessonRepository lessonRepository;
 
+  @Mock private TeacherRepository teacherRepository;
+
+  @Mock private SetOfCoursesRepository setOfCoursesRepository;
+
   @InjectMocks private CourseServiceImpl courseService;
 
   @Mock private CourseMapper courseMapper;
 
-  @Captor private ArgumentCaptor<CourseEntity> captor;
+  @Captor private ArgumentCaptor<CourseEntity> courseCaptor;
 
-  private CourseEntity sampleCourse;
+    private CourseEntity sampleCourse;
   private StudentEntity sampleStudent;
   private TeacherEntity sampleTeacher;
   private LessonEntity sampleOldestLesson;
@@ -161,7 +165,82 @@ public class CourseServiceImplUTest {
   }
 
   @Test
-  void createCourse_ShouldSaveAndReturnDTO() {}
+  void createCourse_ShouldSaveAndReturnDTO() {
+    // given
+    CourseRequestDTO request = CourseRequestDTO.builder()
+        .teacherId(sampleTeacher.getId())
+        .setOfCoursesId(UUID.randomUUID().toString())
+        .studentIds(List.of(sampleStudent.getId()))
+        .description("New Course Description")
+        .level(CourseLevel.B1)
+        .build();
+    CourseResponseDTO expectedResponse = CourseResponseDTO.builder()
+        .id(UUID.randomUUID().toString())
+        .description("New Course Description")
+        .level(CourseLevel.B1)
+        .build();
+
+     sampleCourse.setActive(true);
+
+
+    when(teacherRepository.findById(request.teacherId())).thenReturn(Optional.of(sampleTeacher));
+    when(setOfCoursesRepository.findById(request.setOfCoursesId())).thenReturn(Optional.of(new SetOfCoursesEntity()));
+    when(studentRepository.findAllById(request.studentIds())).thenReturn(List.of(sampleStudent));
+    when(courseMapper.requestToEntity(request)).thenReturn(sampleCourse);
+    when(courseMapper.entityToResponse(sampleCourse)).thenReturn(expectedResponse);
+
+    // when
+    CourseResponseDTO actualResponse = courseService.create(request);
+
+    // then
+    verify(courseRepository).save(sampleCourse);
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+    assertThat(sampleTeacher.getIsActive()).isTrue();
+  }
+
+  @Test
+  void updateCourse_ShouldUpdateAndReturnDTO() {
+    // given
+    CourseRequestDTO request = CourseRequestDTO.builder()
+        .id(sampleCourse.getId())
+        .description("Updated Description")
+        .level(CourseLevel.B2)
+        .build();
+    CourseResponseDTO expectedResponse = CourseResponseDTO.builder()
+        .id(sampleCourse.getId())
+        .description("Updated Description")
+        .level(CourseLevel.B2)
+        .build();
+
+    when(courseRepository.findById(request.id())).thenReturn(Optional.of(sampleCourse));
+    when(courseRepository.save(sampleCourse)).thenReturn(sampleCourse);
+    when(courseMapper.entityToResponse(sampleCourse)).thenReturn(expectedResponse);
+
+    // when
+    CourseResponseDTO actualResponse = courseService.update(request);
+
+    // then
+    verify(courseMapper).updateEntityFromRequest(request, sampleCourse);
+    verify(courseRepository).save(sampleCourse);
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+  }
+
+  @Test
+  void updateCourse_ThrowsExceptionWhenCourseNotFound() {
+    // given
+    CourseRequestDTO request = CourseRequestDTO.builder()
+        .id("NON-EXISTENT")
+        .build();
+
+    when(courseRepository.findById("NON-EXISTENT")).thenReturn(Optional.empty());
+
+    // when && then
+    assertThrows(CourseNotFoundException.class, () -> courseService.update(request));
+
+    // verify
+    verify(courseRepository, never()).save(any());
+    verifyNoInteractions(courseMapper);
+  }
 
   @Test
   void deleteCourseShouldInvokeDeleteOnRepository() {
@@ -197,14 +276,22 @@ public class CourseServiceImplUTest {
     when(studentRepository.findById(sampleStudent.getId()))
         .thenReturn(Optional.ofNullable(sampleStudent));
 
+    // let's set the course to be active and the student not to check if the student is set as active
+    sampleCourse.setActive(true);
+    sampleStudent.setIsActive(false);
+
     // when
     courseService.enrollStudent(sampleCourse.getId(), sampleStudent.getId());
 
     // then
+    // 1. Check that student references course and the other way around
     assertTrue(sampleCourse.getStudents().contains(sampleStudent));
     assertTrue(sampleStudent.getCourses().contains(sampleCourse));
 
-    // verify
+    // 2. Check that student status is changed to active
+    assertThat(sampleStudent.getIsActive()).isTrue();
+
+    // 3. verify that findById() was called on course and student (entities in managed(?) state)
     verify(courseRepository).findById(sampleCourse.getId());
     verify(studentRepository).findById(sampleStudent.getId());
   }
@@ -271,6 +358,8 @@ public class CourseServiceImplUTest {
         .thenReturn(Optional.ofNullable(sampleStudent));
     // student must be added to the course, otherwise unenrollStudent() throws exception as it
     // should
+
+    // this also adds reference for the student to the course, check out the method
     sampleCourse.addStudent(sampleStudent);
 
     // when
@@ -279,6 +368,8 @@ public class CourseServiceImplUTest {
     // then
     assertFalse(sampleCourse.getStudents().contains(sampleStudent));
     assertFalse(sampleStudent.getCourses().contains(sampleCourse));
+
+    assertThat(sampleStudent.getIsActive()).isFalse();
 
     // verify
     verify(courseRepository).findById(sampleCourse.getId());
@@ -352,8 +443,8 @@ public class CourseServiceImplUTest {
     // 1. verify that save has been called and save it to captor
     // 2. check if the saved value of isActive field is true
     // 3. check if the start date and end date map the oldest and newest lesson time date
-    verify(courseRepository).save(captor.capture());
-    CourseEntity savedCourse = captor.getValue();
+    verify(courseRepository).save(courseCaptor.capture());
+    CourseEntity savedCourse = courseCaptor.getValue();
     assertThat(savedCourse.isActive()).isTrue();
     assertThat(savedCourse.getStartDate()).isEqualTo(sampleOldestLessonTime.getDate());
     assertThat(savedCourse.getEndDate()).isEqualTo(sampleNewestLessonTime.getDate());

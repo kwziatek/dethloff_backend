@@ -73,7 +73,7 @@ public class StudentServiceImplUTest {
   @Test
   void getAllReturnsAllStudents() {
     // given
-    List<StudentEntity> entities = List.of(buildStudentEntity1(), buildStudentEntity1());
+    List<StudentEntity> entities = List.of(buildStudentEntity1(), buildStudentEntity2());
     List<StudentResponseDTO> expectedResponse =
         List.of(buildStudentResponseDTO1(), buildStudentResponseDTO2());
     when(studentRepository.findAll()).thenReturn(entities);
