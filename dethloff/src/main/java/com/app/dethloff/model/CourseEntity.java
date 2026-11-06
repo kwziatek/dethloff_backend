@@ -56,10 +56,6 @@ public class CourseEntity {
   @Column(name = "completed_course_time")
   Integer completedCourseTime;
 
-  // Course also needs start date and end date - it's vital to determine if a course is current or
-  // not. Might be determined according to oldest and newest lesson. (Student and Teacher are active
-  // iff they are assigned to current course).
-  // TODO: implement what's above
   @Column(name = "start_date")
   LocalDate startDate;
 
