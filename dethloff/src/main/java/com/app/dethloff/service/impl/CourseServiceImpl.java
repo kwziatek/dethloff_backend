@@ -61,8 +61,9 @@ public class CourseServiceImpl implements CourseService {
 
     CourseEntity course = courseMapper.requestToEntity(courseRequestDTO);
     course.setTeacher(teacher);
-    // if the course is active, teacher should become active
-    // TODO: implement
+    if (course.isActive()) {
+      teacher.setIsActive(true);
+    }
     course.setSetOfCourses(setOfCourses);
     course.setStudents(students);
     courseRepo.save(course);
@@ -120,7 +121,9 @@ public class CourseServiceImpl implements CourseService {
       throw new StudentAlreadyEnrolledException();
     } else {
       course.addStudent(student);
-      student.setIsActive(true);
+      if (course.isActive()) {
+          student.setIsActive(true);
+      }
     }
   }
 
@@ -134,9 +137,7 @@ public class CourseServiceImpl implements CourseService {
       throw new StudentNotEnrolledException();
     } else {
       course.removeStudent(student);
-      if (student.getCourses().isEmpty()) {
-        // checks for all courses, should check for current ones
-        // TODO: check just for current courses
+      if (student.getCourses().stream().noneMatch(CourseEntity::isActive)) {
         student.setIsActive(false);
       }
     }
