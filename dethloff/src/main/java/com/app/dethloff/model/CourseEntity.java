@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CourseEntity {
 
-  @Id
+    @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "id")
   String id;
@@ -82,4 +84,15 @@ public class CourseEntity {
       student.getCourses().remove(this);
     }
   }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CourseEntity that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
