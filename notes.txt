@@ -6,6 +6,8 @@
     -- TO DO ------------------------------------------------------------------------------------------------------------------------------------------------
 
     - implement unit tests
+        - unit tests for mappers (only these that are not handled fully by mapstruct)
+        - controllers
 
     - flyway scripts are written in the postgresql dialect, which is a problem because H2 (db for tests) sometimes doesn't understand it.
         The solution would be to use test containers that during @SpringBootTest create real PostgreSQL in docker for testing time.
@@ -13,11 +15,13 @@
 
     - implement integration tests
 
+    - there is a question of methods that are called automatically e.a. for every course check if today it starts or stops being active
+
     - further development...
 
         - add a new field to the student and teacher tables - joiningDate (dd.mm.yyyy)
 
-        - fix logic bug -> student inactive after being unenrolled
+        - fix logic bug -> student is inactive after being unenrolled
 
         - add course start and end date
 
