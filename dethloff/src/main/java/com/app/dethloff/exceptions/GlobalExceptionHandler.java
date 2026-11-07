@@ -36,7 +36,9 @@ public class GlobalExceptionHandler {
     InvalidPasswordException.class,
     NullPointerException.class,
     MethodArgumentNotValidException.class,
-    UsernameTakenException.class
+    UsernameTakenException.class,
+    StudentAlreadyEnrolledException.class,
+    StudentNotEnrolledException.class
   })
   ResponseEntity<ErrorResponse> handleBadRequestException(Exception exc) {
     ErrorResponse errorResponse =
@@ -60,5 +62,14 @@ public class GlobalExceptionHandler {
             HttpStatus.UNAUTHORIZED.value(), exc.getMessage(), System.currentTimeMillis());
 
     return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(Exception.class)
+  ResponseEntity<ErrorResponse> handleGeneralException(Exception exc) {
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), exc.getMessage(), System.currentTimeMillis());
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
