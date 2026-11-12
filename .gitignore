@@ -4,3 +4,4 @@
 !/craft/storage/rebrand
 migration/
 .idea/
+.aider*
