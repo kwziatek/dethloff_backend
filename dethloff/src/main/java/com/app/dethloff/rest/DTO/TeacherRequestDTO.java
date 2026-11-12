@@ -14,8 +14,8 @@ import lombok.Builder;
 
 @Builder
 public record TeacherRequestDTO(
-    @NotNull(groups = UpdateAction.class, message = "STUDENT_NOT_FOUND")
-        @Null(groups = CreateAction.class, message = "STUDENT_ID_MUST_BE_NULL")
+    @NotNull(groups = UpdateAction.class, message = "TEACHER_NOT_FOUND")
+        @Null(groups = CreateAction.class, message = "TEACHER_ID_MUST_BE_NULL")
         String id,
     @Size(
             min = 2,
