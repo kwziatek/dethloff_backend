@@ -122,7 +122,7 @@ public class CourseServiceImpl implements CourseService {
     } else {
       course.addStudent(student);
       if (course.isActive()) {
-          student.setIsActive(true);
+        student.setIsActive(true);
       }
     }
   }

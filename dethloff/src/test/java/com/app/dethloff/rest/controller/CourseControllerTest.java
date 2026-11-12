@@ -27,11 +27,9 @@ public class CourseControllerTest {
   @Autowired private MockMvc mockMvc;
   private ObjectMapper objectMapper;
 
-  @MockitoBean
-  private CourseService courseService;
+  @MockitoBean private CourseService courseService;
 
-  @MockitoBean
-  private JWTServiceImpl jwtServiceImpl;
+  @MockitoBean private JWTServiceImpl jwtServiceImpl;
 
   @BeforeEach
   void setUp() {
@@ -44,7 +42,8 @@ public class CourseControllerTest {
     CourseResponseDTO course = CourseResponseDTO.builder().id("1").description("Test").build();
     when(courseService.getAll()).thenReturn(List.of(course));
 
-    mockMvc.perform(get("/api/courses"))
+    mockMvc
+        .perform(get("/api/courses"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$[0].id").value("1"));
@@ -54,8 +53,7 @@ public class CourseControllerTest {
   void getAllCourses_ShouldReturnInternalServerError_WhenServiceFails() throws Exception {
     when(courseService.getAll()).thenThrow(new RuntimeException("Database error"));
 
-    mockMvc.perform(get("/api/courses"))
-        .andExpect(status().isInternalServerError());
+    mockMvc.perform(get("/api/courses")).andExpect(status().isInternalServerError());
   }
 
   // 2. getAllSetCourses
@@ -65,7 +63,8 @@ public class CourseControllerTest {
     CourseResponseDTO course = CourseResponseDTO.builder().id("1").description("Test").build();
     when(courseService.getAllFromParticularSet(setId)).thenReturn(List.of(course));
 
-    mockMvc.perform(get("/api/courses/setsOfCourses/{setOfCoursesId}", setId))
+    mockMvc
+        .perform(get("/api/courses/setsOfCourses/{setOfCoursesId}", setId))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value("1"));
   }
@@ -73,19 +72,23 @@ public class CourseControllerTest {
   @Test
   void getAllSetCourses_ShouldReturnNotFound_WhenSetDoesNotExist() throws Exception {
     String setId = "non-existent";
-    when(courseService.getAllFromParticularSet(setId)).thenThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException());
+    when(courseService.getAllFromParticularSet(setId))
+        .thenThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException());
 
-    mockMvc.perform(get("/api/courses/setsOfCourses/{setOfCoursesId}", setId))
+    mockMvc
+        .perform(get("/api/courses/setsOfCourses/{setOfCoursesId}", setId))
         .andExpect(status().isNotFound());
   }
 
   // 3. getAllSetsOfCourses
   @Test
   void getAllSetsOfCourses_ShouldReturnList() throws Exception {
-    SetOfCoursesResponseDTO set = SetOfCoursesResponseDTO.builder().id("set1").name("Java Sets").build();
+    SetOfCoursesResponseDTO set =
+        SetOfCoursesResponseDTO.builder().id("set1").name("Java Sets").build();
     when(courseService.getAllSetsOfCourses()).thenReturn(List.of(set));
 
-    mockMvc.perform(get("/api/courses/setsOfCourses"))
+    mockMvc
+        .perform(get("/api/courses/setsOfCourses"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value("set1"));
   }
@@ -94,8 +97,7 @@ public class CourseControllerTest {
   void getAllSetsOfCourses_ShouldReturnInternalServerError_WhenServiceFails() throws Exception {
     when(courseService.getAllSetsOfCourses()).thenThrow(new RuntimeException("Service failure"));
 
-    mockMvc.perform(get("/api/courses/setsOfCourses"))
-        .andExpect(status().isInternalServerError());
+    mockMvc.perform(get("/api/courses/setsOfCourses")).andExpect(status().isInternalServerError());
   }
 
   // 4. getCourse
@@ -105,7 +107,8 @@ public class CourseControllerTest {
     CourseResponseDTO course = CourseResponseDTO.builder().id(id).description("Test").build();
     when(courseService.get(id)).thenReturn(course);
 
-    mockMvc.perform(get("/api/courses/{courseId}", id))
+    mockMvc
+        .perform(get("/api/courses/{courseId}", id))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(id));
   }
@@ -113,35 +116,36 @@ public class CourseControllerTest {
   @Test
   void getCourse_ShouldReturnNotFound_WhenCourseDoesNotExist() throws Exception {
     String id = "non-existent";
-    when(courseService.get(id)).thenThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException());
+    when(courseService.get(id))
+        .thenThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException());
 
-    mockMvc.perform(get("/api/courses/{courseId}", id))
-        .andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/courses/{courseId}", id)).andExpect(status().isNotFound());
   }
 
   // 5. createCourse
   @Test
   void createCourse_ShouldReturnCreated() throws Exception {
-    CourseRequestDTO request = CourseRequestDTO.builder()
-        .name("Java Course")
-        .level(CourseLevel.A1)
-        .description("New Course")
-        .studentIds(List.of("s1", "s2"))
-        .teacherId("t1")
-        .setOfCoursesId("set1")
-        .room("Room 101")
-        .totalCourseTime(100)
-        .completedCourseTime(0)
-        .build();
-    CourseResponseDTO response = CourseResponseDTO.builder()
-        .id("123")
-        .description("New Course")
-        .build();
+    CourseRequestDTO request =
+        CourseRequestDTO.builder()
+            .name("Java Course")
+            .level(CourseLevel.A1)
+            .description("New Course")
+            .studentIds(List.of("s1", "s2"))
+            .teacherId("t1")
+            .setOfCoursesId("set1")
+            .room("Room 101")
+            .totalCourseTime(100)
+            .completedCourseTime(0)
+            .build();
+    CourseResponseDTO response =
+        CourseResponseDTO.builder().id("123").description("New Course").build();
     when(courseService.create(any())).thenReturn(response);
 
-    mockMvc.perform(post("/api/courses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            post("/api/courses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
         .andExpect(header().exists("Location"))
         .andExpect(jsonPath("$.id").value("123"));
@@ -151,9 +155,11 @@ public class CourseControllerTest {
   void createCourse_ShouldReturnBadRequest_WhenInputIsInvalid() throws Exception {
     CourseRequestDTO invalidRequest = CourseRequestDTO.builder().build();
 
-    mockMvc.perform(post("/api/courses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invalidRequest)))
+    mockMvc
+        .perform(
+            post("/api/courses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
         .andExpect(status().isBadRequest());
   }
 
@@ -163,7 +169,8 @@ public class CourseControllerTest {
     String courseId = "c1";
     String studentId = "s1";
 
-    mockMvc.perform(post("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
+    mockMvc
+        .perform(post("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
         .andExpect(status().isNoContent());
 
     verify(courseService).enrollStudent(courseId, studentId);
@@ -174,59 +181,66 @@ public class CourseControllerTest {
     String courseId = "c1";
     String studentId = "s1";
     doThrow(new com.app.dethloff.exceptions.model.StudentAlreadyEnrolledException())
-        .when(courseService).enrollStudent(courseId, studentId);
+        .when(courseService)
+        .enrollStudent(courseId, studentId);
 
-    mockMvc.perform(post("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
+    mockMvc
+        .perform(post("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
         .andExpect(status().isBadRequest());
   }
 
   // 7. updateCourse
   @Test
   void updateCourse_ShouldReturnOk() throws Exception {
-    CourseRequestDTO request = CourseRequestDTO.builder()
-        .id("123")
-        .name("Updated Course")
-        .level(CourseLevel.A1)
-        .description("Updated")
-        .studentIds(List.of("s1"))
-        .teacherId("t1")
-        .setOfCoursesId("set1")
-        .room("Room 101")
-        .totalCourseTime(100)
-        .completedCourseTime(10)
-        .build();
-    CourseResponseDTO response = CourseResponseDTO.builder()
-        .id("123")
-        .description("Updated")
-        .build();
+    CourseRequestDTO request =
+        CourseRequestDTO.builder()
+            .id("123")
+            .name("Updated Course")
+            .level(CourseLevel.A1)
+            .description("Updated")
+            .studentIds(List.of("s1"))
+            .teacherId("t1")
+            .setOfCoursesId("set1")
+            .room("Room 101")
+            .totalCourseTime(100)
+            .completedCourseTime(10)
+            .build();
+    CourseResponseDTO response =
+        CourseResponseDTO.builder().id("123").description("Updated").build();
     when(courseService.update(any())).thenReturn(response);
 
-    mockMvc.perform(put("/api/courses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            put("/api/courses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.description").value("Updated"));
   }
 
   @Test
   void updateCourse_ShouldReturnNotFound_WhenCourseDoesNotExist() throws Exception {
-    CourseRequestDTO request = CourseRequestDTO.builder()
-        .id("non-existent")
-        .name("Updated Course")
-        .level(CourseLevel.A1)
-        .description("Updated")
-        .studentIds(List.of("s1"))
-        .teacherId("t1")
-        .setOfCoursesId("set1")
-        .room("Room 101")
-        .totalCourseTime(100)
-        .completedCourseTime(10)
-        .build();
-    when(courseService.update(any())).thenThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException());
+    CourseRequestDTO request =
+        CourseRequestDTO.builder()
+            .id("non-existent")
+            .name("Updated Course")
+            .level(CourseLevel.A1)
+            .description("Updated")
+            .studentIds(List.of("s1"))
+            .teacherId("t1")
+            .setOfCoursesId("set1")
+            .room("Room 101")
+            .totalCourseTime(100)
+            .completedCourseTime(10)
+            .build();
+    when(courseService.update(any()))
+        .thenThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException());
 
-    mockMvc.perform(put("/api/courses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
+    mockMvc
+        .perform(
+            put("/api/courses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isNotFound());
   }
 
@@ -235,8 +249,7 @@ public class CourseControllerTest {
   void deleteCourse_ShouldReturnNoContent() throws Exception {
     String id = "123";
 
-    mockMvc.perform(delete("/api/courses/{courseId}", id))
-        .andExpect(status().isNoContent());
+    mockMvc.perform(delete("/api/courses/{courseId}", id)).andExpect(status().isNoContent());
 
     verify(courseService).delete(id);
   }
@@ -245,10 +258,10 @@ public class CourseControllerTest {
   void deleteCourse_ShouldReturnNotFound_WhenCourseDoesNotExist() throws Exception {
     String id = "non-existent";
     doThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException())
-        .when(courseService).delete(id);
+        .when(courseService)
+        .delete(id);
 
-    mockMvc.perform(delete("/api/courses/{courseId}", id))
-        .andExpect(status().isNotFound());
+    mockMvc.perform(delete("/api/courses/{courseId}", id)).andExpect(status().isNotFound());
   }
 
   // 9. unenrollStudent
@@ -257,7 +270,8 @@ public class CourseControllerTest {
     String courseId = "c1";
     String studentId = "s1";
 
-    mockMvc.perform(delete("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
+    mockMvc
+        .perform(delete("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
         .andExpect(status().isNoContent());
 
     verify(courseService).unenrollStudent(courseId, studentId);
@@ -268,9 +282,11 @@ public class CourseControllerTest {
     String courseId = "non-existent";
     String studentId = "s1";
     doThrow(new com.app.dethloff.exceptions.model.CourseNotFoundException())
-        .when(courseService).unenrollStudent(courseId, studentId);
+        .when(courseService)
+        .unenrollStudent(courseId, studentId);
 
-    mockMvc.perform(delete("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
+    mockMvc
+        .perform(delete("/api/courses/{courseId}/students/{studentId}", courseId, studentId))
         .andExpect(status().isNotFound());
   }
 }

@@ -9,7 +9,6 @@ import com.app.dethloff.model.UserPrincipal;
 import com.app.dethloff.repository.UserRepository;
 import com.app.dethloff.service.impl.CustomUserDetailsService;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,10 +27,7 @@ public class CustomUserDetailsServiceUTest {
   void loadUserByUsername_ShouldReturnUserPrincipal_WhenUserExists() {
     // given
     String username = "testuser";
-    UserEntity user = UserEntity.builder()
-        .username(username)
-        .password("password123")
-        .build();
+    UserEntity user = UserEntity.builder().username(username).password("password123").build();
 
     when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
@@ -52,7 +48,8 @@ public class CustomUserDetailsServiceUTest {
     when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
     // when && then
-    assertThrows(UserNotFoundException.class, () -> customUserDetailsService.loadUserByUsername(username));
+    assertThrows(
+        UserNotFoundException.class, () -> customUserDetailsService.loadUserByUsername(username));
     verify(userRepository).findByUsername(username);
   }
 }

@@ -5,7 +5,6 @@ import com.app.dethloff.rest.mappers.PeselMapper;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,14 +66,14 @@ public abstract class PersonAbstractEntity {
     return pesel.toString();
   }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof PersonAbstractEntity that)) return false;
-        return Objects.equals(id, that.id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof PersonAbstractEntity that)) return false;
+    return Objects.equals(id, that.id);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
 }

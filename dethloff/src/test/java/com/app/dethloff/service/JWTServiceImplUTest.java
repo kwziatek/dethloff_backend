@@ -1,6 +1,7 @@
 package com.app.dethloff.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import com.app.dethloff.model.Role;
 import com.app.dethloff.service.impl.JWTServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

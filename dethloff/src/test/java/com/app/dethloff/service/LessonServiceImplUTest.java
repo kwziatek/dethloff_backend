@@ -41,35 +41,37 @@ public class LessonServiceImplUTest {
 
   @BeforeEach
   void setUp() {
-    sampleCourse = CourseEntity.builder()
-        .id(UUID.randomUUID().toString())
-        .description("Sample Course")
-        .build();
-    sampleTeacher = TeacherEntity.builder()
-        .id(UUID.randomUUID().toString())
-        .name("John")
-        .surname("Doe")
-        .build();
-    sampleLesson = LessonEntity.builder()
-        .id(UUID.randomUUID().toString())
-        .name("Sample Lesson")
-        .course(sampleCourse)
-        .teacher(sampleTeacher)
-        .build();
+    sampleCourse =
+        CourseEntity.builder()
+            .id(UUID.randomUUID().toString())
+            .description("Sample Course")
+            .build();
+    sampleTeacher =
+        TeacherEntity.builder()
+            .id(UUID.randomUUID().toString())
+            .name("John")
+            .surname("Doe")
+            .build();
+    sampleLesson =
+        LessonEntity.builder()
+            .id(UUID.randomUUID().toString())
+            .name("Sample Lesson")
+            .course(sampleCourse)
+            .teacher(sampleTeacher)
+            .build();
   }
 
   @Test
   void create_ShouldSaveAndReturnDTO() {
     // given
-    LessonRequestDTO request = LessonRequestDTO.builder()
-        .courseId(sampleCourse.getId())
-        .teacherId(sampleTeacher.getId())
-        .name("New Lesson")
-        .build();
-    LessonResponseDTO expectedResponse = LessonResponseDTO.builder()
-        .id(sampleLesson.getId())
-        .name("New Lesson")
-        .build();
+    LessonRequestDTO request =
+        LessonRequestDTO.builder()
+            .courseId(sampleCourse.getId())
+            .teacherId(sampleTeacher.getId())
+            .name("New Lesson")
+            .build();
+    LessonResponseDTO expectedResponse =
+        LessonResponseDTO.builder().id(sampleLesson.getId()).name("New Lesson").build();
 
     when(courseRepository.findById(request.courseId())).thenReturn(Optional.of(sampleCourse));
     when(teacherRepository.findById(request.teacherId())).thenReturn(Optional.of(sampleTeacher));
@@ -87,10 +89,11 @@ public class LessonServiceImplUTest {
   @Test
   void create_ThrowsExceptionWhenCourseNotFound() {
     // given
-    LessonRequestDTO request = LessonRequestDTO.builder()
-        .courseId("NON-EXISTENT")
-        .teacherId(sampleTeacher.getId())
-        .build();
+    LessonRequestDTO request =
+        LessonRequestDTO.builder()
+            .courseId("NON-EXISTENT")
+            .teacherId(sampleTeacher.getId())
+            .build();
 
     when(courseRepository.findById("NON-EXISTENT")).thenReturn(Optional.empty());
 
@@ -102,10 +105,8 @@ public class LessonServiceImplUTest {
   @Test
   void create_ThrowsExceptionWhenTeacherNotFound() {
     // given
-    LessonRequestDTO request = LessonRequestDTO.builder()
-        .courseId(sampleCourse.getId())
-        .teacherId("NON-EXISTENT")
-        .build();
+    LessonRequestDTO request =
+        LessonRequestDTO.builder().courseId(sampleCourse.getId()).teacherId("NON-EXISTENT").build();
 
     when(courseRepository.findById(sampleCourse.getId())).thenReturn(Optional.of(sampleCourse));
     when(teacherRepository.findById("NON-EXISTENT")).thenReturn(Optional.empty());
@@ -118,10 +119,8 @@ public class LessonServiceImplUTest {
   @Test
   void get_ShouldReturnDTO_WhenIdExists() {
     // given
-    LessonResponseDTO expectedResponse = LessonResponseDTO.builder()
-        .id(sampleLesson.getId())
-        .name(sampleLesson.getName())
-        .build();
+    LessonResponseDTO expectedResponse =
+        LessonResponseDTO.builder().id(sampleLesson.getId()).name(sampleLesson.getName()).build();
     when(lessonRepository.findById(sampleLesson.getId())).thenReturn(Optional.of(sampleLesson));
     when(lessonMapper.entityToResponse(sampleLesson)).thenReturn(expectedResponse);
 
@@ -181,14 +180,10 @@ public class LessonServiceImplUTest {
   @Test
   void update_ShouldUpdateAndReturnDTO() {
     // given
-    LessonRequestDTO request = LessonRequestDTO.builder()
-        .id(sampleLesson.getId())
-        .name("Updated Lesson Name")
-        .build();
-    LessonResponseDTO expectedResponse = LessonResponseDTO.builder()
-        .id(sampleLesson.getId())
-        .name("Updated Lesson Name")
-        .build();
+    LessonRequestDTO request =
+        LessonRequestDTO.builder().id(sampleLesson.getId()).name("Updated Lesson Name").build();
+    LessonResponseDTO expectedResponse =
+        LessonResponseDTO.builder().id(sampleLesson.getId()).name("Updated Lesson Name").build();
 
     when(lessonRepository.findById(request.id())).thenReturn(Optional.of(sampleLesson));
     when(lessonRepository.save(sampleLesson)).thenReturn(sampleLesson);

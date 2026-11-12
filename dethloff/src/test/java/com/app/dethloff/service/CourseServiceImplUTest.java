@@ -48,7 +48,7 @@ public class CourseServiceImplUTest {
 
   @Captor private ArgumentCaptor<CourseEntity> courseCaptor;
 
-    private CourseEntity sampleCourse;
+  private CourseEntity sampleCourse;
   private StudentEntity sampleStudent;
   private TeacherEntity sampleTeacher;
   private LessonEntity sampleOldestLesson;
@@ -167,24 +167,26 @@ public class CourseServiceImplUTest {
   @Test
   void createCourse_ShouldSaveAndReturnDTO() {
     // given
-    CourseRequestDTO request = CourseRequestDTO.builder()
-        .teacherId(sampleTeacher.getId())
-        .setOfCoursesId(UUID.randomUUID().toString())
-        .studentIds(List.of(sampleStudent.getId()))
-        .description("New Course Description")
-        .level(CourseLevel.B1)
-        .build();
-    CourseResponseDTO expectedResponse = CourseResponseDTO.builder()
-        .id(UUID.randomUUID().toString())
-        .description("New Course Description")
-        .level(CourseLevel.B1)
-        .build();
+    CourseRequestDTO request =
+        CourseRequestDTO.builder()
+            .teacherId(sampleTeacher.getId())
+            .setOfCoursesId(UUID.randomUUID().toString())
+            .studentIds(List.of(sampleStudent.getId()))
+            .description("New Course Description")
+            .level(CourseLevel.B1)
+            .build();
+    CourseResponseDTO expectedResponse =
+        CourseResponseDTO.builder()
+            .id(UUID.randomUUID().toString())
+            .description("New Course Description")
+            .level(CourseLevel.B1)
+            .build();
 
-     sampleCourse.setActive(true);
-
+    sampleCourse.setActive(true);
 
     when(teacherRepository.findById(request.teacherId())).thenReturn(Optional.of(sampleTeacher));
-    when(setOfCoursesRepository.findById(request.setOfCoursesId())).thenReturn(Optional.of(new SetOfCoursesEntity()));
+    when(setOfCoursesRepository.findById(request.setOfCoursesId()))
+        .thenReturn(Optional.of(new SetOfCoursesEntity()));
     when(studentRepository.findAllById(request.studentIds())).thenReturn(List.of(sampleStudent));
     when(courseMapper.requestToEntity(request)).thenReturn(sampleCourse);
     when(courseMapper.entityToResponse(sampleCourse)).thenReturn(expectedResponse);
@@ -201,16 +203,18 @@ public class CourseServiceImplUTest {
   @Test
   void updateCourse_ShouldUpdateAndReturnDTO() {
     // given
-    CourseRequestDTO request = CourseRequestDTO.builder()
-        .id(sampleCourse.getId())
-        .description("Updated Description")
-        .level(CourseLevel.B2)
-        .build();
-    CourseResponseDTO expectedResponse = CourseResponseDTO.builder()
-        .id(sampleCourse.getId())
-        .description("Updated Description")
-        .level(CourseLevel.B2)
-        .build();
+    CourseRequestDTO request =
+        CourseRequestDTO.builder()
+            .id(sampleCourse.getId())
+            .description("Updated Description")
+            .level(CourseLevel.B2)
+            .build();
+    CourseResponseDTO expectedResponse =
+        CourseResponseDTO.builder()
+            .id(sampleCourse.getId())
+            .description("Updated Description")
+            .level(CourseLevel.B2)
+            .build();
 
     when(courseRepository.findById(request.id())).thenReturn(Optional.of(sampleCourse));
     when(courseRepository.save(sampleCourse)).thenReturn(sampleCourse);
@@ -228,9 +232,7 @@ public class CourseServiceImplUTest {
   @Test
   void updateCourse_ThrowsExceptionWhenCourseNotFound() {
     // given
-    CourseRequestDTO request = CourseRequestDTO.builder()
-        .id("NON-EXISTENT")
-        .build();
+    CourseRequestDTO request = CourseRequestDTO.builder().id("NON-EXISTENT").build();
 
     when(courseRepository.findById("NON-EXISTENT")).thenReturn(Optional.empty());
 
@@ -276,7 +278,8 @@ public class CourseServiceImplUTest {
     when(studentRepository.findById(sampleStudent.getId()))
         .thenReturn(Optional.ofNullable(sampleStudent));
 
-    // let's set the course to be active and the student not to check if the student is set as active
+    // let's set the course to be active and the student not to check if the student is set as
+    // active
     sampleCourse.setActive(true);
     sampleStudent.setIsActive(false);
 

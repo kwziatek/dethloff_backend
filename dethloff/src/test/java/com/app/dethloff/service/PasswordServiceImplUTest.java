@@ -1,6 +1,7 @@
 package com.app.dethloff.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import com.app.dethloff.service.impl.PasswordServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +30,13 @@ public class PasswordServiceImplUTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {
-      "Short1!",         // Too short (< 14)
-      "alllowercase123!!!", // No uppercase
-      "Password123!",    // Not enough special signs (< 3)
-      "123456789012345"  // No uppercase, no special signs
-  })
+  @ValueSource(
+      strings = {
+        "Short1!", // Too short (< 14)
+        "alllowercase123!!!", // No uppercase
+        "Password123!", // Not enough special signs (< 3)
+        "123456789012345" // No uppercase, no special signs
+      })
   void validateNewPassword_ShouldReturnFalse_WhenPasswordIsInvalid(String invalidPassword) {
     // when
     boolean result = passwordService.validateNewPassword(invalidPassword);
