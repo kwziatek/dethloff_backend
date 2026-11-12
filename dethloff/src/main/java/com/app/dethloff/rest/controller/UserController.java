@@ -20,8 +20,8 @@ public class UserController {
   private final UserService userService;
 
   @Autowired
-  UserController (UserService userService) {
-      this.userService = userService;
+  UserController(UserService userService) {
+    this.userService = userService;
   }
 
   @PostMapping("/register")
