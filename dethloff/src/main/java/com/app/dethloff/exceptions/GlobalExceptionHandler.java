@@ -19,7 +19,8 @@ public class GlobalExceptionHandler {
     StudentNotFoundException.class,
     CourseNotFoundException.class,
     TeacherNotFoundException.class,
-    UserNotFoundException.class
+    UserNotFoundException.class,
+    LessonNotFoundException.class
   })
   ResponseEntity<ErrorResponse> handleObjectNotFoundException(RuntimeException exc) {
 

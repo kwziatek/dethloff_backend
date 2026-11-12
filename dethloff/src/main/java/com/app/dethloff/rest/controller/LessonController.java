@@ -6,11 +6,14 @@ import com.app.dethloff.rest.DTO.validation_groups.CreateAction;
 import com.app.dethloff.rest.DTO.validation_groups.UpdateAction;
 import com.app.dethloff.service.inte.CourseService;
 import com.app.dethloff.service.inte.LessonService;
+
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api")
@@ -53,7 +56,12 @@ public class LessonController {
     // since the lesson was created, the start or end date for the course might have changed
     courseService.updateStartAndEndDateForCourse(lessonDTO.courseId());
 
-    return ResponseEntity.ok(response);
+      URI location =
+              ServletUriComponentsBuilder.fromCurrentRequest()
+                      .path("/{id}")
+                      .buildAndExpand(response.id())
+                      .toUri();
+    return ResponseEntity.created(location).body(response);
   }
 
   @PutMapping("/lesson")

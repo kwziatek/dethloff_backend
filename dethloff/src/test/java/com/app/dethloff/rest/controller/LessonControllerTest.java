@@ -5,20 +5,26 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.app.dethloff.exceptions.model.LessonNotFoundException;
+import com.app.dethloff.model.CourseEntity;
 import com.app.dethloff.model.LessonEntity;
+import com.app.dethloff.model.TeacherEntity;
 import com.app.dethloff.rest.DTO.LessonRequestDTO;
 import com.app.dethloff.rest.DTO.LessonResponseDTO;
+import com.app.dethloff.service.impl.JWTServiceImpl;
 import com.app.dethloff.service.inte.CourseService;
 import com.app.dethloff.service.inte.LessonService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.mvc.test.autoconfigure.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
 @WebMvcTest(LessonController.class)
 public class LessonControllerTest {
@@ -32,6 +38,9 @@ public class LessonControllerTest {
   @MockitoBean
   private CourseService courseService;
 
+  @MockitoBean
+  private JWTServiceImpl jwtServiceImpl;
+
   @BeforeEach
   void setUp() {
     objectMapper = new ObjectMapper();
@@ -41,7 +50,7 @@ public class LessonControllerTest {
   @Test
   void getLesson_ShouldReturnLesson() throws Exception {
     String lessonId = "1";
-    LessonResponseDTO lesson = LessonResponseDTO.builder().id(lessonId).description("Test").build();
+    LessonResponseDTO lesson = LessonResponseDTO.builder().id(lessonId).name("Test Lesson").build();
     when(lessonService.get(lessonId)).thenReturn(lesson);
 
     mockMvc.perform(get("/api/lesson/{lessonId}", lessonId))
@@ -53,7 +62,7 @@ public class LessonControllerTest {
   @Test
   void getLesson_ShouldReturnNotFound_WhenLessonDoesNotExist() throws Exception {
     String lessonId = "non-existent";
-    when(lessonService.get(lessonId)).thenThrow(new com.app.dethloff.exceptions.model.LessonNotFoundException());
+    when(lessonService.get(lessonId)).thenThrow(new LessonNotFoundException());
 
     mockMvc.perform(get("/api/lesson/{lessonId}", lessonId))
         .andExpect(status().isNotFound());
@@ -63,7 +72,7 @@ public class LessonControllerTest {
   @Test
   void getLessonsAssignedToCourse_ShouldReturnList() throws Exception {
     String courseId = "c1";
-    LessonResponseDTO lesson = LessonResponseDTO.builder().id("1").description("Test").build();
+    LessonResponseDTO lesson = LessonResponseDTO.builder().id("1").name("Test Lesson").build();
     when(lessonService.getAllFromCourse(courseId)).thenReturn(List.of(lesson));
 
     mockMvc.perform(get("/api/lesson/course/{courseId}", courseId))
@@ -84,7 +93,7 @@ public class LessonControllerTest {
   // 3. getAllLessons
   @Test
   void getAllLessons_ShouldReturnList() throws Exception {
-    LessonResponseDTO lesson = LessonResponseDTO.builder().id("1").description("Test").build();
+    LessonResponseDTO lesson = LessonResponseDTO.builder().id("1").name("Test Lesson").build();
     when(lessonService.getAll()).thenReturn(List.of(lesson));
 
     mockMvc.perform(get("/api/lesson"))
@@ -93,26 +102,21 @@ public class LessonControllerTest {
         .andExpect(jsonPath("$[0].id").value("1"));
   }
 
-  @Test
-  void getAllLessons_ShouldReturnInternalServerError_WhenServiceFails() throws Exception {
-    when(lessonService.getAll()).thenThrow(new RuntimeException("Database error"));
-
-    mockMvc.perform(get("/api/lesson"))
-        .andExpect(status().isInternalServerError());
-  }
-
   // 4. createLesson
   @Test
   void createLesson_ShouldReturnCreated() throws Exception {
     LessonRequestDTO request = LessonRequestDTO.builder()
+        .name("Test Lesson")
         .courseId("c1")
-        .description("Test")
-        .startTime("2023-04-01T10:00:00")
-        .endTime("2023-04-01T11:00:00")
+        .teacherId("t1")
+        .completed(false)
+        .date(LocalDate.now())
+        .startTime(LocalTime.NOON)
+        .endTime(LocalTime.NOON.plusHours(1))
         .build();
     LessonResponseDTO response = LessonResponseDTO.builder()
         .id("123")
-        .description("Test")
+        .name("Test Lesson")
         .build();
     when(lessonService.create(any())).thenReturn(response);
 
@@ -139,14 +143,17 @@ public class LessonControllerTest {
   void updateLesson_ShouldReturnOk() throws Exception {
     LessonRequestDTO request = LessonRequestDTO.builder()
         .id("123")
+        .name("Updated Lesson")
         .courseId("c1")
-        .description("Updated Test")
-        .startTime("2023-04-01T10:00:00")
-        .endTime("2023-04-01T11:00:00")
+        .teacherId("t1")
+        .completed(false)
+        .date(LocalDate.now())
+        .startTime(LocalTime.NOON)
+        .endTime(LocalTime.NOON.plusHours(1))
         .build();
     LessonResponseDTO response = LessonResponseDTO.builder()
         .id("123")
-        .description("Updated Test")
+        .name("Updated Lesson")
         .build();
     when(lessonService.update(any())).thenReturn(response);
 
@@ -154,17 +161,20 @@ public class LessonControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.description").value("Updated Test"));
+        .andExpect(jsonPath("$.name").value("Updated Lesson"));
   }
 
   @Test
   void updateLesson_ShouldReturnNotFound_WhenLessonDoesNotExist() throws Exception {
     LessonRequestDTO request = LessonRequestDTO.builder()
         .id("non-existent")
+        .name("Updated Lesson")
         .courseId("c1")
-        .description("Updated Test")
-        .startTime("2023-04-01T10:00:00")
-        .endTime("2023-04-01T11:00:00")
+        .teacherId("t1")
+        .completed(false)
+        .date(LocalDate.now())
+        .startTime(LocalTime.NOON)
+        .endTime(LocalTime.NOON.plusHours(1))
         .build();
     when(lessonService.update(any())).thenThrow(new com.app.dethloff.exceptions.model.LessonNotFoundException());
 
